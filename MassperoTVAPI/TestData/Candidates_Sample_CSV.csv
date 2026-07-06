@@ -1,0 +1,6 @@
+Name,JobId,StatusId,SecurityClearanceId,CvFile,ReasonOfAccept,ReasonOfReject,Accepted,ApplicationUserId
+Ali Hassan,1,1,1,,,,False,
+Mariam Khaled,1,2,2,,,,False,
+Hassan Abdelaziz,1,3,3,,,,False,
+Noha Wageeh,1,4,1,,,,False,
+Gamal Morsy,1,5,2,,,,False,

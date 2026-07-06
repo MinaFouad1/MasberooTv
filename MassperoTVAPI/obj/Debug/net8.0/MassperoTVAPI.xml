@@ -1,0 +1,647 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MassperoTVAPI</name>
+    </assembly>
+    <members>
+        <member name="M:MassperoTVAPI.Controllers.AuthController.Register(MassperoTVAPI.Core.DTOs.RegisterDto)">
+            <summary>Register a new user. Optionally assign a role (Admin only).</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.AuthController.Login(MassperoTVAPI.Core.DTOs.LoginDto)">
+            <summary>Authenticate a user with email and password. Returns a JWT token on success.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.AuthController.GetMe">
+            <summary>Get current authenticated user's profile.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.AuthController.UpdateProfile(MassperoTVAPI.Core.DTOs.UpdateProfileDto)">
+            <summary>Update current authenticated user's profile.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetAll(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>List all candidates with optional filters by name, status, or job.</summary>
+            <param name="name">Optional. Filter by candidate name (contains).</param>
+            <param name="statusId">Optional. Filter by application status ID.</param>
+            <param name="jobId">Optional. Filter by job ID.</param>
+            <returns>Filtered list of candidates with full details.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetById(System.Int32)">
+            <summary>Get a single candidate by ID with full details.</summary>
+            <param name="id">Candidate ID.</param>
+            <returns>The candidate details including job, status, and security clearance.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.Create(MassperoTVAPI.Core.DTOs.CreateCandidateDto)">
+            <summary>Create a new candidate with initial status and security clearance. Optionally upload a CV file.</summary>
+            <param name="dto">Candidate data including name, job ID, and optional CV file.</param>
+            <returns>The created candidate with default candidate statuses assigned.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.Update(System.Int32,MassperoTVAPI.Core.DTOs.UpdateCandidateDto)">
+            <summary>Update a candidate's basic info (name, job, reasons, CV).</summary>
+            <param name="id">Candidate ID.</param>
+            <param name="dto">Updated candidate data.</param>
+            <returns>The updated candidate.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.PatchStatus(System.Int32,MassperoTVAPI.Core.DTOs.PatchCandidateStatusDto)">
+            <summary>Update only the application status for a candidate (e.g. Under Vetting, Approved, Rejected).</summary>
+            <param name="id">Candidate ID.</param>
+            <param name="dto">New status ID.</param>
+            <returns>The updated candidate.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.PatchSecurityClearance(System.Int32,MassperoTVAPI.Core.DTOs.PatchCandidateSecurityDto)">
+            <summary>Update only the security clearance status for a candidate (e.g. In Check, Cleared, Denied).</summary>
+            <param name="id">Candidate ID.</param>
+            <param name="dto">New security clearance ID.</param>
+            <returns>The updated candidate.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.Delete(System.Int32)">
+            <summary>Delete a candidate. Admin only.</summary>
+            <param name="id">Candidate ID.</param>
+            <returns>Success status.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CategoriesController.GetAll">
+            <summary>Retrieve all job categories.</summary>
+            <returns>List of categories.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CategoriesController.GetById(System.Int32)">
+            <summary>Get a single category by ID.</summary>
+            <param name="id">Category ID.</param>
+            <returns>The category if found; otherwise 404.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CategoriesController.Create(MassperoTVAPI.Core.DTOs.CreateCategoryDto)">
+            <summary>Create a new category. Admin or HR required.</summary>
+            <param name="dto">Category name.</param>
+            <returns>The created category.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CategoriesController.Update(System.Int32,MassperoTVAPI.Core.DTOs.UpdateCategoryDto)">
+            <summary>Update an existing category. Admin or HR required.</summary>
+            <param name="id">Category ID.</param>
+            <param name="dto">Updated category name.</param>
+            <returns>The updated category.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CategoriesController.Delete(System.Int32)">
+            <summary>Delete a category. Admin only.</summary>
+            <param name="id">Category ID.</param>
+            <returns>Success status.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetAdminDashboard">
+            <summary>Admin dashboard with aggregated statistics: total candidates, jobs, users, interviews, and breakdowns by status, security clearance, job, and process progress.</summary>
+            <returns>Comprehensive admin dashboard data.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetProcessDashboard(System.Nullable{System.Int32})">
+            <summary>Process dashboard showing all phases (or a single phase) with their processes, average completion, and overall progress.</summary>
+            <param name="phaseId">Optional phase ID to filter results to a single phase.</param>
+            <returns>Overall progress and list of phases with their associated process progress.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetProcessStatistics">
+            <summary>Get process statistics: total, active, completed counts, average completion percentage, breakdown by status and phase.</summary>
+            <returns>Process statistics data.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetIssueStatistics">
+            <summary>Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status and process.</summary>
+            <returns>Issue statistics data.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetPhaseStatistics">
+            <summary>Get phase statistics: total phases, each phase with its process progress.</summary>
+            <returns>Phase statistics data.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetRecruitmentFunnel">
+            <summary>Recruitment funnel: counts of candidates at each stage (total, HR interview, technical interview, offers sent, accepted, hired).</summary>
+            <returns>Recruitment funnel counts.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetJobStatus">
+            <summary>Job status: each job with its title, number of open positions, and count of applicants.</summary>
+            <returns>List of job status entries.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetRiskIssues">
+            <summary>Risk management issues: list of all issues with their name, priority, and resolved status.</summary>
+            <returns>List of risk issues.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.ImportController.ImportCandidates(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>Import candidates from an Excel (.xlsx) or CSV file. Each imported candidate gets the default Pending process status and is logged.</summary>
+            <param name="file">The Excel or CSV file to import.</param>
+            <returns>Import result with counts of imported and failed rows, plus error details.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.InterviewsController.GetAll">
+            <summary>List all interviews with full details.</summary>
+            <returns>List of interviews with candidate and type info.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.InterviewsController.GetById(System.Int32)">
+            <summary>Get a single interview by ID.</summary>
+            <param name="id">Interview ID.</param>
+            <returns>The interview details.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.InterviewsController.GetByCandidate(System.Int32)">
+            <summary>Get all interviews for a specific candidate.</summary>
+            <param name="candidateId">Candidate ID.</param>
+            <returns>List of interviews for the candidate.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.InterviewsController.GetByCandidateAndType(System.Int32,System.Int32)">
+            <summary>Get interviews for a candidate filtered by type (HR or Technical).</summary>
+            
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.InterviewsController.Create(MassperoTVAPI.Core.DTOs.CreateInterviewDto)">
+            <summary>Schedule a new interview for a candidate. HR only.</summary>
+            <param name="dto">Interview details including candidate, type, grade, and comments.</param>
+            <returns>The created interview.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.InterviewsController.PatchGrade(System.Int32,MassperoTVAPI.Core.DTOs.PatchInterviewGradeDto)">
+            <summary>Update the grade and optional comments for an interview. HR only.</summary>
+            <param name="id">Interview ID.</param>
+            <param name="dto">New grade and optional comments.</param>
+            <returns>The updated interview.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.InterviewsController.Delete(System.Int32)">
+            <summary>Delete an interview. HR only.</summary>
+            <param name="id">Interview ID.</param>
+            <returns>Success status.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.GetAll(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.Boolean})">
+            <summary>List all issues with optional filters by process ID, date, or resolved status.</summary>
+            <param name="processId">Optional. Filter by process ID.</param>
+            <param name="date">Optional. Filter by issue date.</param>
+            <param name="resolved">Optional. Filter by resolved/unresolved status.</param>
+            <returns>Filtered list of issues.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.GetById(System.Int32)">
+            <summary>Get a single issue by ID.</summary>
+            <param name="id">Issue ID.</param>
+            <returns>The issue details.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.GetByProcess(System.Int32)">
+            <summary>Get all issues associated with a specific process.</summary>
+            <param name="processId">Process ID.</param>
+            <returns>List of issues for the process.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.Create(MassperoTVAPI.Core.DTOs.CreateIssueDto)">
+            <summary>Create a new issue for a process.</summary>
+            <param name="dto">Issue details including name, process ID, and optional resolved/date.</param>
+            <returns>The created issue.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.Update(System.Int32,MassperoTVAPI.Core.DTOs.UpdateIssueDto)">
+            <summary>Update an existing issue.</summary>
+            <param name="id">Issue ID.</param>
+            <param name="dto">Updated issue data.</param>
+            <returns>The updated issue.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.PatchResolved(System.Int32,MassperoTVAPI.Core.DTOs.PatchIssueResolvedDto)">
+            <summary>Toggle the resolved status of an issue.</summary>
+            <param name="id">Issue ID.</param>
+            <param name="dto">New resolved state.</param>
+            <returns>The updated issue.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.Delete(System.Int32)">
+            <summary>Delete an issue. Admin only.</summary>
+            <param name="id">Issue ID.</param>
+            <returns>Success status.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.JobsController.GetAll(System.String,System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.Int32})">
+            <summary>List all jobs with their category names. Optionally filter by title, category, creation date, or location.</summary>
+            <param name="search">Optional search keyword for job title.</param>
+            <param name="categoryId">Optional category ID filter.</param>
+            <param name="date">Optional date filter — returns jobs created on or after this date.</param>
+            <param name="locationId">Optional location ID filter.</param>
+            <returns>List of jobs with applicant and interview counts.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.JobsController.GetStatistics">
+            <summary>Get job statistics counts: total jobs, open positions, applications, offers sent.</summary>
+            <returns>Job statistics.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.JobsController.GetById(System.Int32)">
+            <summary>Get a single job by ID with its category name and all new fields.</summary>
+            <param name="id">Job ID.</param>
+            <returns>The job details.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.JobsController.Create(MassperoTVAPI.Core.DTOs.CreateJobDto)">
+            <summary>Create a new job. Accepts location, employment type, open positions, and target hiring date.</summary>
+            <param name="dto">Job data.</param>
+            <returns>The created job.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.JobsController.Update(System.Int32,MassperoTVAPI.Core.DTOs.UpdateJobDto)">
+            <summary>Update an existing job including location, employment type, open positions, and target hiring date.</summary>
+            <param name="id">Job ID.</param>
+            <param name="dto">Updated job data.</param>
+            <returns>The updated job.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.JobsController.Delete(System.Int32)">
+            <summary>Delete a job. Admin only.</summary>
+            <param name="id">Job ID.</param>
+            <returns>Success status.</returns>
+        </member>
+        <member name="T:MassperoTVAPI.Controllers.LookupsController">
+            <summary>
+            CRUD for all lookup / reference tables.
+            Read endpoints are open to authenticated users; write endpoints require Admin.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetStatuses">
+            <summary>List all candidate application statuses (e.g. Under Vetting, Approved, Rejected).</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetStatus(System.Int32)">
+            <summary>Get a single application status by ID.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreateStatus(MassperoTVAPI.Core.DTOs.CreateStatusDto)">
+            <summary>Create a new application status. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdateStatus(System.Int32,MassperoTVAPI.Core.DTOs.UpdateStatusDto)">
+            <summary>Update an application status name. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeleteStatus(System.Int32)">
+            <summary>Delete an application status. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetSecurityClearances">
+            <summary>List all security clearance statuses (e.g. In Check, Cleared, Denied).</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetSecurityClearance(System.Int32)">
+            <summary>Get a single security clearance status by ID.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreateSecurityClearance(MassperoTVAPI.Core.DTOs.CreateSecurityClearanceStatusDto)">
+            <summary>Create a new security clearance status. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdateSecurityClearance(System.Int32,MassperoTVAPI.Core.DTOs.UpdateSecurityClearanceStatusDto)">
+            <summary>Update a security clearance status name. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeleteSecurityClearance(System.Int32)">
+            <summary>Delete a security clearance status. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetInterviewTypes">
+            <summary>List all interview types (e.g. HR, Technical).</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetInterviewType(System.Int32)">
+            <summary>Get a single interview type by ID.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreateInterviewType(MassperoTVAPI.Core.DTOs.CreateInterviewTypeDto)">
+            <summary>Create a new interview type. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdateInterviewType(System.Int32,MassperoTVAPI.Core.DTOs.UpdateInterviewTypeDto)">
+            <summary>Update an interview type name. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeleteInterviewType(System.Int32)">
+            <summary>Delete an interview type. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetPhases">
+            <summary>List all process phases.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetPhase(System.Int32)">
+            <summary>Get a single phase by ID.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreatePhase(MassperoTVAPI.Core.DTOs.CreatePhaseDto)">
+            <summary>Create a new phase. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdatePhase(System.Int32,MassperoTVAPI.Core.DTOs.UpdatePhaseDto)">
+            <summary>Update a phase name. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeletePhase(System.Int32)">
+            <summary>Delete a phase. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetProcessStatuses">
+            <summary>List all process statuses (Pending, InProgress, Completed, Holded).</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetProcessStatus(System.Int32)">
+            <summary>Get a single process status by ID.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreateProcessStatus(MassperoTVAPI.Core.DTOs.CreateProcessStatusDto)">
+            <summary>Create a new process status with a completion percentage. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdateProcessStatus(System.Int32,MassperoTVAPI.Core.DTOs.UpdateProcessStatusDto)">
+            <summary>Update a process status name and percentage. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeleteProcessStatus(System.Int32)">
+            <summary>Delete a process status. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.PhasesController.Create(MassperoTVAPI.Core.DTOs.CreatePhaseDto)">
+            <summary>Create a new phase. Admin only.</summary>
+            <param name="dto">Phase name.</param>
+            <returns>The created phase.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.PhasesController.GetAll">
+            <summary>List all phases with their associated processes and progress.</summary>
+            <returns>List of phases with process details.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.PhasesController.GetById(System.Int32)">
+            <summary>Get a single phase by ID with its processes.</summary>
+            <param name="id">Phase ID.</param>
+            <returns>The phase with its associated processes.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.ProcessesController.GetAll">
+            <summary>List all processes with full details including dependencies and issues.</summary>
+            <returns>List of processes.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.ProcessesController.GetById(System.Int32)">
+            <summary>Get a single process by ID with its dependencies and issues.</summary>
+            <param name="id">Process ID.</param>
+            <returns>The process details.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.ProcessesController.Create(MassperoTVAPI.Core.DTOs.CreateProcessDto)">
+            <summary>Create a new process with Pending status by default. Admin or HR required.</summary>
+            <param name="dto">Process data including name, dates, and phase ID.</param>
+            <returns>The created process.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.ProcessesController.Update(System.Int32,MassperoTVAPI.Core.DTOs.UpdateProcessDto)">
+            <summary>Update a process including its phase and process status. Admin or HR required.</summary>
+            <param name="id">Process ID.</param>
+            <param name="dto">Updated process data.</param>
+            <returns>The updated process.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.ProcessesController.Delete(System.Int32)">
+            <summary>Delete a process. Admin only.</summary>
+            <param name="id">Process ID.</param>
+            <returns>Success status.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.ProcessesController.SetDependencies(System.Int32,MassperoTVAPI.Core.DTOs.ProcessDependencyDto)">
+            <summary>Replace all dependencies for a process. Pass an empty list to clear dependencies. Admin or HR required.</summary>
+            <param name="id">Process ID.</param>
+            <param name="dto">List of process IDs this process depends on.</param>
+            <returns>The updated process with its new dependencies.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.ProcessesController.RemoveDependency(System.Int32,System.Int32)">
+            <summary>Remove a single dependency from a process. Admin or HR required.</summary>
+            <param name="id">Process ID.</param>
+            <param name="dependsOnId">The dependency process ID to remove.</param>
+            <returns>No content.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.RolesController.GetAll">
+            <summary>List all available roles.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.RolesController.GetById(System.String)">
+            <summary>Get a single role by ID.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.RolesController.Create(MassperoTVAPI.Core.DTOs.CreateRoleDto)">
+            <summary>Create a new role.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.RolesController.Update(System.String,MassperoTVAPI.Core.DTOs.UpdateRoleDto)">
+            <summary>Update a role name.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.RolesController.Delete(System.String)">
+            <summary>Delete a role.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.RolesController.AssignRole(MassperoTVAPI.Core.DTOs.AssignRoleDto)">
+            <summary>Assign a role to a user.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.RolesController.RemoveRole(MassperoTVAPI.Core.DTOs.RemoveRoleDto)">
+            <summary>Remove a role from a user.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Controllers.UsersController">
+            <summary>
+            User management — Admin only.
+            GET /api/users          → list / search all users
+            GET /api/users/{id}     → get user by ID
+            POST /api/users/hr      → create a user with the HR role
+            DELETE /api/users/{id}  → delete a user
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.UsersController.GetAll(System.String)">
+            <summary>List all users. Optional search by username or email.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.UsersController.GetById(System.String)">
+            <summary>Get a single user by ID.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.UsersController.CreateHr(MassperoTVAPI.Core.DTOs.CreateHrUserDto)">
+            <summary>Create a new user and automatically assign the HR role.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.UsersController.Delete(System.String)">
+            <summary>Delete a user account.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.RegisterDto.Role">
+            <summary>Optional role to assign on registration (e.g. "Admin", "HR").</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.PatchCandidateStatusDto">
+            <summary>PATCH body to update only the candidate application status.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.PatchCandidateSecurityDto">
+            <summary>PATCH body to update only the candidate security clearance status.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.PatchInterviewGradeDto">
+            <summary>PATCH body to update the grade (and optionally comments) of an interview.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.ProcessDependencyDto">
+            <summary>
+            Payload for PATCH /api/processes/{id}/dependencies.
+            Replaces the full dependency list for the given process.
+            Pass an empty list to clear all dependencies.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.DTOs.ProcessDependencyDto.#ctor(System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>
+            Payload for PATCH /api/processes/{id}/dependencies.
+            Replaces the full dependency list for the given process.
+            Pass an empty list to clear all dependencies.
+            </summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.Entities.AppConfiguration">
+            <summary>
+            Stores file-type configuration entries.
+            Key  = folder/type name (e.g. "Document", "Evidence", "Profile")
+            Value = base URL for that folder (e.g. "http://192.168.1.163:500/Uploads/Document/")
+            </summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.ApplicationUser.IsVerified">
+            <summary>Whether the user's email/account has been verified.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.Entities.ProcessDependency">
+            <summary>
+            Junction table representing the dependency relationship between processes.
+            A Process can depend on many other Processes (and vice-versa).
+            </summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.ProcessDependency.ProcessId">
+            <summary>The process that has the dependency.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.ProcessDependency.DependsOnProcessId">
+            <summary>The process that must be completed first.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.IEmailService.SendAsync(System.String,System.String,System.String,System.String)">
+            <summary>
+            Send a plain-text or HTML email.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.IEmailService.SendComplaintConfirmationAsync(System.String,System.String,System.Int32,System.String)">
+            <summary>
+            Convenience overload — sends the standard "complaint submitted" notification.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetAllAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>Get all candidates with optional filters. Includes Job, Status, SecurityClearance, User.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetByIdWithDetailsAsync(System.Int32)">
+            <summary>Get a candidate by ID with all related entities included.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetAllWithInterviewsAsync">
+            <summary>Get all candidates including their Interviews and InterviewType for funnel analytics.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IConfigurationRepository.GetByKeyAsync(System.String)">
+            <summary>Find a configuration entry by its Key (case-insensitive).</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.Interfaces.Repositories.ILookupRepository`1">
+            <summary>
+            Generic read-write repository for simple lookup tables (no FK navigation needed).
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IProcessRepository.GetWithDependenciesAsync(System.Int32)">
+            <summary>Gets a process with all its dependencies, phase, status, and issues eagerly loaded.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IProcessRepository.GetAllWithDetailsAsync">
+            <summary>Gets all processes with Phase, ProcessStatus, and Issues eagerly loaded.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Extensions.RoleSeeder.SeedRolesAsync(System.IServiceProvider)">
+            <summary>
+            Ensures the Admin and Company roles exist in the database.
+            Called once on application startup.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Extensions.ServiceCollectionExtensions.AddApplicationServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>Registers repositories, Unit of Work, and application services.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Extensions.ServiceCollectionExtensions.AddIdentityServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>Configures ASP.NET Identity, JWT authentication, and authorization policies.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Extensions.ServiceCollectionExtensions.AddSwaggerWithJwt(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>Configures Swagger/OpenAPI with JWT Bearer security definition.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Infrastructure.Data.ApplicationDbContextFactory">
+            <summary>
+            Allows EF Core CLI tools (dotnet ef migrations add / update-database) to
+            instantiate ApplicationDbContext at design-time without needing the full
+            ASP.NET Core host to be running.
+            </summary>
+        </member>
+        <member name="T:MassperoTVAPI.Infrastructure.Repositories.LookupRepository`1">
+            <summary>
+            Reusable repository for simple lookup tables (e.g. Status, Phase, InterviewType…).
+            </summary>
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddFullERDEntities">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddFullERDEntities.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddFullERDEntities.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddFullERDEntities.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.SeedStatusesAndClearances">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.SeedStatusesAndClearances.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.SeedStatusesAndClearances.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.SeedStatusesAndClearances.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.makeAcepttedNullable">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.makeAcepttedNullable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.makeAcepttedNullable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.makeAcepttedNullable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.IssueStateAndDate">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.IssueStateAndDate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.IssueStateAndDate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.IssueStateAndDate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddProcessStatusToCandidate">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddProcessStatusToCandidate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddProcessStatusToCandidate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddProcessStatusToCandidate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddProcessLogsTable">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddProcessLogsTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddProcessLogsTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddProcessLogsTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.SeparateProcessStatusFromCandidate">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.SeparateProcessStatusFromCandidate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.SeparateProcessStatusFromCandidate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.SeparateProcessStatusFromCandidate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.Priorioty_CreatedAt">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Priorioty_CreatedAt.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Priorioty_CreatedAt.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Priorioty_CreatedAt.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddJobLocationAndEmploymentType">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddJobLocationAndEmploymentType.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddJobLocationAndEmploymentType.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddJobLocationAndEmploymentType.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="F:MassperoTVAPI.Services.FileUploadService.AllowedExtensions">
+            <summary>Allowed file extensions.</summary>
+        </member>
+        <member name="F:MassperoTVAPI.Services.FileUploadService.MaxFileSizeBytes">
+            <summary>Maximum file size: 20 MB.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Services.FileUploadService.UploadAsync(Microsoft.AspNetCore.Http.IFormFile,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:MassperoTVAPI.Services.FileUploadService.UploadManyAsync(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Http.IFormFile},System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:MassperoTVAPI.Services.FileUploadService.DeletePhysicalFile(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:MassperoTVAPI.Services.IFileUploadService.UploadAsync(Microsoft.AspNetCore.Http.IFormFile,System.String)">
+            <summary>
+            Upload a single file.
+            Saves it to: {appsettings.FileUpload:PhysicalBasePath}/{folderKey}/{guid}.{ext}
+            Returns full URL: Configuration[folderKey].Value + "/" + fileName
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Services.IFileUploadService.UploadManyAsync(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Http.IFormFile},System.String)">
+            <summary>Upload multiple files under the same folder key.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Services.IFileUploadService.DeletePhysicalFile(System.String)">
+            <summary>Delete a file by its physical path. Returns false if file not found.</summary>
+        </member>
+    </members>
+</doc>
