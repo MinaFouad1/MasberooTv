@@ -110,20 +110,25 @@ public record UpdateJobDto
 
 // ── Candidate ─────────────────────────────────────────────────────────────────
 public record CandidateDto(
-    int     Id,
-    string  Name,
-    string? CvFile,
-    string? ReasonOfAccept,
-    string? ReasonOfReject,
-    bool?    Accepted,
-    int     JobId,
-    string  JobName,
-    int     StatusId,
-    string  StatusName,
-    int     SecurityClearanceId,
-    string  SecurityClearanceName,
-    string? ApplicationUserId,
-    string? ApplicationUserName
+    int       Id,
+    string    Name,
+    string?   CvFile,
+    string?   ReasonOfAccept,
+    string?   ReasonOfReject,
+    bool?     Accepted,
+    int       JobId,
+    string    JobName,
+    int       CategoryId,
+    string    CategoryName,
+    int       StatusId,
+    string    StatusName,
+    int       SecurityClearanceId,
+    string    SecurityClearanceName,
+    string?   ApplicationUserId,
+    string?   ApplicationUserName,
+    DateTime? HiringDate,
+    string?   HrScore,
+    string?   TechnicalScore
 );
 public record CreateCandidateDto
 {
@@ -175,6 +180,14 @@ public record IssueDetailDto(
     IssuePriority? Priority,
     int ProcessId,
     string ProcessName
+);
+
+public record RiskResponseDto(
+    int RiskId,
+    string RiskTitle,
+    string? Priority,
+    string Status,
+    DateTime? Date
 );
 public record CreateIssueDto
 {
@@ -339,12 +352,26 @@ public record RiskIssueDto(
     bool?          Resolved
 );
 
+public record RiskStatisticsDto(
+    int TotalRisks,
+    RiskPriorityStatDto Critical,
+    RiskPriorityStatDto High,
+    RiskPriorityStatDto Medium,
+    RiskPriorityStatDto Low
+);
+
+public record RiskPriorityStatDto(
+    int Count,
+    decimal Percentage
+);
+
 // ── Job Statistics ────────────────────────────────────────────────────────────
 public record JobStatisticsDto(
     int TotalJobs,
     int OpenPositions,
     int Applications,
-    int OffersSent
+    int OffersSent,
+    int OffersAccepted
 );
 
 // ── Interview grade patch ─────────────────────────────────────────────────────
@@ -353,4 +380,43 @@ public record PatchInterviewGradeDto
 {
     [Required] [MaxLength(50)]   public string  Grade    { get; init; } = string.Empty;
     [MaxLength(2000)]            public string? Comments { get; init; }
+}
+
+// ── Paged Result Wrapper ──────────────────────────────────────────────────────
+/// <summary>Generic paged result returned by list endpoints that support pagination.</summary>
+public record PagedResult<T>(
+    IEnumerable<T> Items,
+    int            TotalCount,
+    int            Page,
+    int            PageSize,
+    int            TotalPages
+);
+
+// ── Applications Search Query ─────────────────────────────────────────────────
+/// <summary>Query parameters for searching/filtering candidates (applications) with pagination.</summary>
+public class GetApplicationsQueryDto
+{
+    /// <summary>Filter by candidate name (partial match).</summary>
+    public string?   CandidateName { get; init; }
+
+    /// <summary>Filter by job ID.</summary>
+    public int?      JobId         { get; init; }
+
+    /// <summary>Filter by category ID (via Job.CategoryId).</summary>
+    public int?      CategoryId    { get; init; }
+
+    /// <summary>Filter by application status ID.</summary>
+    public int?      StatusId      { get; init; }
+
+    /// <summary>Filter by hiring date — from (inclusive).</summary>
+    public DateTime? DateFrom      { get; init; }
+
+    /// <summary>Filter by hiring date — to (inclusive).</summary>
+    public DateTime? DateTo        { get; init; }
+
+    /// <summary>Page number (1-based). Defaults to 1.</summary>
+    public int       Page          { get; init; } = 1;
+
+    /// <summary>Number of items per page. Defaults to 10.</summary>
+    public int       PageSize      { get; init; } = 10;
 }

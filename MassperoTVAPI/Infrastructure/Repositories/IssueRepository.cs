@@ -1,6 +1,7 @@
 using MassperoTV.Infrastructure.Repositories;
 using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Core.Interfaces.Repositories;
+using MassperoTVAPI.Core.Enums;
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,7 @@ public class IssueRepository : GenericRepository<Issue>, IIssueRepository
             .AsNoTracking()
             .ToListAsync();
 
-    public async Task<IEnumerable<Issue>> GetAllWithDetailsAsync(int? processId, DateTime? date, bool? resolved)
+    public async Task<IEnumerable<Issue>> GetAllWithDetailsAsync(int? processId, DateTime? date, bool? resolved, string? name = null, IssuePriority? priority = null)
     {
         var query = _context.Issues
             .Include(i => i.Process)
@@ -34,6 +35,12 @@ public class IssueRepository : GenericRepository<Issue>, IIssueRepository
 
         if (resolved.HasValue)
             query = query.Where(i => i.Resolved == resolved.Value);
+
+        if (!string.IsNullOrWhiteSpace(name))
+            query = query.Where(i => i.Name.Contains(name));
+
+        if (priority.HasValue)
+            query = query.Where(i => i.Priority == priority.Value);
 
         return await query.ToListAsync();
     }

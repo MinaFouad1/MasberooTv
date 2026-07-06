@@ -166,10 +166,10 @@ public class DashboardController : ControllerBase
                 string.Equals(i.Type?.Name, "Technical", StringComparison.OrdinalIgnoreCase)));
 
         var offersSent = candidates.Count(c =>
-            string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.Status?.Name, "Offered", StringComparison.OrdinalIgnoreCase));
 
         var offersAccepted = candidates.Count(c =>
-            string.Equals(c.Status?.Name, "On Board", StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.Status?.Name, "Contracted", StringComparison.OrdinalIgnoreCase));
 
         var hired = candidates.Count(c =>
             string.Equals(c.Status?.Name, "In Production", StringComparison.OrdinalIgnoreCase));

@@ -3439,23 +3439,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Edgecom\\.nuget\\packages\\": {},
+    "C:\\Users\\Mina\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj",
+      "projectUniqueName": "D:\\Projects\\Masberorr\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj",
       "projectName": "MassperoTVAPI",
-      "projectPath": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj",
-      "packagesPath": "C:\\Users\\Edgecom\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\obj\\",
+      "projectPath": "D:\\Projects\\Masberorr\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj",
+      "packagesPath": "C:\\Users\\Mina\\.nuget\\packages\\",
+      "outputPath": "D:\\Projects\\Masberorr\\MasberooTv\\MassperoTVAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Edgecom\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Mina\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

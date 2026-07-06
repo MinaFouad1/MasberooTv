@@ -51,11 +51,16 @@ public class JobsController : ControllerBase
             j.Candidates.Count(c =>
                 string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase)));
 
+        var offersAccepted = jobs.Sum(j =>
+            j.Candidates.Count(c =>
+                string.Equals(c.Status?.Name, "In Production", StringComparison.OrdinalIgnoreCase)));
+
         return Ok(ApiResponse<JobStatisticsDto>.SuccessResponse(new JobStatisticsDto(
             TotalJobs:     totalJobs,
             OpenPositions: openPositions,
             Applications:  applications,
-            OffersSent:    offersSent
+            OffersSent:    offersSent,
+            OffersAccepted: offersAccepted
         )));
     }
 

@@ -16,12 +16,13 @@
         <member name="M:MassperoTVAPI.Controllers.AuthController.UpdateProfile(MassperoTVAPI.Core.DTOs.UpdateProfileDto)">
             <summary>Update current authenticated user's profile.</summary>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetAll(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
-            <summary>List all candidates with optional filters by name, status, or job.</summary>
-            <param name="name">Optional. Filter by candidate name (contains).</param>
-            <param name="statusId">Optional. Filter by application status ID.</param>
-            <param name="jobId">Optional. Filter by job ID.</param>
-            <returns>Filtered list of candidates with full details.</returns>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetAll(MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto)">
+            <summary>
+            List candidates (applications) with optional filters and pagination.
+            Filters: candidateName, jobId, categoryId, statusId, dateFrom (HiringDate), dateTo (HiringDate).
+            </summary>
+            <param name="query">Search and pagination parameters.</param>
+            <returns>Paged list of candidates with full details including HR/Technical scores.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetById(System.Int32)">
             <summary>Get a single candidate by ID with full details.</summary>
@@ -155,12 +156,18 @@
             <param name="id">Interview ID.</param>
             <returns>Success status.</returns>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.IssuesController.GetAll(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.Boolean})">
-            <summary>List all issues with optional filters by process ID, date, or resolved status.</summary>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.GetAll(System.String,System.Nullable{MassperoTVAPI.Core.Enums.IssuePriority},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.Boolean})">
+            <summary>List all issues with optional filters by name, priority, process ID, date, or resolved status.</summary>
+            <param name="name">Optional. Filter by issue/risk name.</param>
+            <param name="priority">Optional. Filter by priority.</param>
             <param name="processId">Optional. Filter by process ID.</param>
             <param name="date">Optional. Filter by issue date.</param>
             <param name="resolved">Optional. Filter by resolved/unresolved status.</param>
-            <returns>Filtered list of issues.</returns>
+            <returns>Filtered list of risks.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.GetStatistics">
+            <summary>Get statistics for all risks/issues including total count and percentages by priority.</summary>
+            <returns>Statistics object with counts and percentages.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.IssuesController.GetById(System.Int32)">
             <summary>Get a single issue by ID.</summary>
@@ -413,6 +420,39 @@
         <member name="T:MassperoTVAPI.Core.DTOs.PatchInterviewGradeDto">
             <summary>PATCH body to update the grade (and optionally comments) of an interview.</summary>
         </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.PagedResult`1">
+            <summary>Generic paged result returned by list endpoints that support pagination.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.DTOs.PagedResult`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>Generic paged result returned by list endpoints that support pagination.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto">
+            <summary>Query parameters for searching/filtering candidates (applications) with pagination.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.CandidateName">
+            <summary>Filter by candidate name (partial match).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.JobId">
+            <summary>Filter by job ID.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.CategoryId">
+            <summary>Filter by category ID (via Job.CategoryId).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.StatusId">
+            <summary>Filter by application status ID.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.DateFrom">
+            <summary>Filter by hiring date — from (inclusive).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.DateTo">
+            <summary>Filter by hiring date — to (inclusive).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.Page">
+            <summary>Page number (1-based). Defaults to 1.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.PageSize">
+            <summary>Number of items per page. Defaults to 10.</summary>
+        </member>
         <member name="T:MassperoTVAPI.Core.DTOs.ProcessDependencyDto">
             <summary>
             Payload for PATCH /api/processes/{id}/dependencies.
@@ -468,6 +508,12 @@
         <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetAllAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>Get all candidates with optional filters. Includes Job, Status, SecurityClearance, User.</summary>
         </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetPagedAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Int32)">
+            <summary>
+            Get a paged + filtered list of candidates.
+            Includes Job (with Category), Status, SecurityClearance, User, and Interviews (with Type).
+            </summary>
+        </member>
         <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetByIdWithDetailsAsync(System.Int32)">
             <summary>Get a candidate by ID with all related entities included.</summary>
         </member>
@@ -487,6 +533,12 @@
         </member>
         <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IProcessRepository.GetAllWithDetailsAsync">
             <summary>Gets all processes with Phase, ProcessStatus, and Issues eagerly loaded.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Mappers.CandidateMapper.GetScoreByType(System.Collections.Generic.ICollection{MassperoTVAPI.Core.Entities.Interview},System.String)">
+            <summary>
+            Returns the grade of the first interview whose type name contains the given keyword
+            (case-insensitive). Returns null if no matching interview exists.
+            </summary>
         </member>
         <member name="M:MassperoTVAPI.Extensions.RoleSeeder.SeedRolesAsync(System.IServiceProvider)">
             <summary>
@@ -633,6 +685,18 @@
             <inheritdoc />
         </member>
         <member name="M:MassperoTVAPI.Migrations.IssuePriority_StringToInt.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddHiringDateToCandidate">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddHiringDateToCandidate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddHiringDateToCandidate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddHiringDateToCandidate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="F:MassperoTVAPI.Services.FileUploadService.AllowedExtensions">

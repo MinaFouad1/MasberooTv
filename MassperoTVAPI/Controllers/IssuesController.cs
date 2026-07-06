@@ -3,6 +3,7 @@ using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Core.Helpers;
 using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Mappers;
+using MassperoTVAPI.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,20 +18,48 @@ public class IssuesController : ControllerBase
 
     public IssuesController(IUnitOfWork uow) => _uow = uow;
 
-    /// <summary>List all issues with optional filters by process ID, date, or resolved status.</summary>
+    /// <summary>List all issues with optional filters by name, priority, process ID, date, or resolved status.</summary>
+    /// <param name="name">Optional. Filter by issue/risk name.</param>
+    /// <param name="priority">Optional. Filter by priority.</param>
     /// <param name="processId">Optional. Filter by process ID.</param>
     /// <param name="date">Optional. Filter by issue date.</param>
     /// <param name="resolved">Optional. Filter by resolved/unresolved status.</param>
-    /// <returns>Filtered list of issues.</returns>
+    /// <returns>Filtered list of risks.</returns>
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<IEnumerable<IssueDetailDto>>>> GetAll(
+    public async Task<ActionResult<ApiResponse<IEnumerable<RiskResponseDto>>>> GetAll(
+        [FromQuery] string? name,
+        [FromQuery] IssuePriority? priority,
         [FromQuery] int? processId,
         [FromQuery] DateTime? date,
         [FromQuery] bool? resolved)
     {
-        var list = await _uow.Issues.GetAllWithDetailsAsync(processId, date, resolved);
-        return Ok(ApiResponse<IEnumerable<IssueDetailDto>>.SuccessResponse(
-            list.Select(i => i.ToDto())));
+        var list = await _uow.Issues.GetAllWithDetailsAsync(processId, date, resolved, name, priority);
+        return Ok(ApiResponse<IEnumerable<RiskResponseDto>>.SuccessResponse(
+            list.Select(i => i.ToRiskResponseDto())));
+    }
+
+    /// <summary>Get statistics for all risks/issues including total count and percentages by priority.</summary>
+    /// <returns>Statistics object with counts and percentages.</returns>
+    [HttpGet("statistics")]
+    public async Task<ActionResult<ApiResponse<RiskStatisticsDto>>> GetStatistics()
+    {
+        var issues = await _uow.Issues.GetAllWithDetailsAsync();
+        var total = issues.Count();
+        
+        var criticalCount = issues.Count(i => i.Priority == IssuePriority.Critical);
+        var highCount = issues.Count(i => i.Priority == IssuePriority.High);
+        var mediumCount = issues.Count(i => i.Priority == IssuePriority.Medium);
+        var lowCount = issues.Count(i => i.Priority == IssuePriority.Low);
+
+        var stats = new RiskStatisticsDto(
+            total,
+            new RiskPriorityStatDto(criticalCount, total > 0 ? (decimal)criticalCount / total * 100 : 0),
+            new RiskPriorityStatDto(highCount, total > 0 ? (decimal)highCount / total * 100 : 0),
+            new RiskPriorityStatDto(mediumCount, total > 0 ? (decimal)mediumCount / total * 100 : 0),
+            new RiskPriorityStatDto(lowCount, total > 0 ? (decimal)lowCount / total * 100 : 0)
+        );
+
+        return Ok(ApiResponse<RiskStatisticsDto>.SuccessResponse(stats));
     }
 
     /// <summary>Get a single issue by ID.</summary>

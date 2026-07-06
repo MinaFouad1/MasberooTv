@@ -27,21 +27,40 @@ public class CandidatesController : ControllerBase
         _fileUploadService = fileUploadService;
     }
 
-    /// <summary>List all candidates with optional filters by name, status, or job.</summary>
-    /// <param name="name">Optional. Filter by candidate name (contains).</param>
-    /// <param name="statusId">Optional. Filter by application status ID.</param>
-    /// <param name="jobId">Optional. Filter by job ID.</param>
-    /// <returns>Filtered list of candidates with full details.</returns>
+    /// <summary>
+    /// List candidates (applications) with optional filters and pagination.
+    /// Filters: candidateName, jobId, categoryId, statusId, dateFrom (HiringDate), dateTo (HiringDate).
+    /// </summary>
+    /// <param name="query">Search and pagination parameters.</param>
+    /// <returns>Paged list of candidates with full details including HR/Technical scores.</returns>
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<IEnumerable<CandidateDto>>>> GetAll(
-        [FromQuery] string? name,
-        [FromQuery] int?    statusId,
-        [FromQuery] int?    jobId)
+    public async Task<ActionResult<ApiResponse<PagedResult<CandidateDto>>>> GetAll(
+        [FromQuery] GetApplicationsQueryDto query)
     {
-        var list = await _uow.Candidates.GetAllAsync(name, statusId, jobId);
-        var cvBaseUrl = await GetCvBaseUrlAsync();
-        return Ok(ApiResponse<IEnumerable<CandidateDto>>.SuccessResponse(
-            list.Select(c => c.ToDto(cvBaseUrl))));
+        var safePage     = Math.Max(1, query.Page);
+        var safePageSize = Math.Clamp(query.PageSize, 1, 100);
+
+        var (items, totalCount) = await _uow.Candidates.GetPagedAsync(
+            query.CandidateName,
+            query.JobId,
+            query.CategoryId,
+            query.StatusId,
+            query.DateFrom,
+            query.DateTo,
+            safePage,
+            safePageSize);
+
+        var cvBaseUrl  = await GetCvBaseUrlAsync();
+        var totalPages = (int)Math.Ceiling(totalCount / (double)safePageSize);
+
+        var result = new PagedResult<CandidateDto>(
+            items.Select(c => c.ToDto(cvBaseUrl)),
+            totalCount,
+            safePage,
+            safePageSize,
+            totalPages);
+
+        return Ok(ApiResponse<PagedResult<CandidateDto>>.SuccessResponse(result));
     }
 
     /// <summary>Get a single candidate by ID with full details.</summary>

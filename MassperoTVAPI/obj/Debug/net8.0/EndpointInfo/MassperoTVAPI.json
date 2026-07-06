@@ -312,29 +312,74 @@
         "tags": [
           "Candidates"
         ],
-        "summary": "List all candidates with optional filters by name, status, or job.",
+        "summary": "List candidates (applications) with optional filters and pagination.\r\nFilters: candidateName, jobId, categoryId, statusId, dateFrom (HiringDate), dateTo (HiringDate).",
         "parameters": [
           {
-            "name": "name",
+            "name": "CandidateName",
             "in": "query",
-            "description": "Optional. Filter by candidate name (contains).",
+            "description": "Filter by candidate name (partial match).",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "statusId",
+            "name": "JobId",
             "in": "query",
-            "description": "Optional. Filter by application status ID.",
+            "description": "Filter by job ID.",
             "schema": {
               "type": "integer",
               "format": "int32"
             }
           },
           {
-            "name": "jobId",
+            "name": "CategoryId",
             "in": "query",
-            "description": "Optional. Filter by job ID.",
+            "description": "Filter by category ID (via Job.CategoryId).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "StatusId",
+            "in": "query",
+            "description": "Filter by application status ID.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "DateFrom",
+            "in": "query",
+            "description": "Filter by hiring date — from (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "DateTo",
+            "in": "query",
+            "description": "Filter by hiring date — to (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "Page number (1-based). Defaults to 1.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page. Defaults to 10.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -347,17 +392,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/CandidateDtoPagedResultApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/CandidateDtoPagedResultApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/CandidateDtoPagedResultApiResponse"
                 }
               }
             }
@@ -1536,8 +1581,24 @@
         "tags": [
           "Issues"
         ],
-        "summary": "List all issues with optional filters by process ID, date, or resolved status.",
+        "summary": "List all issues with optional filters by name, priority, process ID, date, or resolved status.",
         "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Optional. Filter by issue/risk name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "description": "Optional. Filter by priority.",
+            "schema": {
+              "$ref": "#/components/schemas/IssuePriority"
+            }
+          },
           {
             "name": "processId",
             "in": "query",
@@ -1571,17 +1632,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/IssueDetailDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/RiskResponseDtoIEnumerableApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IssueDetailDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/RiskResponseDtoIEnumerableApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IssueDetailDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/RiskResponseDtoIEnumerableApiResponse"
                 }
               }
             }
@@ -1630,6 +1691,36 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IssueDetailDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Issues/statistics": {
+      "get": {
+        "tags": [
+          "Issues"
+        ],
+        "summary": "Get statistics for all risks/issues including total count and percentages by priority.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskStatisticsDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskStatisticsDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskStatisticsDtoApiResponse"
                 }
               }
             }
@@ -4453,6 +4544,14 @@
             "type": "string",
             "nullable": true
           },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
           "statusId": {
             "type": "integer",
             "format": "int32"
@@ -4474,6 +4573,19 @@
             "nullable": true
           },
           "applicationUserName": {
+            "type": "string",
+            "nullable": true
+          },
+          "hiringDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hrScore": {
+            "type": "string",
+            "nullable": true
+          },
+          "technicalScore": {
             "type": "string",
             "nullable": true
           }
@@ -4507,7 +4619,37 @@
         },
         "additionalProperties": false
       },
-      "CandidateDtoIEnumerableApiResponse": {
+      "CandidateDtoPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CandidateDto"
+            },
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Generic paged result returned by list endpoints that support pagination."
+      },
+      "CandidateDtoPagedResultApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -4518,11 +4660,7 @@
             "nullable": true
           },
           "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CandidateDto"
-            },
-            "nullable": true
+            "$ref": "#/components/schemas/CandidateDtoPagedResult"
           },
           "statusCode": {
             "type": "integer",
@@ -5413,6 +5551,10 @@
             "format": "int32"
           },
           "offersSent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offersAccepted": {
             "type": "integer",
             "format": "int32"
           }
@@ -6400,6 +6542,127 @@
               "$ref": "#/components/schemas/RiskIssueDto"
             },
             "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RiskPriorityStatDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "percentage": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RiskResponseDto": {
+        "type": "object",
+        "properties": {
+          "riskId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "riskTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RiskResponseDtoIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RiskResponseDto"
+            },
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RiskStatisticsDto": {
+        "type": "object",
+        "properties": {
+          "totalRisks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "critical": {
+            "$ref": "#/components/schemas/RiskPriorityStatDto"
+          },
+          "high": {
+            "$ref": "#/components/schemas/RiskPriorityStatDto"
+          },
+          "medium": {
+            "$ref": "#/components/schemas/RiskPriorityStatDto"
+          },
+          "low": {
+            "$ref": "#/components/schemas/RiskPriorityStatDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RiskStatisticsDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/RiskStatisticsDto"
           },
           "statusCode": {
             "type": "integer",

@@ -8,6 +8,7 @@ public class Candidate
     public string? ReasonOfAccept { get; set; }
     public string? ReasonOfReject { get; set; }
     public bool? Accepted { get; set; }
+    public DateTime? HiringDate { get; set; }
 
     // FK → Job
     public int JobId { get; set; }
