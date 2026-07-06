@@ -1,3 +1,5 @@
+using MassperoTVAPI.Core.Enums;
+
 namespace MassperoTVAPI.Core.Entities;
 
 public class Issue
@@ -7,7 +9,7 @@ public class Issue
 
     public bool? Resolved { get; set; } = false;
 
-    public string? Priority { get; set; }
+    public IssuePriority? Priority { get; set; }
     public DateTime? Date { get; set; } = DateTime.UtcNow;
 
     // FK → Process

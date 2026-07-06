@@ -95,7 +95,7 @@
             <returns>Process statistics data.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.DashboardController.GetIssueStatistics">
-            <summary>Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status and process.</summary>
+            <summary>Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status, process, and priority.</summary>
             <returns>Issue statistics data.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.DashboardController.GetPhaseStatistics">
@@ -110,9 +110,11 @@
             <summary>Job status: each job with its title, number of open positions, and count of applicants.</summary>
             <returns>List of job status entries.</returns>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetRiskIssues">
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetRiskIssues(System.Nullable{MassperoTVAPI.Core.Enums.IssuePriority},System.Nullable{System.Boolean})">
             <summary>Risk management issues: list of all issues with their name, priority, and resolved status.</summary>
-            <returns>List of risk issues.</returns>
+            <param name="priority">Optional. Filter by priority level (1=Low, 2=Medium, 3=High, 4=Critical).</param>
+            <param name="resolved">Optional. Filter by resolved status.</param>
+            <returns>List of risk issues ordered by priority descending (Critical first).</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.ImportController.ImportCandidates(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>Import candidates from an Excel (.xlsx) or CSV file. Each imported candidate gets the default Pending process status and is logged.</summary>
@@ -447,6 +449,12 @@
         <member name="P:MassperoTVAPI.Core.Entities.ProcessDependency.DependsOnProcessId">
             <summary>The process that must be completed first.</summary>
         </member>
+        <member name="T:MassperoTVAPI.Core.Enums.IssuePriority">
+            <summary>
+            Represents the priority level of an issue.
+            Stored as int in the database.
+            </summary>
+        </member>
         <member name="M:MassperoTVAPI.Core.Interfaces.IEmailService.SendAsync(System.String,System.String,System.String,System.String)">
             <summary>
             Send a plain-text or HTML email.
@@ -613,6 +621,18 @@
             <inheritdoc />
         </member>
         <member name="M:MassperoTVAPI.Migrations.AddJobLocationAndEmploymentType.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.IssuePriority_StringToInt">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.IssuePriority_StringToInt.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.IssuePriority_StringToInt.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.IssuePriority_StringToInt.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="F:MassperoTVAPI.Services.FileUploadService.AllowedExtensions">

@@ -9,6 +9,7 @@ public static class IssueMapper
         i.Id, i.Name,
         i.Resolved,
         i.Date,
+        i.Priority,
         i.ProcessId, i.Process?.Name ?? string.Empty
     );
 }

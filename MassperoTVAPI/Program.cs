@@ -15,7 +15,10 @@ builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
 
 // ─── Controllers ──────────────────────────────────────────────────────────────
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+        opts.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter()));
 
 // ─── Swagger with JWT bearer support ──────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();

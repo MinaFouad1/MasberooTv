@@ -1,5 +1,6 @@
 using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Entities;
+using MassperoTVAPI.Core.Enums;
 using MassperoTVAPI.Core.Helpers;
 using MassperoTVAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -102,25 +103,29 @@ public class DashboardController : ControllerBase
         return Ok(ApiResponse<ProcessStatisticsDto>.SuccessResponse(data));
     }
 
-    /// <summary>Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status and process.</summary>
+    /// <summary>Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status, process, and priority.</summary>
     /// <returns>Issue statistics data.</returns>
     [HttpGet("issue-statistics")]
     [Authorize(Roles = "Admin,HR,Client")]
     public async Task<ActionResult<ApiResponse<IssueStatisticsDto>>> GetIssueStatistics()
     {
         var issues = (await _uow.Issues.GetAllWithDetailsAsync()).ToList();
-        var resolvedIssues = issues.Count(i => i.Resolved == true);
+        var resolvedIssues   = issues.Count(i => i.Resolved == true);
         var unresolvedIssues = issues.Count - resolvedIssues;
 
         var data = new IssueStatisticsDto(
-            TotalIssues: issues.Count,
-            ResolvedIssues: resolvedIssues,
+            TotalIssues:      issues.Count,
+            ResolvedIssues:   resolvedIssues,
             UnresolvedIssues: unresolvedIssues,
             ByResolvedStatus: issues
                 .GroupBy(i => i.Resolved == true ? "Resolved" : "Unresolved")
                 .Select(g => new StatusCountDto(g.Key, g.Count())),
             ByProcess: issues
                 .GroupBy(i => i.Process?.Name ?? "Unknown")
+                .Select(g => new StatusCountDto(g.Key, g.Count())),
+            ByPriority: issues
+                .GroupBy(i => i.Priority.HasValue ? i.Priority.Value.ToString() : "None")
+                .OrderBy(g => g.Key)
                 .Select(g => new StatusCountDto(g.Key, g.Count()))
         );
 
@@ -197,19 +202,31 @@ public class DashboardController : ControllerBase
     }
 
     /// <summary>Risk management issues: list of all issues with their name, priority, and resolved status.</summary>
-    /// <returns>List of risk issues.</returns>
+    /// <param name="priority">Optional. Filter by priority level (1=Low, 2=Medium, 3=High, 4=Critical).</param>
+    /// <param name="resolved">Optional. Filter by resolved status.</param>
+    /// <returns>List of risk issues ordered by priority descending (Critical first).</returns>
     [HttpGet("risk-issues")]
     [Authorize(Roles = "Admin,HR,Client")]
-    public async Task<ActionResult<ApiResponse<IEnumerable<RiskIssueDto>>>> GetRiskIssues()
+    public async Task<ActionResult<ApiResponse<IEnumerable<RiskIssueDto>>>> GetRiskIssues(
+        [FromQuery] IssuePriority? priority,
+        [FromQuery] bool? resolved)
     {
         var issues = (await _uow.Issues.GetAllWithDetailsAsync()).ToList();
 
-        var result = issues.Select(i => new RiskIssueDto(
-            Id:        i.Id,
-            IssueName: i.Name,
-            Priority:  i.Priority,
-            Resolved:  i.Resolved
-        ));
+        if (priority.HasValue)
+            issues = issues.Where(i => i.Priority == priority.Value).ToList();
+
+        if (resolved.HasValue)
+            issues = issues.Where(i => i.Resolved == resolved.Value).ToList();
+
+        var result = issues
+            .OrderByDescending(i => i.Priority)
+            .Select(i => new RiskIssueDto(
+                Id:        i.Id,
+                IssueName: i.Name,
+                Priority:  i.Priority,
+                Resolved:  i.Resolved
+            ));
 
         return Ok(ApiResponse<IEnumerable<RiskIssueDto>>.SuccessResponse(result));
     }

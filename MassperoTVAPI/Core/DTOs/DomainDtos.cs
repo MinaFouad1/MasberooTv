@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using MassperoTVAPI.Core.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace MassperoTVAPI.Core.DTOs;
@@ -171,22 +172,25 @@ public record IssueDetailDto(
     string Name,
     bool? Resolved,
     DateTime? Date,
+    IssuePriority? Priority,
     int ProcessId,
     string ProcessName
 );
 public record CreateIssueDto
 {
-    [Required] [MaxLength(300)] public string Name      { get; init; } = string.Empty;
-    [Required]                  public int    ProcessId { get; init; }
-    public bool? Resolved { get; init; }
-    public DateTime? Date { get; init; }
+    [Required] [MaxLength(300)] public string         Name      { get; init; } = string.Empty;
+    [Required]                  public int            ProcessId { get; init; }
+    public bool?          Resolved  { get; init; }
+    public DateTime?      Date      { get; init; }
+    public IssuePriority? Priority  { get; init; }
 }
 public record UpdateIssueDto
 {
-    [Required] [MaxLength(300)] public string Name      { get; init; } = string.Empty;
-    [Required]                  public int    ProcessId { get; init; }
-    public bool? Resolved { get; init; }
-    public DateTime? Date { get; init; }
+    [Required] [MaxLength(300)] public string         Name      { get; init; } = string.Empty;
+    [Required]                  public int            ProcessId { get; init; }
+    public bool?          Resolved  { get; init; }
+    public DateTime?      Date      { get; init; }
+    public IssuePriority? Priority  { get; init; }
 }
 public record PatchIssueResolvedDto
 {
@@ -301,7 +305,8 @@ public record IssueStatisticsDto(
     int ResolvedIssues,
     int UnresolvedIssues,
     IEnumerable<StatusCountDto> ByResolvedStatus,
-    IEnumerable<StatusCountDto> ByProcess
+    IEnumerable<StatusCountDto> ByProcess,
+    IEnumerable<StatusCountDto> ByPriority
 );
 
 public record PhaseStatisticsDto(
@@ -328,10 +333,10 @@ public record JobStatusDto(
 
 // ── Risk Management Issues (Dashboard) ───────────────────────────────────────
 public record RiskIssueDto(
-    int     Id,
-    string  IssueName,
-    string? Priority,
-    bool?   Resolved
+    int            Id,
+    string         IssueName,
+    IssuePriority? Priority,
+    bool?          Resolved
 );
 
 // ── Job Statistics ────────────────────────────────────────────────────────────

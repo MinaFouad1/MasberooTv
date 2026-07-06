@@ -1021,7 +1021,7 @@
         "tags": [
           "Dashboard"
         ],
-        "summary": "Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status and process.",
+        "summary": "Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status, process, and priority.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1142,6 +1142,24 @@
           "Dashboard"
         ],
         "summary": "Risk management issues: list of all issues with their name, priority, and resolved status.",
+        "parameters": [
+          {
+            "name": "priority",
+            "in": "query",
+            "description": "Optional. Filter by priority level (1=Low, 2=Medium, 3=High, 4=Critical).",
+            "schema": {
+              "$ref": "#/components/schemas/IssuePriority"
+            }
+          },
+          {
+            "name": "resolved",
+            "in": "query",
+            "description": "Optional. Filter by resolved status.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1853,7 +1871,7 @@
         "tags": [
           "Jobs"
         ],
-        "summary": "List all jobs with their category names. Optionally filter by title, category, or creation date.",
+        "summary": "List all jobs with their category names. Optionally filter by title, category, creation date, or location.",
         "parameters": [
           {
             "name": "search",
@@ -1879,6 +1897,15 @@
             "schema": {
               "type": "string",
               "format": "date-time"
+            }
+          },
+          {
+            "name": "locationId",
+            "in": "query",
+            "description": "Optional location ID filter.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -4687,6 +4714,9 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "priority": {
+            "$ref": "#/components/schemas/IssuePriority"
           }
         },
         "additionalProperties": false
@@ -5087,6 +5117,9 @@
             "format": "date-time",
             "nullable": true
           },
+          "priority": {
+            "$ref": "#/components/schemas/IssuePriority"
+          },
           "processId": {
             "type": "integer",
             "format": "int32"
@@ -5170,6 +5203,16 @@
         },
         "additionalProperties": false
       },
+      "IssuePriority": {
+        "enum": [
+          "Low",
+          "Medium",
+          "High",
+          "Critical"
+        ],
+        "type": "string",
+        "description": "Represents the priority level of an issue.\r\nStored as int in the database."
+      },
       "IssueStatisticsDto": {
         "type": "object",
         "properties": {
@@ -5193,6 +5236,13 @@
             "nullable": true
           },
           "byProcess": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusCountDto"
+            },
+            "nullable": true
+          },
+          "byPriority": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/StatusCountDto"
@@ -5277,6 +5327,14 @@
           "locationName": {
             "type": "string",
             "nullable": true
+          },
+          "applicants": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "interviews": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -6317,8 +6375,7 @@
             "nullable": true
           },
           "priority": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/IssuePriority"
           },
           "resolved": {
             "type": "boolean",
@@ -6640,6 +6697,9 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "priority": {
+            "$ref": "#/components/schemas/IssuePriority"
           }
         },
         "additionalProperties": false

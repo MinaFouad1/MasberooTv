@@ -72,7 +72,8 @@ public class IssuesController : ControllerBase
             Name = dto.Name,
             ProcessId = dto.ProcessId,
             Resolved = dto.Resolved ?? false,
-            Date = dto.Date ?? DateTime.UtcNow
+            Date = dto.Date ?? DateTime.UtcNow,
+            Priority = dto.Priority
         };
         await _uow.Issues.AddAsync(entity);
         await _uow.SaveChangesAsync();
@@ -101,6 +102,7 @@ public class IssuesController : ControllerBase
         entity.ProcessId = dto.ProcessId;
         entity.Resolved  = dto.Resolved ?? entity.Resolved;
         entity.Date      = dto.Date ?? entity.Date;
+        entity.Priority  = dto.Priority ?? entity.Priority;
 
         _uow.Issues.Update(entity);
         await _uow.SaveChangesAsync();
