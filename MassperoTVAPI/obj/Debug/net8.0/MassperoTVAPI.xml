@@ -97,9 +97,9 @@
             Builds the 6-step pipeline list from the candidate and their offers.
             </summary>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.CategoriesController.GetAll">
-            <summary>Retrieve all job categories.</summary>
-            <returns>List of categories.</returns>
+        <member name="M:MassperoTVAPI.Controllers.CategoriesController.GetAll(MassperoTVAPI.Core.DTOs.GetCategoriesQueryDto)">
+            <summary>Retrieve all job categories with pagination and filtering.</summary>
+            <returns>Paged list of categories.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CategoriesController.GetById(System.Int32)">
             <summary>Get a single category by ID.</summary>
@@ -558,6 +558,21 @@
         <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.PageSize">
             <summary>Number of items per page. Defaults to 10.</summary>
         </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.GetCategoriesQueryDto">
+            <summary>Query parameters for searching/filtering categories with pagination.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetCategoriesQueryDto.CategoryName">
+            <summary>Filter by category name (partial match).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetCategoriesQueryDto.IsActive">
+            <summary>Filter by active status.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetCategoriesQueryDto.Page">
+            <summary>Page number (1-based). Defaults to 1.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetCategoriesQueryDto.PageSize">
+            <summary>Number of items per page. Defaults to 10.</summary>
+        </member>
         <member name="T:MassperoTVAPI.Core.DTOs.OfferDto">
             <summary>Full offer details — used for list rows and offer preview.</summary>
         </member>
@@ -988,6 +1003,18 @@
             <inheritdoc />
         </member>
         <member name="M:MassperoTVAPI.Migrations.AddCandidateProfileConfig.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.Cateogry">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Cateogry.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Cateogry.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Cateogry.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="F:MassperoTVAPI.Services.FileUploadService.AllowedExtensions">

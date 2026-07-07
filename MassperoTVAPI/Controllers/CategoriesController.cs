@@ -17,14 +17,23 @@ public class CategoriesController : ControllerBase
      
     public CategoriesController(IUnitOfWork uow) => _uow = uow;
 
-    /// <summary>Retrieve all job categories.</summary>
-    /// <returns>List of categories.</returns>
+    /// <summary>Retrieve all job categories with pagination and filtering.</summary>
+    /// <returns>Paged list of categories.</returns>
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<IEnumerable<CategoryDto>>>> GetAll()
+    public async Task<ActionResult<ApiResponse<PagedResult<CategoryDto>>>> GetAll([FromQuery] GetCategoriesQueryDto query)
     {
-        var list = await _uow.Categories.GetAllAsync();
-        return Ok(ApiResponse<IEnumerable<CategoryDto>>.SuccessResponse(
-            list.Select(c => c.ToDto())));
+        var pagedList = await _uow.Categories.GetPagedAsync(query);
+        
+        var dtoItems = pagedList.Items.Select(c => c.ToDto()).ToList();
+        var result = new PagedResult<CategoryDto>(
+            dtoItems,
+            pagedList.TotalCount,
+            pagedList.Page,
+            pagedList.PageSize,
+            pagedList.TotalPages
+        );
+
+        return Ok(ApiResponse<PagedResult<CategoryDto>>.SuccessResponse(result));
     }
 
     /// <summary>Get a single category by ID.</summary>
@@ -47,7 +56,12 @@ public class CategoriesController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ApiResponse<CategoryDto>.ErrorResponse("Validation failed."));
 
-        var entity = new Category { Name = dto.Name };
+        var entity = new Category 
+        { 
+            Name = dto.Name,
+            CategoryCode = dto.CategoryCode,
+            IsActive = dto.IsActive
+        };
         await _uow.Categories.AddAsync(entity);
         await _uow.SaveChangesAsync();
 
@@ -68,6 +82,8 @@ public class CategoriesController : ControllerBase
         if (entity is null) return NotFound(ApiResponse<CategoryDto>.NotFoundResponse());
 
         entity.Name = dto.Name;
+        entity.CategoryCode = dto.CategoryCode;
+        entity.IsActive = dto.IsActive;
         _uow.Categories.Update(entity);
         await _uow.SaveChangesAsync();
 

@@ -27,14 +27,27 @@ public record UpdateStatusDto
 }
 
 // ── Category ──────────────────────────────────────────────────────────────────
-public record CategoryDto(int Id, string Name);
+public record CategoryDto(
+    int Id,
+    string Name,
+    string? CategoryCode,
+    bool IsActive,
+    DateTime CreatedAt,
+    int JobsCount
+);
+
 public record CreateCategoryDto
 {
     [Required] [MaxLength(150)] public string Name { get; init; } = string.Empty;
+    [MaxLength(50)] public string? CategoryCode { get; init; }
+    public bool IsActive { get; init; } = true;
 }
+
 public record UpdateCategoryDto
 {
     [Required] [MaxLength(150)] public string Name { get; init; } = string.Empty;
+    [MaxLength(50)] public string? CategoryCode { get; init; }
+    public bool IsActive { get; init; } = true;
 }
 
 // ── InterviewType ─────────────────────────────────────────────────────────────
@@ -501,6 +514,22 @@ public class GetApplicationsQueryDto
 
     /// <summary>Number of items per page. Defaults to 10.</summary>
     public int       PageSize      { get; init; } = 10;
+}
+
+/// <summary>Query parameters for searching/filtering categories with pagination.</summary>
+public class GetCategoriesQueryDto
+{
+    /// <summary>Filter by category name (partial match).</summary>
+    public string?   CategoryName { get; init; }
+
+    /// <summary>Filter by active status.</summary>
+    public bool?     IsActive     { get; init; }
+
+    /// <summary>Page number (1-based). Defaults to 1.</summary>
+    public int       Page         { get; init; } = 1;
+
+    /// <summary>Number of items per page. Defaults to 10.</summary>
+    public int       PageSize     { get; init; } = 10;
 }
 
 // ── Offers ────────────────────────────────────────────────────────────────────

@@ -5,7 +5,14 @@ namespace MassperoTVAPI.Core.Mappers;
 
 public static class CategoryMapper
 {
-    public static CategoryDto ToDto(this Category c) => new(c.Id, c.Name);
+    public static CategoryDto ToDto(this Category c) => new(
+        c.Id, 
+        c.Name, 
+        c.CategoryCode, 
+        c.IsActive, 
+        c.CreatedAt, 
+        c.Jobs?.Count ?? 0
+    );
 
     //public static InterviewDto CV(this Interview x) => new(x.Id, x.Grade, x.Comments, x.CandidateId, null, x.TypeId, x.Type?.Name ?? string.Empty);
 
