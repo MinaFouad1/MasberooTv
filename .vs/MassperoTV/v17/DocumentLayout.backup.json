@@ -7,6 +7,18 @@
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\candidatescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\core\\dtos\\domaindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\core\\dtos\\domaindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\interviewscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\interviewscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,24 +27,12 @@
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\core\\entities\\candidate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\jobscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\jobscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\offerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\offerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\core\\dtos\\domaindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\core\\dtos\\domaindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -45,6 +45,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\issuescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\issuescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\migrations\\20260707091459_imageurl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\migrations\\20260707091459_imageurl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -75,19 +79,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "20260707091459_ImageUrl.cs",
-              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
-              "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
-              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
-              "RelativeToolTip": "MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "InterviewsController.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\InterviewsController.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\InterviewsController.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\InterviewsController.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Controllers\\InterviewsController.cs",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAAAHUAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T09:15:00.185Z",
+              "WhenOpened": "2026-07-07T12:39:29.945Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "Candidate.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Candidate.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\Candidate.cs",
@@ -95,8 +99,7 @@
               "RelativeToolTip": "MassperoTVAPI\\Core\\Entities\\Candidate.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T09:00:50.096Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-07T09:00:50.096Z"
             },
             {
               "$type": "Document",
@@ -106,7 +109,7 @@
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\CandidatesController.cs",
               "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\CandidatesController.cs",
               "RelativeToolTip": "MassperoTVAPI\\Controllers\\CandidatesController.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAowBEAAABAAAAAAAAAAA==",
+              "ViewState": "AgIAALsAAAAAAAAAAAAAANsAAABPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-07T08:59:00.723Z",
               "EditorCaption": ""
@@ -125,20 +128,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "DomainDtos.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\DTOs\\DomainDtos.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\DTOs\\DomainDtos.cs",
               "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\DTOs\\DomainDtos.cs",
               "RelativeToolTip": "MassperoTVAPI\\Core\\DTOs\\DomainDtos.cs",
-              "ViewState": "AgIAAKIBAAAAAAAAAAAiwKsBAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAJgBAAAAAAAAAAAqwKsBAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-06T16:41:12.159Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "JobsController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\JobsController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\JobsController.cs",
@@ -146,12 +149,11 @@
               "RelativeToolTip": "MassperoTVAPI\\Controllers\\JobsController.cs",
               "ViewState": "AgIAAHIAAAAAAAAAAAA4wKQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T16:40:07.897Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-06T16:40:07.897Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "DashboardController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\DashboardController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\DashboardController.cs",
@@ -159,8 +161,32 @@
               "RelativeToolTip": "MassperoTVAPI\\Controllers\\DashboardController.cs",
               "ViewState": "AgIAAJMAAAAAAAAAAAAmwKsAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T16:32:56.332Z",
+              "WhenOpened": "2026-07-06T16:32:56.332Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\appsettings.json",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\appsettings.json",
+              "RelativeToolTip": "MassperoTVAPI\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAB9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-06T16:33:29.589Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "20260707091459_ImageUrl.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T09:15:00.185Z"
             },
             {
               "$type": "Document",
@@ -172,12 +198,11 @@
               "RelativeToolTip": "MassperoTVAPI\\Migrations\\ApplicationDbContextModelSnapshot.cs",
               "ViewState": "AgIAACwBAAAAAAAAAAAAAFkBAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T08:30:47.118Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-07T08:30:47.118Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "OffersController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\OffersController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\OffersController.cs",
@@ -186,19 +211,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-07T08:33:46.992Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\appsettings.json",
-              "RelativeDocumentMoniker": "MassperoTVAPI\\appsettings.json",
-              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\appsettings.json",
-              "RelativeToolTip": "MassperoTVAPI\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAB9AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-07-06T16:33:29.589Z",
               "EditorCaption": ""
             },
             {

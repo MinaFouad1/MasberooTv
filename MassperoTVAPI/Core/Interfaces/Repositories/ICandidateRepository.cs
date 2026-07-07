@@ -26,4 +26,16 @@ public interface ICandidateRepository : IGenericRepository<Candidate>
 
     /// <summary>Get all candidates including their Interviews and InterviewType for funnel analytics.</summary>
     Task<IEnumerable<Candidate>> GetAllWithInterviewsAsync();
+
+    /// <summary>
+    /// Returns the ranking position of a candidate among all candidates for the same job,
+    /// ordered by overall interview score descending (rank 1 = highest scorer).
+    /// </summary>
+    Task<int> GetRankInJobAsync(int candidateId, int jobId);
+
+    /// <summary>
+    /// Returns all candidates for a specific job, ordered by their overall interview score descending.
+    /// Used for the Ranking Comparison UI.
+    /// </summary>
+    Task<IEnumerable<Candidate>> GetJobRankingAsync(int jobId);
 }

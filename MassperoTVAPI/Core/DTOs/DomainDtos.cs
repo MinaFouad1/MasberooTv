@@ -148,6 +148,87 @@ public record UpdateCandidateDto
     [Required]                  public int       JobId          { get; init; }
 }
 
+public record PatchCandidateInterviewGradeDto
+{
+    [Required]                  public string    InterviewType  { get; init; } = string.Empty; // e.g. "HR" or "Technical"
+    [MaxLength(50)]             public string?   Grade          { get; init; }
+    [MaxLength(2000)]           public string?   Comments       { get; init; }
+}
+
+// ── Candidate Detail (GET by ID) ──────────────────────────────────────────────
+
+public record CandidateRankingDto(
+    int       Rank,
+    int       CandidateId,
+    string    CandidateName,
+    string    CandidateCode,
+    string?   ProfileImage,
+    decimal?  OverallScore
+);
+
+/// <summary>Single interview summary used inside CandidateDetailDto.</summary>
+public record InterviewSummaryDto(
+    int     Id,
+    string  TypeName,
+    string? Grade,
+    string? Comments,
+    DateTime CreatedAt
+);
+
+/// <summary>
+/// Rich single-candidate response for GET /api/candidates/{id}.
+/// Includes computed analytics: overall score, ranking, hiring probability.
+/// </summary>
+public record CandidateDetailDto(
+    // ── Identity ──────────────────────────────────────────────────────────────
+    int       Id,
+    string    Name,
+    string    CandidateCode,
+
+    // ── Files ─────────────────────────────────────────────────────────────────
+    string?   CvFile,
+    string?   ProfileImage,
+
+    // ── Job / position ────────────────────────────────────────────────────────
+    int       JobId,
+    string    JobName,
+    string?   JobDescription,
+    string?   EmploymentType,
+    int       CategoryId,
+    string    CategoryName,
+    string?   WorkLocation,
+    DateTime  JobCreatedAt,
+    DateTime? TargetHiringDate,
+
+    // ── Status & dates ────────────────────────────────────────────────────────
+    int       StatusId,
+    string    StatusName,
+    int       SecurityClearanceId,
+    string    SecurityClearanceName,
+    DateTime? HiringDate,
+
+    // ── Assigned HR user ──────────────────────────────────────────────────────
+    string?   ApplicationUserId,
+    string?   ApplicationUserName,
+
+    // ── Candidate notes ───────────────────────────────────────────────────────
+    string?   ReasonOfAccept,
+    string?   ReasonOfReject,
+    bool?     Accepted,
+
+    // ── Interview scores ──────────────────────────────────────────────────────
+    string?   HrScore,
+    string?   TechnicalScore,
+    decimal?  OverallScore,        // average of all parseable interview grades
+    string    HiringProbability,   // "Low" | "Medium" | "High" | "Very High" | "N/A"
+
+    // ── Ranking ───────────────────────────────────────────────────────────────
+    int       RankingPosition,     // 1-based; rank among all candidates for same job
+
+    // ── All interviews ────────────────────────────────────────────────────────
+    IEnumerable<InterviewSummaryDto> Interviews
+);
+
 // ── Interview ─────────────────────────────────────────────────────────────────
 public record InterviewDto(
     int     Id,
@@ -530,3 +611,37 @@ public record OfferStatusSummaryDto(
     int Expired
 );
 
+// ── Candidate Pipeline / Progress ─────────────────────────────────────────────
+
+/// <summary>
+/// Represents a single step in the candidate hiring pipeline.
+/// Status: "Completed" | "InProgress" | "Pending"
+/// </summary>
+public record CandidatePipelineStepDto(
+    // Step display name, e.g. "Application", "HR Evaluation".
+    string    StepName,
+
+    // True when this step is fully done.
+    bool      Completed,
+
+    // "Completed" | "InProgress" | "Pending"
+    string    Status,
+
+    // Date the step was completed or last updated (null if not yet reached).
+    DateTime? Date,
+
+    // Optional extra detail (e.g. grade, offer status name, clearance name).
+    string?   Detail
+);
+
+/// <summary>Full pipeline progress for a candidate — returned by GET /api/candidates/{id}/pipeline.</summary>
+public record CandidatePipelineDto(
+    int       CandidateId,
+    string    CandidateName,
+
+    // True when the candidate has been hired (all steps forced to Completed).
+    bool      IsHired,
+
+    // Ordered list of pipeline steps (Application → HR → Technical → Offer → Security Clearance → Hired).
+    IEnumerable<CandidatePipelineStepDto> Steps
+);

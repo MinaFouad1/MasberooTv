@@ -31,4 +31,7 @@ public interface IOfferRepository : IGenericRepository<Offer>
     /// ordered by their Id (lower Id = earlier applicant = rank 1).
     /// </summary>
     Task<int> GetCandidateRankAsync(int candidateId, int jobId);
+
+    /// <summary>Returns all offers for a specific candidate (lightweight, for pipeline checks).</summary>
+    Task<IEnumerable<Offer>> GetByCandidateAsync(int candidateId);
 }

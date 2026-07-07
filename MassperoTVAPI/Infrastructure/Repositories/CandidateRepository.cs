@@ -91,6 +91,8 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
         => await _context.Candidates
             .Include(c => c.Job)
                 .ThenInclude(j => j.Category)
+            .Include(c => c.Job)
+                .ThenInclude(j => j.Location)
             .Include(c => c.Status)
             .Include(c => c.SecurityClearance)
             .Include(c => c.User)
@@ -105,5 +107,57 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
                 .ThenInclude(i => i.Type)
             .AsNoTracking()
             .ToListAsync();
+
+    public async Task<int> GetRankInJobAsync(int candidateId, int jobId)
+    {
+        // Load all candidates for this job with their interviews
+        var peers = await _context.Candidates
+            .Where(c => c.JobId == jobId)
+            .Include(c => c.Interviews)
+            .AsNoTracking()
+            .ToListAsync();
+
+        // Compute average score for each candidate (null if no parseable grades)
+        var ranked = peers
+            .Select(c => new
+            {
+                c.Id,
+                AvgScore = c.Interviews
+                    .Select(i => decimal.TryParse(i.Grade, out var g) ? (decimal?)g : null)
+                    .Where(g => g.HasValue)
+                    .Select(g => g!.Value)
+                    .DefaultIfEmpty(0m)
+                    .Average()
+            })
+            .OrderByDescending(x => x.AvgScore)
+            .ThenBy(x => x.Id)          // stable tie-breaker: earlier applicant ranks higher
+            .ToList();
+
+        var idx = ranked.FindIndex(x => x.Id == candidateId);
+        return idx < 0 ? 0 : idx + 1;   // 1-based; 0 = not found
+    }
+
+    public async Task<IEnumerable<Candidate>> GetJobRankingAsync(int jobId)
+    {
+        // Load all candidates for this job with their interviews
+        var peers = await _context.Candidates
+            .Where(c => c.JobId == jobId)
+            .Include(c => c.Interviews)
+            .AsNoTracking()
+            .ToListAsync();
+
+        // Sort them by their computed average score in memory
+        var ranked = peers
+            .OrderByDescending(c => c.Interviews
+                .Select(i => decimal.TryParse(i.Grade, out var g) ? (decimal?)g : null)
+                .Where(g => g.HasValue)
+                .Select(g => g!.Value)
+                .DefaultIfEmpty(0m)
+                .Average())
+            .ThenBy(c => c.Id)
+            .ToList();
+
+        return ranked;
+    }
 }
 

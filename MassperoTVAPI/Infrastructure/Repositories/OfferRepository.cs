@@ -115,4 +115,12 @@ public class OfferRepository : GenericRepository<Offer>, IOfferRepository
         var idx = ids.IndexOf(candidateId);
         return idx < 0 ? 0 : idx + 1;
     }
+
+    // ── Offers by candidate (pipeline check) ──────────────────────────────────
+    public async Task<IEnumerable<Offer>> GetByCandidateAsync(int candidateId)
+        => await _context.Offers
+            .Where(o => o.CandidateId == candidateId)
+            .OrderByDescending(o => o.OfferDate)
+            .AsNoTracking()
+            .ToListAsync();
 }

@@ -1,5 +1,6 @@
 using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Entities;
+using MassperoTVAPI.Core.Enums;
 using MassperoTVAPI.Core.Helpers;
 using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Mappers;
@@ -14,10 +15,15 @@ namespace MassperoTVAPI.Controllers;
 [Authorize(Roles = "HR,Admin")]
 public class CandidatesController : ControllerBase
 {
-    private const string CvConfigurationKey      = "CvFile";
-    private const string ProfileConfigurationKey = "ProfileImage";
-    private const string InitialStatusName                = "Under Vetting";
-    private const string InitialSecurityClearanceName     = "In Check";
+    private const string CvConfigurationKey           = "CvFile";
+    private const string ProfileConfigurationKey       = "ProfileImage";
+    private const string InitialStatusName             = "Under Vetting";
+    private const string InitialSecurityClearanceName  = "In Check";
+    // Pipeline status names
+    private const string HiredStatusName               = "Hired";
+    private const string PipelineCompleted             = "Completed";
+    private const string PipelineInProgress            = "InProgress";
+    private const string PipelinePending               = "Pending";
 
     private readonly IUnitOfWork _uow;
     private readonly IFileUploadService _fileUploadService;
@@ -64,17 +70,25 @@ public class CandidatesController : ControllerBase
         return Ok(ApiResponse<PagedResult<CandidateDto>>.SuccessResponse(result));
     }
 
-    /// <summary>Get a single candidate by ID with full details.</summary>
+    /// <summary>
+    /// Get a single candidate by ID with full details.
+    /// Returns: profile image, CV file, job info, all interview scores (HR / Technical / Overall),
+    /// hiring probability, ranking position among same-job candidates, and current status.
+    /// </summary>
     /// <param name="id">Candidate ID.</param>
-    /// <returns>The candidate details including job, status, security clearance, and profile image.</returns>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ApiResponse<CandidateDto>>> GetById(int id)
+    public async Task<ActionResult<ApiResponse<CandidateDetailDto>>> GetById(int id)
     {
         var entity = await _uow.Candidates.GetByIdWithDetailsAsync(id);
-        if (entity is null) return NotFound(ApiResponse<CandidateDto>.NotFoundResponse());
+        if (entity is null)
+            return NotFound(ApiResponse<CandidateDetailDto>.NotFoundResponse());
+
+        // Compute ranking among all candidates for the same job
+        var rank = await _uow.Candidates.GetRankInJobAsync(entity.Id, entity.JobId);
 
         var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
-        return Ok(ApiResponse<CandidateDto>.SuccessResponse(entity.ToDto(cvBaseUrl, profileBaseUrl)));
+        return Ok(ApiResponse<CandidateDetailDto>.SuccessResponse(
+            entity.ToDetailDto(rank, cvBaseUrl, profileBaseUrl)));
     }
 
     /// <summary>
@@ -191,7 +205,7 @@ public class CandidatesController : ControllerBase
     /// <returns>The updated candidate.</returns>
     [HttpPatch("{id:int}/status")]
     public async Task<ActionResult<ApiResponse<CandidateDto>>> PatchStatus(
-        int id, [FromBody] PatchCandidateStatusDto dto)
+        int id, [FromBody] PatchCandidateStatusDto  dto)
     {
         var entity = await _uow.Candidates.GetByIdAsync(id);
         if (entity is null) return NotFound(ApiResponse<CandidateDto>.NotFoundResponse());
@@ -230,6 +244,59 @@ public class CandidatesController : ControllerBase
         var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
         return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(cvBaseUrl, profileBaseUrl), "Security clearance updated."));
     }
+
+    /// <summary>Update interview grade for a candidate (e.g. HR or Technical).</summary>
+    /// <param name="id">Candidate ID.</param>
+    /// <param name="dto">Interview type, grade, and comments.</param>
+    /// <returns>The updated candidate details.</returns>
+    [HttpPatch("{id:int}/grade")]
+    public async Task<ActionResult<ApiResponse<CandidateDetailDto>>> PatchGrade(
+        int id, [FromBody] PatchCandidateInterviewGradeDto dto)
+    {
+        var candidate = await _uow.Candidates.GetByIdWithDetailsAsync(id);
+        if (candidate is null) return NotFound(ApiResponse<CandidateDetailDto>.NotFoundResponse());
+
+        var typeKeyword = dto.InterviewType.Trim();
+        var interview = candidate.Interviews.FirstOrDefault(i =>
+            i.Type?.Name != null &&
+            i.Type.Name.Contains(typeKeyword, StringComparison.OrdinalIgnoreCase));
+
+        if (interview is not null)
+        {
+            interview.Grade = dto.Grade;
+            if (dto.Comments is not null)
+                interview.Comments = dto.Comments;
+            _uow.Interviews.Update(interview);
+        }
+        else
+        {
+            var types = await _uow.InterviewTypes.GetAllAsync();
+            var type = types.FirstOrDefault(t => t.Name.Contains(typeKeyword, StringComparison.OrdinalIgnoreCase));
+            if (type is null)
+                return BadRequest(ApiResponse<CandidateDetailDto>.ErrorResponse($"Interview type containing '{typeKeyword}' not found."));
+
+            interview = new Interview
+            {
+                CandidateId = candidate.Id,
+                TypeId = type.Id,
+                Grade = dto.Grade,
+                Comments = dto.Comments,
+                CreatedAt = DateTime.UtcNow
+            };
+            await _uow.Interviews.AddAsync(interview);
+        }
+
+        await _uow.SaveChangesAsync();
+
+        // Re-fetch to get updated rankings/scores
+        var updated = await _uow.Candidates.GetByIdWithDetailsAsync(id);
+        var rank = await _uow.Candidates.GetRankInJobAsync(id, updated!.JobId);
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+
+        return Ok(ApiResponse<CandidateDetailDto>.SuccessResponse(
+            updated.ToDetailDto(rank, cvBaseUrl, profileBaseUrl), "Interview grade updated."));
+    }
+
 
     /// <summary>Delete a candidate. Admin only.</summary>
     /// <param name="id">Candidate ID.</param>
@@ -286,5 +353,171 @@ public class CandidatesController : ControllerBase
         {
             return (null, ex.Message);
         }
+    }
+
+    // ── Pipeline endpoint ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Returns the hiring pipeline progress for a candidate.
+    /// Steps: Application → HR Evaluation → Technical Evaluation → Offer → Security Clearance → Hired.
+    /// Each step returns: stepName, completed (bool), status (Completed/InProgress/Pending), date, detail.
+    /// If the candidate is Hired, all steps are forced to Completed.
+    /// </summary>
+    [HttpGet("{id:int}/pipeline")]
+    public async Task<ActionResult<ApiResponse<CandidatePipelineDto>>> GetPipeline(int id)
+    {
+        var candidate = await _uow.Candidates.GetByIdWithDetailsAsync(id);
+        if (candidate is null)
+            return NotFound(ApiResponse<CandidatePipelineDto>.NotFoundResponse());
+
+        // Load all offers for this candidate
+        var offers = (await _uow.Offers.GetByCandidateAsync(id)).ToList();
+
+        var isHired = candidate.HiringDate.HasValue ||
+                      string.Equals(candidate.Status?.Name, HiredStatusName,
+                                    StringComparison.OrdinalIgnoreCase);
+
+        var steps = BuildPipeline(candidate, offers, isHired);
+
+        return Ok(ApiResponse<CandidatePipelineDto>.SuccessResponse(new CandidatePipelineDto(
+            CandidateId:   candidate.Id,
+            CandidateName: candidate.Name,
+            IsHired:       isHired,
+            Steps:         steps
+        )));
+    }
+
+    /// <summary>
+    /// Returns a ranked list of all candidates for a specific job.
+    /// Ordered by their Overall Score (descending).
+    /// </summary>
+    [HttpGet("job/{jobId:int}/ranking")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<CandidateRankingDto>>>> GetJobRanking(int jobId)
+    {
+        if (!await _uow.Jobs.ExistsAsync(jobId))
+            return NotFound(ApiResponse<IEnumerable<CandidateRankingDto>>.ErrorResponse($"Job {jobId} not found."));
+
+        var candidates = await _uow.Candidates.GetJobRankingAsync(jobId);
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+
+        var rankedList = candidates.Select((c, index) => 
+        {
+            var score = CandidateMapper.ComputeOverallScore(c.Interviews);
+            
+            return new CandidateRankingDto(
+                Rank: index + 1,
+                CandidateId: c.Id,
+                CandidateName: c.Name,
+                CandidateCode: CandidateMapper.BuildCandidateCode(c.Id),
+                ProfileImage: CandidateMapper.BuildFileUrl(c.Profile, profileBaseUrl),
+                OverallScore: score.HasValue ? Math.Round(score.Value, 2) : null
+            );
+        });
+
+        return Ok(ApiResponse<IEnumerable<CandidateRankingDto>>.SuccessResponse(rankedList));
+    }
+
+    /// <summary>
+    /// Builds the 6-step pipeline list from the candidate and their offers.
+    /// </summary>
+    private static List<CandidatePipelineStepDto> BuildPipeline(
+        Candidate           candidate,
+        List<Offer>         offers,
+        bool                isHired)
+    {
+        // ── Helper: find interview by type keyword ────────────────────────────
+        Interview? GetInterview(string keyword) =>
+            candidate.Interviews
+                .FirstOrDefault(i => i.Type?.Name != null &&
+                                     i.Type.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+
+        bool HasGrade(Interview? i) =>
+            i is not null && !string.IsNullOrWhiteSpace(i.Grade);
+
+        // ── Step 1: Application — always completed ────────────────────────────
+        var stepApplication = new CandidatePipelineStepDto(
+            StepName:  "Application",
+            Completed: true,
+            Status:    PipelineCompleted,
+            Date:      null,
+            Detail:    null
+        );
+
+        // ── Step 2: HR Evaluation ─────────────────────────────────────────────
+        var hrInterview = GetInterview("HR");
+        var hrCompleted = HasGrade(hrInterview);
+        var stepHr = new CandidatePipelineStepDto(
+            StepName:  "HR Evaluation",
+            Completed: hrCompleted,
+            Status:    hrCompleted             ? PipelineCompleted
+                       : hrInterview is not null ? PipelineInProgress
+                                                 : PipelinePending,
+            Date:      hrInterview?.CreatedAt,
+            Detail:    hrInterview?.Grade
+        );
+
+        // ── Step 3: Technical Evaluation ─────────────────────────────────────
+        var techInterview = GetInterview("Technical");
+        var techCompleted = HasGrade(techInterview);
+        var stepTech = new CandidatePipelineStepDto(
+            StepName:  "Technical Evaluation",
+            Completed: techCompleted,
+            Status:    techCompleted              ? PipelineCompleted
+                       : techInterview is not null ? PipelineInProgress
+                                                   : PipelinePending,
+            Date:      techInterview?.CreatedAt,
+            Detail:    techInterview?.Grade
+        );
+
+        // ── Step 4: Offer ─────────────────────────────────────────────────────
+        var latestOffer    = offers.FirstOrDefault();
+        var offerCompleted = latestOffer?.OfferStatusId == OfferStatus.Accepted;
+        var stepOffer = new CandidatePipelineStepDto(
+            StepName:  "Offer",
+            Completed: offerCompleted,
+            Status:    offerCompleted                                         ? PipelineCompleted
+                       : latestOffer is not null &&
+                         latestOffer.OfferStatusId == OfferStatus.Pending      ? PipelineInProgress
+                                                                               : PipelinePending,
+            Date:      latestOffer?.OfferDate,
+            Detail:    latestOffer?.OfferStatusId.ToString()
+        );
+
+        // ── Step 5: Security Clearance ────────────────────────────────────────
+        var clearanceName      = candidate.SecurityClearance?.Name ?? string.Empty;
+        var clearanceCompleted = !string.Equals(
+            clearanceName, InitialSecurityClearanceName, StringComparison.OrdinalIgnoreCase);
+        var stepClearance = new CandidatePipelineStepDto(
+            StepName:  "Security Clearance",
+            Completed: clearanceCompleted,
+            Status:    clearanceCompleted ? PipelineCompleted : PipelinePending,
+            Date:      null,
+            Detail:    clearanceName
+        );
+
+        // ── Step 6: Hired ─────────────────────────────────────────────────────
+        var stepHired = new CandidatePipelineStepDto(
+            StepName:  "Hired",
+            Completed: isHired,
+            Status:    isHired ? PipelineCompleted : PipelinePending,
+            Date:      candidate.HiringDate,
+            Detail:    isHired ? "Hired" : null
+        );
+
+        // ── If hired — force all steps completed ──────────────────────────────
+        if (isHired)
+        {
+            return
+            [
+                stepApplication with { Completed = true, Status = PipelineCompleted },
+                stepHr          with { Completed = true, Status = PipelineCompleted },
+                stepTech        with { Completed = true, Status = PipelineCompleted },
+                stepOffer       with { Completed = true, Status = PipelineCompleted },
+                stepClearance   with { Completed = true, Status = PipelineCompleted },
+                stepHired
+            ];
+        }
+
+        return [ stepApplication, stepHr, stepTech, stepOffer, stepClearance, stepHired ];
     }
 }

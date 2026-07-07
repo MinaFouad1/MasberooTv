@@ -25,9 +25,12 @@
             <returns>Paged list of candidates with full details including HR/Technical scores.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetById(System.Int32)">
-            <summary>Get a single candidate by ID with full details.</summary>
+            <summary>
+            Get a single candidate by ID with full details.
+            Returns: profile image, CV file, job info, all interview scores (HR / Technical / Overall),
+            hiring probability, ranking position among same-job candidates, and current status.
+            </summary>
             <param name="id">Candidate ID.</param>
-            <returns>The candidate details including job, status, security clearance, and profile image.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.Create(MassperoTVAPI.Core.DTOs.CreateCandidateDto)">
             <summary>
@@ -55,6 +58,12 @@
             <param name="dto">New security clearance ID.</param>
             <returns>The updated candidate.</returns>
         </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.PatchGrade(System.Int32,MassperoTVAPI.Core.DTOs.PatchCandidateInterviewGradeDto)">
+            <summary>Update interview grade for a candidate (e.g. HR or Technical).</summary>
+            <param name="id">Candidate ID.</param>
+            <param name="dto">Interview type, grade, and comments.</param>
+            <returns>The updated candidate details.</returns>
+        </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.Delete(System.Int32)">
             <summary>Delete a candidate. Admin only.</summary>
             <param name="id">Candidate ID.</param>
@@ -67,6 +76,25 @@
             <summary>
             Uploads a file to the specified folder key.
             Returns (FileName, null) on success or (null, errorMessage) on failure.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetPipeline(System.Int32)">
+            <summary>
+            Returns the hiring pipeline progress for a candidate.
+            Steps: Application → HR Evaluation → Technical Evaluation → Offer → Security Clearance → Hired.
+            Each step returns: stepName, completed (bool), status (Completed/InProgress/Pending), date, detail.
+            If the candidate is Hired, all steps are forced to Completed.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetJobRanking(System.Int32)">
+            <summary>
+            Returns a ranked list of all candidates for a specific job.
+            Ordered by their Overall Score (descending).
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.BuildPipeline(MassperoTVAPI.Core.Entities.Candidate,System.Collections.Generic.List{MassperoTVAPI.Core.Entities.Offer},System.Boolean)">
+            <summary>
+            Builds the 6-step pipeline list from the candidate and their offers.
             </summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CategoriesController.GetAll">
@@ -470,6 +498,24 @@
         <member name="P:MassperoTVAPI.Core.DTOs.RegisterDto.Role">
             <summary>Optional role to assign on registration (e.g. "Admin", "HR").</summary>
         </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.InterviewSummaryDto">
+            <summary>Single interview summary used inside CandidateDetailDto.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.DTOs.InterviewSummaryDto.#ctor(System.Int32,System.String,System.String,System.String,System.DateTime)">
+            <summary>Single interview summary used inside CandidateDetailDto.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.CandidateDetailDto">
+            <summary>
+            Rich single-candidate response for GET /api/candidates/{id}.
+            Includes computed analytics: overall score, ranking, hiring probability.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.DTOs.CandidateDetailDto.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.DateTime,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Decimal},System.String,System.Int32,System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.InterviewSummaryDto})">
+            <summary>
+            Rich single-candidate response for GET /api/candidates/{id}.
+            Includes computed analytics: overall score, ranking, hiring probability.
+            </summary>
+        </member>
         <member name="T:MassperoTVAPI.Core.DTOs.PatchCandidateStatusDto">
             <summary>PATCH body to update only the candidate application status.</summary>
         </member>
@@ -563,6 +609,24 @@
         <member name="M:MassperoTVAPI.Core.DTOs.OfferStatusSummaryDto.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>Dashboard stats counts for each offer status.</summary>
         </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.CandidatePipelineStepDto">
+            <summary>
+            Represents a single step in the candidate hiring pipeline.
+            Status: "Completed" | "InProgress" | "Pending"
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.DTOs.CandidatePipelineStepDto.#ctor(System.String,System.Boolean,System.String,System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Represents a single step in the candidate hiring pipeline.
+            Status: "Completed" | "InProgress" | "Pending"
+            </summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.CandidatePipelineDto">
+            <summary>Full pipeline progress for a candidate — returned by GET /api/candidates/{id}/pipeline.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.DTOs.CandidatePipelineDto.#ctor(System.Int32,System.String,System.Boolean,System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.CandidatePipelineStepDto})">
+            <summary>Full pipeline progress for a candidate — returned by GET /api/candidates/{id}/pipeline.</summary>
+        </member>
         <member name="T:MassperoTVAPI.Core.DTOs.ProcessDependencyDto">
             <summary>
             Payload for PATCH /api/processes/{id}/dependencies.
@@ -654,6 +718,18 @@
         <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetAllWithInterviewsAsync">
             <summary>Get all candidates including their Interviews and InterviewType for funnel analytics.</summary>
         </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetRankInJobAsync(System.Int32,System.Int32)">
+            <summary>
+            Returns the ranking position of a candidate among all candidates for the same job,
+            ordered by overall interview score descending (rank 1 = highest scorer).
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetJobRankingAsync(System.Int32)">
+            <summary>
+            Returns all candidates for a specific job, ordered by their overall interview score descending.
+            Used for the Ranking Comparison UI.
+            </summary>
+        </member>
         <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IConfigurationRepository.GetByKeyAsync(System.String)">
             <summary>Find a configuration entry by its Key (case-insensitive).</summary>
         </member>
@@ -680,6 +756,9 @@
             ordered by their Id (lower Id = earlier applicant = rank 1).
             </summary>
         </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IOfferRepository.GetByCandidateAsync(System.Int32)">
+            <summary>Returns all offers for a specific candidate (lightweight, for pipeline checks).</summary>
+        </member>
         <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IProcessRepository.GetWithDependenciesAsync(System.Int32)">
             <summary>Gets a process with all its dependencies, phase, status, and issues eagerly loaded.</summary>
         </member>
@@ -691,6 +770,21 @@
             Returns the grade of the first interview whose type name contains the given keyword
             (case-insensitive). Returns null if no matching interview exists.
             </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Mappers.CandidateMapper.ComputeOverallScore(System.Collections.Generic.ICollection{MassperoTVAPI.Core.Entities.Interview})">
+            <summary>
+            Averages the numeric grades of all interviews whose Grade parses as a decimal.
+            Returns null if no parseable grades exist.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Mappers.CandidateMapper.ComputeHiringProbability(System.Nullable{System.Decimal})">
+            <summary>
+            Maps overall score to a human-readable hiring probability label.
+            &lt;50 → Low | 50–74 → Medium | 75–89 → High | ≥90 → Very High | null → N/A
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Mappers.CandidateMapper.BuildCandidateCode(System.Int32)">
+            <summary>Formats the candidate code displayed in the UI: CAN-YYYY-NNNNN.</summary>
         </member>
         <member name="M:MassperoTVAPI.Core.Mappers.CandidateMapper.BuildFileUrl(System.String,System.String)">
             <summary>

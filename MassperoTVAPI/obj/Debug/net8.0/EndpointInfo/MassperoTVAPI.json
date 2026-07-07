@@ -488,7 +488,7 @@
         "tags": [
           "Candidates"
         ],
-        "summary": "Get a single candidate by ID with full details.",
+        "summary": "Get a single candidate by ID with full details.\r\nReturns: profile image, CV file, job info, all interview scores (HR / Technical / Overall),\r\nhiring probability, ranking position among same-job candidates, and current status.",
         "parameters": [
           {
             "name": "id",
@@ -507,17 +507,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                  "$ref": "#/components/schemas/CandidateDetailDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                  "$ref": "#/components/schemas/CandidateDetailDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                  "$ref": "#/components/schemas/CandidateDetailDtoApiResponse"
                 }
               }
             }
@@ -764,6 +764,47 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Candidates/{id}/pipeline": {
+      "get": {
+        "tags": [
+          "Candidates"
+        ],
+        "summary": "Returns the hiring pipeline progress for a candidate.\r\nSteps: Application → HR Evaluation → Technical Evaluation → Offer → Security Clearance → Hired.\r\nEach step returns: stepName, completed (bool), status (Completed/InProgress/Pending), date, detail.\r\nIf the candidate is Hired, all steps are forced to Completed.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidatePipelineDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidatePipelineDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidatePipelineDtoApiResponse"
                 }
               }
             }
@@ -4947,6 +4988,166 @@
         },
         "additionalProperties": false
       },
+      "CandidateDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "candidateCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "cvFile": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileImage": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jobName": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "employmentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "workLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobCreatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "targetHiringDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusName": {
+            "type": "string",
+            "nullable": true
+          },
+          "securityClearanceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "securityClearanceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "hiringDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "applicationUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "applicationUserName": {
+            "type": "string",
+            "nullable": true
+          },
+          "reasonOfAccept": {
+            "type": "string",
+            "nullable": true
+          },
+          "reasonOfReject": {
+            "type": "string",
+            "nullable": true
+          },
+          "accepted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "hrScore": {
+            "type": "string",
+            "nullable": true
+          },
+          "technicalScore": {
+            "type": "string",
+            "nullable": true
+          },
+          "overallScore": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "hiringProbability": {
+            "type": "string",
+            "nullable": true
+          },
+          "rankingPosition": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "interviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InterviewSummaryDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Rich single-candidate response for GET /api/candidates/{id}.\r\nIncludes computed analytics: overall score, ranking, hiring probability."
+      },
+      "CandidateDetailDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CandidateDetailDto"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CandidateDto": {
         "type": "object",
         "properties": {
@@ -5117,6 +5318,85 @@
           }
         },
         "additionalProperties": false
+      },
+      "CandidatePipelineDto": {
+        "type": "object",
+        "properties": {
+          "candidateId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "candidateName": {
+            "type": "string",
+            "nullable": true
+          },
+          "isHired": {
+            "type": "boolean"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CandidatePipelineStepDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Full pipeline progress for a candidate — returned by GET /api/candidates/{id}/pipeline."
+      },
+      "CandidatePipelineDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CandidatePipelineDto"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CandidatePipelineStepDto": {
+        "type": "object",
+        "properties": {
+          "stepName": {
+            "type": "string",
+            "nullable": true
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a single step in the candidate hiring pipeline.\r\nStatus: \"Completed\" | \"InProgress\" | \"Pending\""
       },
       "CategoryDto": {
         "type": "object",
@@ -5638,6 +5918,33 @@
           }
         },
         "additionalProperties": false
+      },
+      "InterviewSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "typeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "grade": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Single interview summary used inside CandidateDetailDto."
       },
       "InterviewTypeDto": {
         "type": "object",
