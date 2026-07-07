@@ -5,22 +5,26 @@ namespace MassperoTVAPI.Core.Mappers;
 
 public static class CandidateMapper
 {
-    private const string HrTypeName          = "HR";
-    private const string TechnicalTypeName   = "Technical";
+    private const string HrTypeName        = "HR";
+    private const string TechnicalTypeName = "Technical";
 
-    public static CandidateDto ToDto(this Candidate c, string? cvBaseUrl = null) => new(
+    public static CandidateDto ToDto(
+        this Candidate c,
+        string? cvBaseUrl      = null,
+        string? profileBaseUrl = null) => new(
         c.Id,
         c.Name,
-        BuildCvUrl(c.CvFile, cvBaseUrl),
+        BuildFileUrl(c.CvFile, cvBaseUrl),
+        BuildFileUrl(c.Profile, profileBaseUrl),
         c.ReasonOfAccept,
         c.ReasonOfReject,
         c.Accepted,
         c.JobId,
-        c.Job?.Name          ?? string.Empty,
-        c.Job?.CategoryId    ?? 0,
+        c.Job?.Name           ?? string.Empty,
+        c.Job?.CategoryId     ?? 0,
         c.Job?.Category?.Name ?? string.Empty,
         c.StatusId,
-        c.Status?.Name       ?? string.Empty,
+        c.Status?.Name        ?? string.Empty,
         c.SecurityClearanceId,
         c.SecurityClearance?.Name ?? string.Empty,
         c.ApplicationUserId,
@@ -40,7 +44,11 @@ public static class CandidateMapper
                                  i.Type.Name.Contains(typeKeyword, StringComparison.OrdinalIgnoreCase))
             ?.Grade;
 
-    private static string? BuildCvUrl(string? fileName, string? cvBaseUrl)
+    /// <summary>
+    /// Builds a full URL for a stored file name using a base URL from configuration.
+    /// Returns null if fileName is empty. Returns fileName as-is if it is already an absolute URI.
+    /// </summary>
+    private static string? BuildFileUrl(string? fileName, string? baseUrl)
     {
         if (string.IsNullOrWhiteSpace(fileName))
             return null;
@@ -48,8 +56,9 @@ public static class CandidateMapper
         if (Uri.TryCreate(fileName, UriKind.Absolute, out _))
             return fileName;
 
-        return string.IsNullOrWhiteSpace(cvBaseUrl)
+        return string.IsNullOrWhiteSpace(baseUrl)
             ? fileName
-            : $"{cvBaseUrl.TrimEnd('/')}/{fileName}";
+            : $"{baseUrl.TrimEnd('/')}/{fileName}";
     }
 }
+

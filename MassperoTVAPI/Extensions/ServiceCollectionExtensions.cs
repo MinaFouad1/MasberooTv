@@ -39,6 +39,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICategoryRepository,        CategoryRepository>();
         services.AddScoped<IIssueRepository,           IssueRepository>();
         services.AddScoped<IProcessRepository,         ProcessRepository>();
+        services.AddScoped<IOfferRepository,           OfferRepository>();
         services.AddScoped<IConfigurationRepository,   ConfigurationRepository>();
 
         // Unit of Work

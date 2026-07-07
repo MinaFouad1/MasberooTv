@@ -49,11 +49,11 @@ public class JobsController : ControllerBase
         // "Offers Sent" = candidates whose status name is "Under Vetting"
         var offersSent = jobs.Sum(j =>
             j.Candidates.Count(c =>
-                string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase)));
+                string.Equals(c.Status?.Name, "Offered", StringComparison.OrdinalIgnoreCase)));
 
         var offersAccepted = jobs.Sum(j =>
             j.Candidates.Count(c =>
-                string.Equals(c.Status?.Name, "In Production", StringComparison.OrdinalIgnoreCase)));
+                string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase)));
 
         return Ok(ApiResponse<JobStatisticsDto>.SuccessResponse(new JobStatisticsDto(
             TotalJobs:     totalJobs,

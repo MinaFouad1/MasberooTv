@@ -231,6 +231,11 @@
         "IsRequired": false
       },
       {
+        "Name": "ProfileImage",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
         "Name": "JobId",
         "Type": "System.Int32",
         "IsRequired": false
@@ -294,6 +299,11 @@
       },
       {
         "Name": "CvFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "ProfileImage",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
       },
@@ -1877,6 +1887,264 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.OffersController",
+    "Method": "GetAll",
+    "RelativePath": "api/offers",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "CandidateName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "OfferStatusId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "CategoryId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "JobId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "DateFrom",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "DateTo",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "Page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.PagedResult\u00601[[MassperoTVAPI.Core.DTOs.OfferDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.OffersController",
+    "Method": "Create",
+    "RelativePath": "api/offers",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MassperoTVAPI.Core.DTOs.CreateOfferDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.OfferDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.OffersController",
+    "Method": "GetById",
+    "RelativePath": "api/offers/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.OfferPreviewDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.OffersController",
+    "Method": "Update",
+    "RelativePath": "api/offers/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MassperoTVAPI.Core.DTOs.UpdateOfferDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.OfferDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.OffersController",
+    "Method": "Delete",
+    "RelativePath": "api/offers/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.OffersController",
+    "Method": "Accept",
+    "RelativePath": "api/offers/{id}/accept",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.OfferDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.OffersController",
+    "Method": "Decline",
+    "RelativePath": "api/offers/{id}/decline",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.OfferDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.OffersController",
+    "Method": "Expire",
+    "RelativePath": "api/offers/{id}/expire",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.OfferDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.OffersController",
+    "Method": "GetSummary",
+    "RelativePath": "api/offers/summary",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.OfferStatusSummaryDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "MassperoTVAPI.Controllers.PhasesController",

@@ -300,7 +300,6 @@ D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\SixLabors.Fonts.dl
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\System.IO.Packaging.dll
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\MassperoTVAPI.xml
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.xml
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\appsettings.Development.json
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\appsettings.json
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\MassperoTVAPI.staticwebassets.endpoints.json
@@ -458,3 +457,4 @@ D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.pd
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.genruntimeconfig.cache
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\ref\MassperoTVAPI.dll
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

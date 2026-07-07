@@ -17,6 +17,9 @@ public class CandidateConfiguration : IEntityTypeConfiguration<Candidate>
         builder.Property(x => x.CvFile)
                .HasMaxLength(500);
 
+        builder.Property(x => x.Profile)
+               .HasMaxLength(500);
+
         builder.Property(x => x.ReasonOfAccept)
                .HasMaxLength(1000);
 

@@ -169,10 +169,10 @@ public class DashboardController : ControllerBase
             string.Equals(c.Status?.Name, "Offered", StringComparison.OrdinalIgnoreCase));
 
         var offersAccepted = candidates.Count(c =>
-            string.Equals(c.Status?.Name, "Contracted", StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.Status?.Name, "In Process", StringComparison.OrdinalIgnoreCase));
 
         var hired = candidates.Count(c =>
-            string.Equals(c.Status?.Name, "In Production", StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase));
 
         return Ok(ApiResponse<RecruitmentFunnelDto>.SuccessResponse(new RecruitmentFunnelDto(
             CandidatesCount:        candidatesCount,

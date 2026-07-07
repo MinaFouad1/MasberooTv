@@ -25,6 +25,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Process>                Processes               => Set<Process>();
     public DbSet<ProcessDependency>      ProcessDependencies     => Set<ProcessDependency>();
     public DbSet<Issue>                  Issues                  => Set<Issue>();
+    public DbSet<Offer>                  Offers                  => Set<Offer>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

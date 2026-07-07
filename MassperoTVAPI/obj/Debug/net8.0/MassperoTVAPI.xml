@@ -27,15 +27,18 @@
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetById(System.Int32)">
             <summary>Get a single candidate by ID with full details.</summary>
             <param name="id">Candidate ID.</param>
-            <returns>The candidate details including job, status, and security clearance.</returns>
+            <returns>The candidate details including job, status, security clearance, and profile image.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.Create(MassperoTVAPI.Core.DTOs.CreateCandidateDto)">
-            <summary>Create a new candidate with initial status and security clearance. Optionally upload a CV file.</summary>
-            <param name="dto">Candidate data including name, job ID, and optional CV file.</param>
-            <returns>The created candidate with default candidate statuses assigned.</returns>
+            <summary>
+            Create a new candidate with initial status and security clearance.
+            Optionally upload a CV file and/or a profile image.
+            </summary>
+            <param name="dto">Candidate data including name, job ID, optional CV file and optional profile image.</param>
+            <returns>The created candidate.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.Update(System.Int32,MassperoTVAPI.Core.DTOs.UpdateCandidateDto)">
-            <summary>Update a candidate's basic info (name, job, reasons, CV).</summary>
+            <summary>Update a candidate's basic info (name, job, reasons, CV, profile image).</summary>
             <param name="id">Candidate ID.</param>
             <param name="dto">Updated candidate data.</param>
             <returns>The updated candidate.</returns>
@@ -56,6 +59,15 @@
             <summary>Delete a candidate. Admin only.</summary>
             <param name="id">Candidate ID.</param>
             <returns>Success status.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetBaseUrlsAsync">
+            <summary>Fetches both the CV and Profile base URLs in a single async call.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.UploadFileAsync(Microsoft.AspNetCore.Http.IFormFile,System.String)">
+            <summary>
+            Uploads a file to the specified folder key.
+            Returns (FileName, null) on success or (null, errorMessage) on failure.
+            </summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CategoriesController.GetAll">
             <summary>Retrieve all job categories.</summary>
@@ -315,6 +327,53 @@
         <member name="M:MassperoTVAPI.Controllers.LookupsController.DeleteProcessStatus(System.Int32)">
             <summary>Delete a process status. Admin only.</summary>
         </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.GetSummary">
+            <summary>Returns offer status counts for the dashboard summary cards.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.GetAll(MassperoTVAPI.Core.DTOs.GetOffersQueryDto)">
+            <summary>
+            Returns a paged, filtered list of offers.
+            Filters: candidateName, offerStatusId, categoryId, jobId, dateFrom, dateTo.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.GetById(System.Int32)">
+            <summary>Returns the full offer preview including candidate summary and rank.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.Create(MassperoTVAPI.Core.DTOs.CreateOfferDto)">
+            <summary>
+            Creates a new offer for a candidate.
+            Automatically moves the candidate's status to "In Offer".
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.Update(System.Int32,MassperoTVAPI.Core.DTOs.UpdateOfferDto)">
+            <summary>Updates an existing offer's details (salary, start date, expiry date, benefits).</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.Accept(System.Int32)">
+            <summary>
+            Marks the offer as Accepted.
+            Automatically moves the candidate's status to "Hired".
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.Decline(System.Int32)">
+            <summary>
+            Marks the offer as Declined.
+            Automatically moves the candidate's status to "Rejected".
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.Expire(System.Int32)">
+            <summary>
+            Marks the offer as Expired.
+            Automatically moves the candidate's status back to "In Process".
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.Delete(System.Int32)">
+            <summary>Deletes an offer. Admin only.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.OffersController.TransitionOffer(System.Int32,MassperoTVAPI.Core.Enums.OfferStatus,System.String,System.String)">
+            <summary>
+            Generic offer status transition: updates OfferStatusId and syncs candidate status.
+            </summary>
+        </member>
         <member name="M:MassperoTVAPI.Controllers.PhasesController.Create(MassperoTVAPI.Core.DTOs.CreatePhaseDto)">
             <summary>Create a new phase. Admin only.</summary>
             <param name="dto">Phase name.</param>
@@ -453,6 +512,57 @@
         <member name="P:MassperoTVAPI.Core.DTOs.GetApplicationsQueryDto.PageSize">
             <summary>Number of items per page. Defaults to 10.</summary>
         </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.OfferDto">
+            <summary>Full offer details — used for list rows and offer preview.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.DTOs.OfferDto.#ctor(System.Int32,System.Int32,System.String,System.String,System.Int32,System.String,System.Int32,System.String,System.String,System.String,System.String,System.Int32,System.Decimal,System.Nullable{System.DateTime},System.DateTime,System.DateTime,System.String,System.DateTime,System.String)">
+            <summary>Full offer details — used for list rows and offer preview.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.CreateOfferDto">
+            <summary>Request body for creating a new offer.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.UpdateOfferDto">
+            <summary>Request body for updating an existing offer's details.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.GetOffersQueryDto">
+            <summary>Query parameters for searching/filtering offers with pagination.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetOffersQueryDto.CandidateName">
+            <summary>Filter by candidate name (partial match).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetOffersQueryDto.OfferStatusId">
+            <summary>Filter by offer status (1=Pending, 2=Accepted, 3=Declined, 4=Expired).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetOffersQueryDto.CategoryId">
+            <summary>Filter by department/category ID.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetOffersQueryDto.JobId">
+            <summary>Filter by job position ID.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetOffersQueryDto.DateFrom">
+            <summary>Filter by offer date — from (inclusive).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetOffersQueryDto.DateTo">
+            <summary>Filter by offer date — to (inclusive).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetOffersQueryDto.Page">
+            <summary>Page number (1-based). Defaults to 1.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.GetOffersQueryDto.PageSize">
+            <summary>Number of items per page. Defaults to 10.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.OfferPreviewDto">
+            <summary>Richer offer preview panel — includes candidate summary fields shown in the UI.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.DTOs.OfferPreviewDto.#ctor(System.Int32,System.String,System.Int32,System.Decimal,System.Nullable{System.DateTime},System.DateTime,System.DateTime,System.String,System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32})">
+            <summary>Richer offer preview panel — includes candidate summary fields shown in the UI.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.OfferStatusSummaryDto">
+            <summary>Dashboard stats counts for each offer status.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.DTOs.OfferStatusSummaryDto.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>Dashboard stats counts for each offer status.</summary>
+        </member>
         <member name="T:MassperoTVAPI.Core.DTOs.ProcessDependencyDto">
             <summary>
             Payload for PATCH /api/processes/{id}/dependencies.
@@ -477,6 +587,24 @@
         <member name="P:MassperoTVAPI.Core.Entities.ApplicationUser.IsVerified">
             <summary>Whether the user's email/account has been verified.</summary>
         </member>
+        <member name="P:MassperoTVAPI.Core.Entities.Offer.OfferStatusId">
+            <summary>Offer lifecycle status (Pending, Accepted, Declined, Expired).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.Offer.StartDate">
+            <summary>Proposed employment start date (optional at creation).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.Offer.OfferDate">
+            <summary>Date the offer was issued. Defaults to now.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.Offer.ExpiryDate">
+            <summary>Date the offer expires.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.Offer.Benefits">
+            <summary>Free-text benefits description (health, bonuses, etc.).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.Offer.CreatedBy">
+            <summary>Username / user-id of the HR who created this offer.</summary>
+        </member>
         <member name="T:MassperoTVAPI.Core.Entities.ProcessDependency">
             <summary>
             Junction table representing the dependency relationship between processes.
@@ -493,6 +621,12 @@
             <summary>
             Represents the priority level of an issue.
             Stored as int in the database.
+            </summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.Enums.OfferStatus">
+            <summary>
+            Represents the lifecycle status of a job offer.
+            Stored as int in the database (OfferStatusId column).
             </summary>
         </member>
         <member name="M:MassperoTVAPI.Core.Interfaces.IEmailService.SendAsync(System.String,System.String,System.String,System.String)">
@@ -528,6 +662,24 @@
             Generic read-write repository for simple lookup tables (no FK navigation needed).
             </summary>
         </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IOfferRepository.GetPagedAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Int32)">
+            <summary>
+            Paged + filtered list of offers.
+            Includes Candidate → Job (Category, Location), Interviews (Type).
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IOfferRepository.GetByIdWithDetailsAsync(System.Int32)">
+            <summary>Get a single offer by ID with all related data for the preview panel.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IOfferRepository.GetStatusSummaryAsync">
+            <summary>Aggregate counts per offer status (for dashboard cards).</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IOfferRepository.GetCandidateRankAsync(System.Int32,System.Int32)">
+            <summary>
+            Returns the rank (position) of the candidate among all candidates for the same job
+            ordered by their Id (lower Id = earlier applicant = rank 1).
+            </summary>
+        </member>
         <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.IProcessRepository.GetWithDependenciesAsync(System.Int32)">
             <summary>Gets a process with all its dependencies, phase, status, and issues eagerly loaded.</summary>
         </member>
@@ -539,6 +691,15 @@
             Returns the grade of the first interview whose type name contains the given keyword
             (case-insensitive). Returns null if no matching interview exists.
             </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Mappers.CandidateMapper.BuildFileUrl(System.String,System.String)">
+            <summary>
+            Builds a full URL for a stored file name using a base URL from configuration.
+            Returns null if fileName is empty. Returns fileName as-is if it is already an absolute URI.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Mappers.OfferMapper.BuildCandidateCode(System.Int32)">
+            <summary>Formats candidate code the same way the UI shows it: CAN-YYYY-NNNNN.</summary>
         </member>
         <member name="M:MassperoTVAPI.Extensions.RoleSeeder.SeedRolesAsync(System.IServiceProvider)">
             <summary>
@@ -697,6 +858,42 @@
             <inheritdoc />
         </member>
         <member name="M:MassperoTVAPI.Migrations.AddHiringDateToCandidate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddOffersTable">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddOffersTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddOffersTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddOffersTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.ImageUrl">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.ImageUrl.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.ImageUrl.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.ImageUrl.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddCandidateProfileConfig">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddCandidateProfileConfig.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddCandidateProfileConfig.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddCandidateProfileConfig.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="F:MassperoTVAPI.Services.FileUploadService.AllowedExtensions">

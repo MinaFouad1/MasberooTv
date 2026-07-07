@@ -14,9 +14,10 @@ namespace MassperoTVAPI.Controllers;
 [Authorize(Roles = "HR,Admin")]
 public class CandidatesController : ControllerBase
 {
-    private const string CvConfigurationKey = "CvFile";
-    private const string InitialStatusName = "Under Vetting";
-    private const string InitialSecurityClearanceName = "In Check";
+    private const string CvConfigurationKey      = "CvFile";
+    private const string ProfileConfigurationKey = "ProfileImage";
+    private const string InitialStatusName                = "Under Vetting";
+    private const string InitialSecurityClearanceName     = "In Check";
 
     private readonly IUnitOfWork _uow;
     private readonly IFileUploadService _fileUploadService;
@@ -50,11 +51,11 @@ public class CandidatesController : ControllerBase
             safePage,
             safePageSize);
 
-        var cvBaseUrl  = await GetCvBaseUrlAsync();
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
         var totalPages = (int)Math.Ceiling(totalCount / (double)safePageSize);
 
         var result = new PagedResult<CandidateDto>(
-            items.Select(c => c.ToDto(cvBaseUrl)),
+            items.Select(c => c.ToDto(cvBaseUrl, profileBaseUrl)),
             totalCount,
             safePage,
             safePageSize,
@@ -65,18 +66,23 @@ public class CandidatesController : ControllerBase
 
     /// <summary>Get a single candidate by ID with full details.</summary>
     /// <param name="id">Candidate ID.</param>
-    /// <returns>The candidate details including job, status, and security clearance.</returns>
+    /// <returns>The candidate details including job, status, security clearance, and profile image.</returns>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ApiResponse<CandidateDto>>> GetById(int id)
     {
         var entity = await _uow.Candidates.GetByIdWithDetailsAsync(id);
         if (entity is null) return NotFound(ApiResponse<CandidateDto>.NotFoundResponse());
-        return Ok(ApiResponse<CandidateDto>.SuccessResponse(entity.ToDto(await GetCvBaseUrlAsync())));
+
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+        return Ok(ApiResponse<CandidateDto>.SuccessResponse(entity.ToDto(cvBaseUrl, profileBaseUrl)));
     }
 
-    /// <summary>Create a new candidate with initial status and security clearance. Optionally upload a CV file.</summary>
-    /// <param name="dto">Candidate data including name, job ID, and optional CV file.</param>
-    /// <returns>The created candidate with default candidate statuses assigned.</returns>
+    /// <summary>
+    /// Create a new candidate with initial status and security clearance.
+    /// Optionally upload a CV file and/or a profile image.
+    /// </summary>
+    /// <param name="dto">Candidate data including name, job ID, optional CV file and optional profile image.</param>
+    /// <returns>The created candidate.</returns>
     [HttpPost]
     public async Task<ActionResult<ApiResponse<CandidateDto>>> Create([FromForm] CreateCandidateDto dto)
     {
@@ -94,20 +100,31 @@ public class CandidatesController : ControllerBase
         if (initialSecurityClearance is null)
             return BadRequest(ApiResponse<CandidateDto>.ErrorResponse($"SecurityClearance '{InitialSecurityClearanceName}' not found."));
 
+        // ── CV upload (optional) ──────────────────────────────────────────────
         string? cvFileName = null;
         if (dto.CvFile is not null)
         {
-            var upload = await UploadCandidateCvAsync(dto.CvFile);
+            var upload = await UploadFileAsync(dto.CvFile, CvConfigurationKey);
             if (upload.Error is not null)
                 return BadRequest(ApiResponse<CandidateDto>.ErrorResponse(upload.Error));
-
             cvFileName = upload.FileName;
+        }
+
+        // ── Profile image upload (optional) ──────────────────────────────────
+        string? profileFileName = null;
+        if (dto.ProfileImage is not null)
+        {
+            var upload = await UploadFileAsync(dto.ProfileImage, ProfileConfigurationKey);
+            if (upload.Error is not null)
+                return BadRequest(ApiResponse<CandidateDto>.ErrorResponse(upload.Error));
+            profileFileName = upload.FileName;
         }
 
         var entity = new Candidate
         {
             Name                = dto.Name,
             CvFile              = cvFileName,
+            Profile             = profileFileName,
             JobId               = dto.JobId,
             StatusId            = initialStatus.Id,
             SecurityClearanceId = initialSecurityClearance.Id,
@@ -117,10 +134,11 @@ public class CandidatesController : ControllerBase
         await _uow.SaveChangesAsync();
 
         var created = await _uow.Candidates.GetByIdWithDetailsAsync(entity.Id);
-        return StatusCode(201, ApiResponse<CandidateDto>.CreatedResponse(created!.ToDto(await GetCvBaseUrlAsync())));
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+        return StatusCode(201, ApiResponse<CandidateDto>.CreatedResponse(created!.ToDto(cvBaseUrl, profileBaseUrl)));
     }
 
-    /// <summary>Update a candidate's basic info (name, job, reasons, CV).</summary>
+    /// <summary>Update a candidate's basic info (name, job, reasons, CV, profile image).</summary>
     /// <param name="id">Candidate ID.</param>
     /// <param name="dto">Updated candidate data.</param>
     /// <returns>The updated candidate.</returns>
@@ -136,25 +154,35 @@ public class CandidatesController : ControllerBase
         if (!await _uow.Jobs.ExistsAsync(dto.JobId))
             return BadRequest(ApiResponse<CandidateDto>.ErrorResponse($"Job {dto.JobId} not found."));
 
+        // ── CV upload (optional — only replaces if a new file is sent) ────────
         if (dto.CvFile is not null)
         {
-            var upload = await UploadCandidateCvAsync(dto.CvFile);
+            var upload = await UploadFileAsync(dto.CvFile, CvConfigurationKey);
             if (upload.Error is not null)
                 return BadRequest(ApiResponse<CandidateDto>.ErrorResponse(upload.Error));
-
             entity.CvFile = upload.FileName;
         }
 
-        entity.Name                = dto.Name;
-        entity.ReasonOfAccept      = dto.ReasonOfAccept;
-        entity.ReasonOfReject      = dto.ReasonOfReject;
-        entity.JobId               = dto.JobId;
+        // ── Profile image upload (optional — only replaces if a new file is sent)
+        if (dto.ProfileImage is not null)
+        {
+            var upload = await UploadFileAsync(dto.ProfileImage, ProfileConfigurationKey);
+            if (upload.Error is not null)
+                return BadRequest(ApiResponse<CandidateDto>.ErrorResponse(upload.Error));
+            entity.Profile = upload.FileName;
+        }
+
+        entity.Name           = dto.Name;
+        entity.ReasonOfAccept = dto.ReasonOfAccept;
+        entity.ReasonOfReject = dto.ReasonOfReject;
+        entity.JobId          = dto.JobId;
 
         _uow.Candidates.Update(entity);
         await _uow.SaveChangesAsync();
 
         var updated = await _uow.Candidates.GetByIdWithDetailsAsync(entity.Id);
-        return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(await GetCvBaseUrlAsync())));
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+        return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(cvBaseUrl, profileBaseUrl)));
     }
 
     /// <summary>Update only the application status for a candidate (e.g. Under Vetting, Approved, Rejected).</summary>
@@ -176,7 +204,8 @@ public class CandidatesController : ControllerBase
         await _uow.SaveChangesAsync();
 
         var updated = await _uow.Candidates.GetByIdWithDetailsAsync(entity.Id);
-        return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(await GetCvBaseUrlAsync()), "Candidate status updated."));
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+        return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(cvBaseUrl, profileBaseUrl), "Candidate status updated."));
     }
 
     /// <summary>Update only the security clearance status for a candidate (e.g. In Check, Cleared, Denied).</summary>
@@ -198,7 +227,8 @@ public class CandidatesController : ControllerBase
         await _uow.SaveChangesAsync();
 
         var updated = await _uow.Candidates.GetByIdWithDetailsAsync(entity.Id);
-        return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(await GetCvBaseUrlAsync()), "Security clearance updated."));
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+        return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(cvBaseUrl, profileBaseUrl), "Security clearance updated."));
     }
 
     /// <summary>Delete a candidate. Admin only.</summary>
@@ -215,17 +245,23 @@ public class CandidatesController : ControllerBase
             _uow.Candidates.Delete(entity);
             await _uow.SaveChangesAsync();
         }
-        catch(Exception ex)
-        
+        catch (Exception ex)
         {
-            return BadRequest(ApiResponse<object>.ErrorResponse($"Can not delete this one {ex.Message }"));
+            return BadRequest(ApiResponse<object>.ErrorResponse($"Can not delete this one {ex.Message}"));
         }
-    
-        return Ok(ApiResponse<bool>.SuccessResponse(true,"Deleted succesffuly"));
+
+        return Ok(ApiResponse<bool>.SuccessResponse(true, "Deleted successfully"));
     }
 
-    private async Task<string?> GetCvBaseUrlAsync()
-        => (await _uow.Configurations.GetByKeyAsync(CvConfigurationKey))?.Value;
+    // ── Private helpers ───────────────────────────────────────────────────────
+
+    /// <summary>Fetches both the CV and Profile base URLs in a single async call.</summary>
+    private async Task<(string? CvBaseUrl, string? ProfileBaseUrl)> GetBaseUrlsAsync()
+    {
+        var cvUrl      = (await _uow.Configurations.GetByKeyAsync(CvConfigurationKey))?.Value;
+        var profileUrl = (await _uow.Configurations.GetByKeyAsync(ProfileConfigurationKey))?.Value;
+        return (cvUrl, profileUrl);
+    }
 
     private async Task<Status?> GetStatusByNameAsync(string name)
         => (await _uow.Statuses.GetAllAsync())
@@ -235,11 +271,15 @@ public class CandidatesController : ControllerBase
         => (await _uow.SecurityClearances.GetAllAsync())
             .FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
 
-    private async Task<(string? FileName, string? Error)> UploadCandidateCvAsync(IFormFile file)
+    /// <summary>
+    /// Uploads a file to the specified folder key.
+    /// Returns (FileName, null) on success or (null, errorMessage) on failure.
+    /// </summary>
+    private async Task<(string? FileName, string? Error)> UploadFileAsync(IFormFile file, string folderKey)
     {
         try
         {
-            var upload = await _fileUploadService.UploadAsync(file, CvConfigurationKey);
+            var upload = await _fileUploadService.UploadAsync(file, folderKey);
             return (upload.FileName, null);
         }
         catch (Exception ex) when (ex is ArgumentException or KeyNotFoundException)

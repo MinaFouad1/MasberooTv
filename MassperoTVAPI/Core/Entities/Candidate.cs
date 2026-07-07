@@ -5,6 +5,7 @@ public class Candidate
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? CvFile { get; set; }
+    public string? Profile { get; set; }
     public string? ReasonOfAccept { get; set; }
     public string? ReasonOfReject { get; set; }
     public bool? Accepted { get; set; }

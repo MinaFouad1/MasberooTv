@@ -16,6 +16,7 @@ public class UnitOfWork : IUnitOfWork
     public ICategoryRepository               Categories         { get; }
     public IIssueRepository                  Issues             { get; }
     public IProcessRepository                Processes          { get; }
+    public IOfferRepository                  Offers             { get; }
     public ILookupRepository<Status>                 Statuses           { get; }
     public ILookupRepository<SecurityClearanceStatus> SecurityClearances { get; }
     public ILookupRepository<InterviewType>          InterviewTypes     { get; }
@@ -32,6 +33,7 @@ public class UnitOfWork : IUnitOfWork
         ICategoryRepository                categories,
         IIssueRepository                   issues,
         IProcessRepository                 processes,
+        IOfferRepository                   offers,
         ILookupRepository<Status>                  statuses,
         ILookupRepository<SecurityClearanceStatus>  securityClearances,
         ILookupRepository<InterviewType>           interviewTypes,
@@ -47,6 +49,7 @@ public class UnitOfWork : IUnitOfWork
         Categories         = categories;
         Issues             = issues;
         Processes          = processes;
+        Offers             = offers;
         Statuses           = statuses;
         SecurityClearances = securityClearances;
         InterviewTypes     = interviewTypes;

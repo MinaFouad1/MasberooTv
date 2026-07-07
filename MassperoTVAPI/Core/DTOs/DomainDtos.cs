@@ -113,6 +113,7 @@ public record CandidateDto(
     int       Id,
     string    Name,
     string?   CvFile,
+    string?   ProfileImage,
     string?   ReasonOfAccept,
     string?   ReasonOfReject,
     bool?     Accepted,
@@ -132,18 +133,19 @@ public record CandidateDto(
 );
 public record CreateCandidateDto
 {
-    [Required] [MaxLength(200)] public string  Name                { get; init; } = string.Empty;
-    public IFormFile?                         CvFile              { get; init; }
-    [Required]                  public int     JobId               { get; init; }
-
+    [Required] [MaxLength(200)] public string    Name         { get; init; } = string.Empty;
+    public IFormFile?                            CvFile       { get; init; }
+    public IFormFile?                            ProfileImage { get; init; }
+    [Required]                  public int       JobId        { get; init; }
 }
 public record UpdateCandidateDto
 {
-    [Required] [MaxLength(200)] public string  Name                { get; init; } = string.Empty;
-    public IFormFile?                         CvFile              { get; init; }
-    [MaxLength(1000)]           public string? ReasonOfAccept      { get; init; }
-    [MaxLength(1000)]           public string? ReasonOfReject      { get; init; }
-    [Required]                  public int     JobId               { get; init; }
+    [Required] [MaxLength(200)] public string    Name           { get; init; } = string.Empty;
+    public IFormFile?                            CvFile         { get; init; }
+    public IFormFile?                            ProfileImage   { get; init; }
+    [MaxLength(1000)]           public string?   ReasonOfAccept { get; init; }
+    [MaxLength(1000)]           public string?   ReasonOfReject { get; init; }
+    [Required]                  public int       JobId          { get; init; }
 }
 
 // ── Interview ─────────────────────────────────────────────────────────────────
@@ -392,7 +394,6 @@ public record PagedResult<T>(
     int            TotalPages
 );
 
-// ── Applications Search Query ─────────────────────────────────────────────────
 /// <summary>Query parameters for searching/filtering candidates (applications) with pagination.</summary>
 public class GetApplicationsQueryDto
 {
@@ -420,3 +421,112 @@ public class GetApplicationsQueryDto
     /// <summary>Number of items per page. Defaults to 10.</summary>
     public int       PageSize      { get; init; } = 10;
 }
+
+// ── Offers ────────────────────────────────────────────────────────────────────
+
+/// <summary>Full offer details — used for list rows and offer preview.</summary>
+public record OfferDto(
+    int       Id,
+    int       CandidateId,
+    string    CandidateName,
+    string    CandidateCode,
+    int       JobId,
+    string    JobName,
+    int       CategoryId,
+    string    DepartmentName,
+    string?   EmploymentType,
+    string?   WorkLocation,
+    string    OfferStatus,          // "Pending" | "Accepted" | "Declined" | "Expired"
+    int       OfferStatusId,
+    decimal   ProposedSalary,
+    DateTime? StartDate,
+    DateTime  OfferDate,
+    DateTime  ExpiryDate,
+    string?   Benefits,
+    DateTime  CreatedAt,
+    string?   CreatedBy
+);
+
+/// <summary>Request body for creating a new offer.</summary>
+public record CreateOfferDto
+{
+    [Required] public int       CandidateId    { get; init; }
+    [Required] public decimal   ProposedSalary { get; init; }
+    [Required] public DateTime  ExpiryDate     { get; init; }
+               public DateTime? StartDate      { get; init; }
+    [MaxLength(2000)] public string? Benefits  { get; init; }
+}
+
+/// <summary>Request body for updating an existing offer's details.</summary>
+public record UpdateOfferDto
+{
+    [Required] public decimal   ProposedSalary { get; init; }
+    [Required] public DateTime  ExpiryDate     { get; init; }
+               public DateTime? StartDate      { get; init; }
+    [MaxLength(2000)] public string? Benefits  { get; init; }
+}
+
+/// <summary>Query parameters for searching/filtering offers with pagination.</summary>
+public class GetOffersQueryDto
+{
+    /// <summary>Filter by candidate name (partial match).</summary>
+    public string?   CandidateName  { get; init; }
+
+    /// <summary>Filter by offer status (1=Pending, 2=Accepted, 3=Declined, 4=Expired).</summary>
+    public int?      OfferStatusId  { get; init; }
+
+    /// <summary>Filter by department/category ID.</summary>
+    public int?      CategoryId     { get; init; }
+
+    /// <summary>Filter by job position ID.</summary>
+    public int?      JobId          { get; init; }
+
+    /// <summary>Filter by offer date — from (inclusive).</summary>
+    public DateTime? DateFrom       { get; init; }
+
+    /// <summary>Filter by offer date — to (inclusive).</summary>
+    public DateTime? DateTo         { get; init; }
+
+    /// <summary>Page number (1-based). Defaults to 1.</summary>
+    public int       Page           { get; init; } = 1;
+
+    /// <summary>Number of items per page. Defaults to 10.</summary>
+    public int       PageSize       { get; init; } = 10;
+}
+
+/// <summary>Richer offer preview panel — includes candidate summary fields shown in the UI.</summary>
+public record OfferPreviewDto(
+    // Offer fields
+    int       OfferId,
+    string    OfferStatus,
+    int       OfferStatusId,
+    decimal   ProposedSalary,
+    DateTime? StartDate,
+    DateTime  OfferDate,
+    DateTime  ExpiryDate,
+    string?   Benefits,
+    // Candidate info
+    int       CandidateId,
+    string    CandidateName,
+    string    CandidateCode,
+    // Job / position info
+    int       JobId,
+    string    JobName,
+    string    DepartmentName,
+    string?   EmploymentType,
+    string?   WorkLocation,
+    // Candidate summary (right panel in UI)
+    string?   HrScore,
+    string?   TechnicalScore,
+    int?      CandidateRank      // rank among candidates for same job
+);
+
+/// <summary>Dashboard stats counts for each offer status.</summary>
+public record OfferStatusSummaryDto(
+    int TotalOffers,
+    int Pending,
+    int Accepted,
+    int Declined,
+    int Expired
+);
+

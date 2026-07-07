@@ -413,7 +413,7 @@
         "tags": [
           "Candidates"
         ],
-        "summary": "Create a new candidate with initial status and security clearance. Optionally upload a CV file.",
+        "summary": "Create a new candidate with initial status and security clearance.\r\nOptionally upload a CV file and/or a profile image.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -432,6 +432,10 @@
                     "type": "string",
                     "format": "binary"
                   },
+                  "ProfileImage": {
+                    "type": "string",
+                    "format": "binary"
+                  },
                   "JobId": {
                     "type": "integer",
                     "format": "int32"
@@ -443,6 +447,9 @@
                   "style": "form"
                 },
                 "CvFile": {
+                  "style": "form"
+                },
+                "ProfileImage": {
                   "style": "form"
                 },
                 "JobId": {
@@ -521,7 +528,7 @@
         "tags": [
           "Candidates"
         ],
-        "summary": "Update a candidate's basic info (name, job, reasons, CV).",
+        "summary": "Update a candidate's basic info (name, job, reasons, CV, profile image).",
         "parameters": [
           {
             "name": "id",
@@ -552,6 +559,10 @@
                     "type": "string",
                     "format": "binary"
                   },
+                  "ProfileImage": {
+                    "type": "string",
+                    "format": "binary"
+                  },
                   "ReasonOfAccept": {
                     "maxLength": 1000,
                     "type": "string"
@@ -571,6 +582,9 @@
                   "style": "form"
                 },
                 "CvFile": {
+                  "style": "form"
+                },
+                "ProfileImage": {
                   "style": "form"
                 },
                 "ReasonOfAccept": {
@@ -3217,6 +3231,430 @@
         }
       }
     },
+    "/api/offers/summary": {
+      "get": {
+        "tags": [
+          "Offers"
+        ],
+        "summary": "Returns offer status counts for the dashboard summary cards.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferStatusSummaryDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferStatusSummaryDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferStatusSummaryDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/offers": {
+      "get": {
+        "tags": [
+          "Offers"
+        ],
+        "summary": "Returns a paged, filtered list of offers.\r\nFilters: candidateName, offerStatusId, categoryId, jobId, dateFrom, dateTo.",
+        "parameters": [
+          {
+            "name": "CandidateName",
+            "in": "query",
+            "description": "Filter by candidate name (partial match).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "OfferStatusId",
+            "in": "query",
+            "description": "Filter by offer status (1=Pending, 2=Accepted, 3=Declined, 4=Expired).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "CategoryId",
+            "in": "query",
+            "description": "Filter by department/category ID.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "JobId",
+            "in": "query",
+            "description": "Filter by job position ID.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "DateFrom",
+            "in": "query",
+            "description": "Filter by offer date — from (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "DateTo",
+            "in": "query",
+            "description": "Filter by offer date — to (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "Page number (1-based). Defaults to 1.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page. Defaults to 10.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoPagedResultApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoPagedResultApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoPagedResultApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Offers"
+        ],
+        "summary": "Creates a new offer for a candidate.\r\nAutomatically moves the candidate's status to \"In Offer\".",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOfferDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOfferDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOfferDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/offers/{id}": {
+      "get": {
+        "tags": [
+          "Offers"
+        ],
+        "summary": "Returns the full offer preview including candidate summary and rank.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferPreviewDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferPreviewDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferPreviewDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Offers"
+        ],
+        "summary": "Updates an existing offer's details (salary, start date, expiry date, benefits).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOfferDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOfferDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOfferDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Offers"
+        ],
+        "summary": "Deletes an offer. Admin only.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/offers/{id}/accept": {
+      "patch": {
+        "tags": [
+          "Offers"
+        ],
+        "summary": "Marks the offer as Accepted.\r\nAutomatically moves the candidate's status to \"Hired\".",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/offers/{id}/decline": {
+      "patch": {
+        "tags": [
+          "Offers"
+        ],
+        "summary": "Marks the offer as Declined.\r\nAutomatically moves the candidate's status to \"Rejected\".",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/offers/{id}/expire": {
+      "patch": {
+        "tags": [
+          "Offers"
+        ],
+        "summary": "Marks the offer as Expired.\r\nAutomatically moves the candidate's status back to \"In Process\".",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Phases": {
       "post": {
         "tags": [
@@ -4524,6 +4962,10 @@
             "type": "string",
             "nullable": true
           },
+          "profileImage": {
+            "type": "string",
+            "nullable": true
+          },
           "reasonOfAccept": {
             "type": "string",
             "nullable": true
@@ -4901,6 +5343,40 @@
           }
         },
         "additionalProperties": false
+      },
+      "CreateOfferDto": {
+        "required": [
+          "candidateId",
+          "expiryDate",
+          "proposedSalary"
+        ],
+        "type": "object",
+        "properties": {
+          "candidateId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proposedSalary": {
+            "type": "number",
+            "format": "double"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "benefits": {
+            "maxLength": 2000,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body for creating a new offer."
       },
       "CreatePhaseDto": {
         "required": [
@@ -5668,6 +6144,340 @@
           },
           "data": {
             "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "candidateId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "candidateName": {
+            "type": "string",
+            "nullable": true
+          },
+          "candidateCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jobName": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "departmentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "employmentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "workLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "offerStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "offerStatusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proposedSalary": {
+            "type": "number",
+            "format": "double"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "offerDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "benefits": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Full offer details — used for list rows and offer preview."
+      },
+      "OfferDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/OfferDto"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferDtoPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferDto"
+            },
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Generic paged result returned by list endpoints that support pagination."
+      },
+      "OfferDtoPagedResultApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/OfferDtoPagedResult"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferPreviewDto": {
+        "type": "object",
+        "properties": {
+          "offerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offerStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "offerStatusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proposedSalary": {
+            "type": "number",
+            "format": "double"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "offerDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "benefits": {
+            "type": "string",
+            "nullable": true
+          },
+          "candidateId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "candidateName": {
+            "type": "string",
+            "nullable": true
+          },
+          "candidateCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jobName": {
+            "type": "string",
+            "nullable": true
+          },
+          "departmentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "employmentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "workLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "hrScore": {
+            "type": "string",
+            "nullable": true
+          },
+          "technicalScore": {
+            "type": "string",
+            "nullable": true
+          },
+          "candidateRank": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Richer offer preview panel — includes candidate summary fields shown in the UI."
+      },
+      "OfferPreviewDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/OfferPreviewDto"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferStatusSummaryDto": {
+        "type": "object",
+        "properties": {
+          "totalOffers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pending": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "accepted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "declined": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "expired": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Dashboard stats counts for each offer status."
+      },
+      "OfferStatusSummaryDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/OfferStatusSummaryDto"
           },
           "statusCode": {
             "type": "integer",
@@ -7009,6 +7819,35 @@
           }
         },
         "additionalProperties": false
+      },
+      "UpdateOfferDto": {
+        "required": [
+          "expiryDate",
+          "proposedSalary"
+        ],
+        "type": "object",
+        "properties": {
+          "proposedSalary": {
+            "type": "number",
+            "format": "double"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "benefits": {
+            "maxLength": 2000,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body for updating an existing offer's details."
       },
       "UpdatePhaseDto": {
         "required": [
