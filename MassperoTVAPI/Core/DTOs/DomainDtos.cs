@@ -344,6 +344,7 @@ public record PatchCandidateSecurityDto
 public record UserDto(
     string Id,
     string UserName,
+    string PhoneNumber,
     string Email,
     bool IsVerified,
     IList<string> Roles,
@@ -368,6 +369,42 @@ public record UpdateUserStatusDto
 {
     [Required(ErrorMessage = "Status is required.")]
     public AccountStatus Status { get; init; }
+}
+
+/// <summary>
+/// Flat search-result DTO returned by GET /api/users/search.
+/// Contains only the fields relevant for the user list view.
+/// </summary>
+public record UserSearchResultDto(
+    string Id,
+    string UserName,
+    string Email,
+    IList<string> Roles,
+    AccountStatus AccountStatus,
+    DateTime? LastLoginAt
+);
+
+/// <summary>Query parameters for the advanced user-search endpoint.</summary>
+public record UserSearchQueryDto
+{
+    /// <summary>Partial match on username (case-insensitive).</summary>
+    public string? UserName { get; init; }
+
+    /// <summary>Partial match on email (case-insensitive).</summary>
+    public string? Email { get; init; }
+
+    /// <summary>Exact match on role name (e.g. "Admin", "HR").</summary>
+    public string? Role { get; init; }
+
+    /// <summary>Filter by account status (Active / Blocked / Locked).</summary>
+    public AccountStatus? Status { get; init; }
+
+    /// <summary>
+    /// How to combine the provided filters.
+    /// "AND" (default) — user must satisfy ALL supplied filters.
+    /// "OR"            — user must satisfy AT LEAST ONE supplied filter.
+    /// </summary>
+    public string Mode { get; init; } = "AND";
 }
 
 // ── Admin dashboard statistics ─────────────────────────────────────────────────

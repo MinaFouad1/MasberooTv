@@ -4768,16 +4768,50 @@
         }
       }
     },
-    "/api/Users": {
+    "/api/Users/search": {
       "get": {
         "tags": [
           "Users"
         ],
-        "summary": "List all users. Optional search by username or email.",
+        "summary": "Advanced user search. All filters are optional. Use `mode=AND` (default)\r\nto require all filters match, or `mode=OR` to match any filter.",
+        "description": "Example — AND: `?userName=john&status=Active&mode=AND`\r\n\r\nExample — OR:  `?email=@eta.com&role=HR&mode=OR`",
         "parameters": [
           {
-            "name": "search",
+            "name": "UserName",
             "in": "query",
+            "description": "Partial match on username (case-insensitive).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Email",
+            "in": "query",
+            "description": "Partial match on email (case-insensitive).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Role",
+            "in": "query",
+            "description": "Exact match on role name (e.g. \"Admin\", \"HR\").",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Status",
+            "in": "query",
+            "description": "Filter by account status (Active / Blocked / Locked).",
+            "schema": {
+              "$ref": "#/components/schemas/AccountStatus"
+            }
+          },
+          {
+            "name": "Mode",
+            "in": "query",
+            "description": "How to combine the provided filters.\r\n\"AND\" (default) — user must satisfy ALL supplied filters.\r\n\"OR\"            — user must satisfy AT LEAST ONE supplied filter.",
             "schema": {
               "type": "string"
             }
@@ -4789,17 +4823,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/UserSearchResultDtoIEnumerableApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/UserSearchResultDtoIEnumerableApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/UserSearchResultDtoIEnumerableApiResponse"
                 }
               }
             }
@@ -8727,6 +8761,10 @@
             "type": "string",
             "nullable": true
           },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
           "email": {
             "type": "string",
             "nullable": true
@@ -8779,7 +8817,41 @@
         },
         "additionalProperties": false
       },
-      "UserDtoIEnumerableApiResponse": {
+      "UserSearchResultDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "accountStatus": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "lastLoginAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Flat search-result DTO returned by GET /api/users/search.\r\nContains only the fields relevant for the user list view."
+      },
+      "UserSearchResultDtoIEnumerableApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -8792,7 +8864,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserDto"
+              "$ref": "#/components/schemas/UserSearchResultDto"
             },
             "nullable": true
           },

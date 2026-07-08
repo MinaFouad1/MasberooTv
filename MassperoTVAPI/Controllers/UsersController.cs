@@ -11,11 +11,12 @@ namespace MassperoTVAPI.Controllers;
 
 /// <summary>
 /// User management — Admin only.
-/// GET    /api/users              → list / search all users
-/// GET    /api/users/{id}         → get user by ID
-/// POST   /api/users/hr           → create a user with the HR role
-/// PATCH  /api/users/{id}/status  → set AccountStatus (Active / Blocked / Locked)
-/// DELETE /api/users/{id}         → delete a user
+/// GET    /api/users               → list all users (simple search)
+/// GET    /api/users/search        → advanced search with AND/OR mode
+/// GET    /api/users/{id}          → get user by ID
+/// POST   /api/users/hr            → create a user with the HR role
+/// PATCH  /api/users/{id}/status   → set AccountStatus (Active / Blocked / Locked)
+/// DELETE /api/users/{id}          → delete a user
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
@@ -35,28 +36,118 @@ public class UsersController : ControllerBase
 
     // ── GET /api/users?search= ────────────────────────────────────────────────
     /// <summary>List all users. Optional search by username or email.</summary>
-    [HttpGet]
-    [ProducesResponseType(typeof(ApiResponse<IEnumerable<UserDto>>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<ApiResponse<IEnumerable<UserDto>>>> GetAll(
-        [FromQuery] string? search)
+    //[HttpGet]
+    //[ProducesResponseType(typeof(ApiResponse<IEnumerable<UserDto>>), StatusCodes.Status200OK)]
+    //public async Task<ActionResult<ApiResponse<IEnumerable<UserDto>>>> GetAll(
+    //    [FromQuery] string? search)
+    //{
+    //    var query = _userManager.Users.AsQueryable();
+
+    //    if (!string.IsNullOrWhiteSpace(search))
+    //        query = query.Where(u =>
+    //            u.UserName!.Contains(search) ||
+    //            u.Email!.Contains(search));
+
+    //    var users = await query.ToListAsync();
+
+    //    var dtos = new List<UserDto>();
+    //    foreach (var u in users)
+    //    {
+    //        var roles = await _userManager.GetRolesAsync(u);
+    //        dtos.Add(new UserDto(u.Id, u.UserName!,u.PhoneNumber ,u.Email!, u.IsVerified, roles, u.AccountStatus, u.LastLoginAt));
+    //    }
+
+    //    return Ok(ApiResponse<IEnumerable<UserDto>>.SuccessResponse(dtos));
+    //}
+
+    // ── GET /api/users/search ─────────────────────────────────────────────────
+    /// <summary>
+    /// Advanced user search. All filters are optional. Use <c>mode=AND</c> (default)
+    /// to require all filters match, or <c>mode=OR</c> to match any filter.
+    /// </summary>
+    /// <remarks>
+    /// Example — AND: <c>?userName=john&amp;status=Active&amp;mode=AND</c><br/>
+    /// Example — OR:  <c>?email=@eta.com&amp;role=HR&amp;mode=OR</c>
+    /// </remarks>
+    [HttpGet("search")]
+    [ProducesResponseType(typeof(ApiResponse<IEnumerable<UserSearchResultDto>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResponse<IEnumerable<UserSearchResultDto>>>> Search(
+        [FromQuery] UserSearchQueryDto query)
     {
-        var query = _userManager.Users.AsQueryable();
+        var isOr = query.Mode.Equals("OR", StringComparison.OrdinalIgnoreCase);
 
-        if (!string.IsNullOrWhiteSpace(search))
-            query = query.Where(u =>
-                u.UserName!.Contains(search) ||
-                u.Email!.Contains(search));
+        var hasUserName = !string.IsNullOrWhiteSpace(query.UserName);
+        var hasEmail    = !string.IsNullOrWhiteSpace(query.Email);
+        var hasStatus   = query.Status.HasValue;
+        // Role filter is applied in-memory (Identity doesn't expose role FK in Users table)
+        var hasRole     = !string.IsNullOrWhiteSpace(query.Role);
 
-        var users = await query.ToListAsync();
+        // No filters at all → return every user
+        bool noFilters = !hasUserName && !hasEmail && !hasStatus && !hasRole;
 
-        var dtos = new List<UserDto>();
+        // ── DB-level filtering (username / email / status) ────────────────────
+        IQueryable<ApplicationUser> dbQuery = _userManager.Users;
+
+        if (!noFilters)
+        {
+            if (isOr)
+            {
+                // OR: at least one DB-level condition must match
+                dbQuery = dbQuery.Where(u =>
+                    (hasUserName && u.UserName!.Contains(query.UserName!)) ||
+                    (hasEmail    && u.Email!.Contains(query.Email!))       ||
+                    (hasStatus   && u.AccountStatus == query.Status!.Value));
+            }
+            else
+            {
+                // AND: every supplied DB-level condition must match
+                if (hasUserName)
+                    dbQuery = dbQuery.Where(u => u.UserName!.Contains(query.UserName!));
+                if (hasEmail)
+                    dbQuery = dbQuery.Where(u => u.Email!.Contains(query.Email!));
+                if (hasStatus)
+                    dbQuery = dbQuery.Where(u => u.AccountStatus == query.Status!.Value);
+            }
+        }
+
+        var users = await dbQuery.ToListAsync();
+
+        // ── In-memory role filtering ──────────────────────────────────────────
+        var results = new List<UserSearchResultDto>();
         foreach (var u in users)
         {
             var roles = await _userManager.GetRolesAsync(u);
-            dtos.Add(new UserDto(u.Id, u.UserName!, u.Email!, u.IsVerified, roles, u.AccountStatus, u.LastLoginAt));
+
+            if (hasRole)
+            {
+                bool roleMatch = roles.Contains(query.Role!, StringComparer.OrdinalIgnoreCase);
+
+                if (isOr)
+                {
+                    // OR mode: if none of the DB filters already hit, skip unless role matches
+                    bool dbHit = (hasUserName && u.UserName!.Contains(query.UserName!))  ||
+                                 (hasEmail    && u.Email!.Contains(query.Email!))         ||
+                                 (hasStatus   && u.AccountStatus == query.Status!.Value);
+                    if (!dbHit && !roleMatch) continue;
+                }
+                else
+                {
+                    // AND mode: role MUST also match
+                    if (!roleMatch) continue;
+                }
+            }
+
+            results.Add(new UserSearchResultDto(
+                u.Id,
+                u.UserName!,
+                u.Email!,
+                roles,
+                u.AccountStatus,
+                u.LastLoginAt));
         }
 
-        return Ok(ApiResponse<IEnumerable<UserDto>>.SuccessResponse(dtos));
+        return Ok(ApiResponse<IEnumerable<UserSearchResultDto>>.SuccessResponse(
+            results, $"{results.Count} user(s) found."));
     }
 
     // ── GET /api/users/{id} ───────────────────────────────────────────────────
@@ -72,7 +163,7 @@ public class UsersController : ControllerBase
 
         var roles = await _userManager.GetRolesAsync(user);
         return Ok(ApiResponse<UserDto>.SuccessResponse(
-            new UserDto(user.Id, user.UserName!, user.Email!, user.IsVerified, roles, user.AccountStatus, user.LastLoginAt)));
+            new UserDto(user.Id, user.UserName!,user.PhoneNumber!, user.Email!, user.IsVerified, roles, user.AccountStatus, user.LastLoginAt)));
     }
 
     // ── POST /api/users/hr ────────────────────────────────────────────────────
@@ -116,7 +207,7 @@ public class UsersController : ControllerBase
         var roles = await _userManager.GetRolesAsync(user);
 
         return StatusCode(201, ApiResponse<UserDto>.CreatedResponse(
-            new UserDto(user.Id, user.UserName!, user.Email!, user.IsVerified, roles, user.AccountStatus, user.LastLoginAt),
+            new UserDto(user.Id, user.UserName!,user.PhoneNumber!, user.Email!, user.IsVerified, roles, user.AccountStatus, user.LastLoginAt),
             "HR user created successfully."));
     }
 
@@ -156,7 +247,7 @@ public class UsersController : ControllerBase
 
         var roles = await _userManager.GetRolesAsync(user);
         return Ok(ApiResponse<UserDto>.SuccessResponse(
-            new UserDto(user.Id, user.UserName!, user.Email!, user.IsVerified, roles, user.AccountStatus, user.LastLoginAt),
+            new UserDto(user.Id, user.UserName!,user.PhoneNumber!, user.Email!, user.IsVerified, roles, user.AccountStatus, user.LastLoginAt),
             $"User status updated to '{dto.Status}' successfully."));
     }
 
