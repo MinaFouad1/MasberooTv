@@ -9,6 +9,8 @@ public class Category
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string? CategoryCode { get; set; }
 
+    public string? Description { get; set; }
+
     // Navigation
     public ICollection<Job> Jobs { get; set; } = [];
 }

@@ -9,4 +9,5 @@ public interface IIssueRepository : IGenericRepository<Issue>
     Task<IEnumerable<Issue>> GetAllWithDetailsAsync(int? processId, DateTime? date, bool? resolved, string? name = null, IssuePriority? priority = null);
     Task<Issue?> GetByIdWithDetailsAsync(int id);
     Task<IEnumerable<Issue>> GetByProcessAsync(int processId);
+    Task<IEnumerable<Issue>> GetTopRisksAsync(int count = 5);
 }

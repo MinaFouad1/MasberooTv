@@ -180,20 +180,7 @@
             <summary>Get interviews for a candidate filtered by type (HR or Technical).</summary>
             
         </member>
-        <member name="M:MassperoTVAPI.Controllers.InterviewsController.Create(MassperoTVAPI.Core.DTOs.CreateInterviewDto)">
-            <summary>Schedule a new interview for a candidate. HR only.</summary>
-            <param name="dto">Interview details including candidate, type, grade, and comments.</param>
-            <returns>The created interview.</returns>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.InterviewsController.PatchGrade(System.Int32,MassperoTVAPI.Core.DTOs.PatchInterviewGradeDto)">
-            <summary>Update the grade and optional comments for an interview. HR only.</summary>
-            <param name="id">Interview ID.</param>
-            <param name="dto">New grade and optional comments.</param>
-            <returns>The updated interview.</returns>
-        </member>
         <member name="M:MassperoTVAPI.Controllers.InterviewsController.Delete(System.Int32)">
-            <summary>Delete an interview. HR only.</summary>
-            <param name="id">Interview ID.</param>
             <returns>Success status.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.IssuesController.GetAll(System.String,System.Nullable{MassperoTVAPI.Core.Enums.IssuePriority},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.Boolean})">
@@ -208,6 +195,10 @@
         <member name="M:MassperoTVAPI.Controllers.IssuesController.GetStatistics">
             <summary>Get statistics for all risks/issues including total count and percentages by priority.</summary>
             <returns>Statistics object with counts and percentages.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.GetTopRisks">
+            <summary>Get top 5 unresolved issues ordered by priority (Critical first).</summary>
+            <returns>List of top 5 risk issues.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.IssuesController.GetById(System.Int32)">
             <summary>Get a single issue by ID.</summary>
@@ -485,15 +476,8 @@
             DELETE /api/users/{id}          → delete a user
             </summary>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.UsersController.Search(MassperoTVAPI.Core.DTOs.UserSearchQueryDto)">
-            <summary>
-            Advanced user search. All filters are optional. Use <c>mode=AND</c> (default)
-            to require all filters match, or <c>mode=OR</c> to match any filter.
-            </summary>
-            <remarks>
-            Example — AND: <c>?userName=john&amp;status=Active&amp;mode=AND</c><br/>
-            Example — OR:  <c>?email=@eta.com&amp;role=HR&amp;mode=OR</c>
-            </remarks>
+        <member name="M:MassperoTVAPI.Controllers.UsersController.GetStatistics">
+            <summary>Get statistics for all users including total counts and percentages.</summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.UsersController.GetById(System.String)">
             <summary>Get a single user by ID.</summary>
@@ -870,10 +854,9 @@
             Returns null if no parseable grades exist.
             </summary>
         </member>
-        <member name="M:MassperoTVAPI.Core.Mappers.CandidateMapper.ComputeHiringProbability(System.Nullable{System.Decimal})">
+        <member name="M:MassperoTVAPI.Core.Mappers.CandidateMapper.ComputeHiringProbability(System.Int32,System.Int32)">
             <summary>
-            Maps overall score to a human-readable hiring probability label.
-            &lt;50 → Low | 50–74 → Medium | 75–89 → High | ≥90 → Very High | null → N/A
+            Computes hiring probability as a percentage based on ranking among candidates for the same job.
             </summary>
         </member>
         <member name="M:MassperoTVAPI.Core.Mappers.CandidateMapper.BuildCandidateCode(System.Int32)">
@@ -1105,6 +1088,18 @@
             <inheritdoc />
         </member>
         <member name="M:MassperoTVAPI.Migrations.AddAccountStatusAndLockout.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.Desc">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Desc.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Desc.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Desc.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="F:MassperoTVAPI.Services.FileUploadService.AllowedExtensions">

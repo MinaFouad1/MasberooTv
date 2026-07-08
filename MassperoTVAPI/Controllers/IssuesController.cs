@@ -62,6 +62,16 @@ public class IssuesController : ControllerBase
         return Ok(ApiResponse<RiskStatisticsDto>.SuccessResponse(stats));
     }
 
+    /// <summary>Get top 5 unresolved issues ordered by priority (Critical first).</summary>
+    /// <returns>List of top 5 risk issues.</returns>
+    [HttpGet("top-risks")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<RiskResponseDto>>>> GetTopRisks()
+    {
+        var topRisks = await _uow.Issues.GetTopRisksAsync(5);
+        return Ok(ApiResponse<IEnumerable<RiskResponseDto>>.SuccessResponse(
+            topRisks.Select(i => i.ToRiskResponseDto())));
+    }
+
     /// <summary>Get a single issue by ID.</summary>
     /// <param name="id">Issue ID.</param>
     /// <returns>The issue details.</returns>

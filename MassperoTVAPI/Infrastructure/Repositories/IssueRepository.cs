@@ -56,4 +56,15 @@ public class IssueRepository : GenericRepository<Issue>, IIssueRepository
             .Where(i => i.ProcessId == processId)
             .AsNoTracking()
             .ToListAsync();
+
+    public async Task<IEnumerable<Issue>> GetTopRisksAsync(int count = 5)
+    {
+        return await _context.Issues
+            .Include(i => i.Process)
+            .Where(i => i.Resolved != true)
+            .OrderByDescending(i => i.Priority)
+            .Take(count)
+            .AsNoTracking()
+            .ToListAsync();
+    }
 }

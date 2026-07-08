@@ -39,11 +39,12 @@ public static class CandidateMapper
     public static CandidateDetailDto ToDetailDto(
         this Candidate c,
         int     rankingPosition,
+        int     totalCandidates,
         string? cvBaseUrl      = null,
         string? profileBaseUrl = null)
     {
         var overallScore       = ComputeOverallScore(c.Interviews);
-        var hiringProbability  = ComputeHiringProbability(overallScore);
+        var hiringProbability  = ComputeHiringProbability(rankingPosition, totalCandidates);
 
         return new CandidateDetailDto(
             // Identity
@@ -131,17 +132,16 @@ public static class CandidateMapper
     }
 
     /// <summary>
-    /// Maps overall score to a human-readable hiring probability label.
-    /// &lt;50 → Low | 50–74 → Medium | 75–89 → High | ≥90 → Very High | null → N/A
+    /// Computes hiring probability as a percentage based on ranking among candidates for the same job.
     /// </summary>
-    private static string ComputeHiringProbability(decimal? overallScore) => overallScore switch
+    private static string ComputeHiringProbability(int rankingPosition, int totalCandidates)
     {
-        null         => "N/A",
-        < 50m        => "Low",
-        < 75m        => "Medium",
-        < 90m        => "High",
-        _            => "Very High"
-    };
+        if (totalCandidates <= 0 || rankingPosition <= 0)
+            return "0%";
+
+        decimal percentage = ((decimal)(totalCandidates - rankingPosition + 1) / totalCandidates) * 100;
+        return $"{Math.Round(percentage, 0)}%";
+    }
 
     /// <summary>Formats the candidate code displayed in the UI: CAN-YYYY-NNNNN.</summary>
     public static string BuildCandidateCode(int candidateId)

@@ -456,16 +456,6 @@ D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.xm
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.pdb
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.genruntimeconfig.cache
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\ref\MassperoTVAPI.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
 D:\Projects\Masberorr\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
@@ -643,3 +633,4 @@ F:\Projects\Maspero\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.pdb
 F:\Projects\Maspero\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.genruntimeconfig.cache
 F:\Projects\Maspero\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\ref\MassperoTVAPI.dll
 F:\Projects\Maspero\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

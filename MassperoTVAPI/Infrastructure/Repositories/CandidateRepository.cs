@@ -108,7 +108,7 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
             .AsNoTracking()
             .ToListAsync();
 
-    public async Task<int> GetRankInJobAsync(int candidateId, int jobId)
+    public async Task<(int Rank, int TotalCandidates)> GetRankInJobAsync(int candidateId, int jobId)
     {
         // Load all candidates for this job with their interviews
         var peers = await _context.Candidates
@@ -134,7 +134,7 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
             .ToList();
 
         var idx = ranked.FindIndex(x => x.Id == candidateId);
-        return idx < 0 ? 0 : idx + 1;   // 1-based; 0 = not found
+        return (idx < 0 ? 0 : idx + 1, ranked.Count);   // 1-based; 0 = not found
     }
 
     public async Task<IEnumerable<Candidate>> GetJobRankingAsync(int jobId)

@@ -66,61 +66,8 @@ public class InterviewsController : ControllerBase
             list.Select(i => i.ToDto())));
     }
 
-    /// <summary>Schedule a new interview for a candidate. HR only.</summary>
-    /// <param name="dto">Interview details including candidate, type, grade, and comments.</param>
-    /// <returns>The created interview.</returns>
-    [Authorize(Roles = "HR")]
-    [HttpPost]
-    public async Task<ActionResult<ApiResponse<InterviewDto>>> Create([FromBody] CreateInterviewDto dto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ApiResponse<InterviewDto>.ErrorResponse("Validation failed."));
-
-        if (!await _uow.Candidates.ExistsAsync(dto.CandidateId))
-            return BadRequest(ApiResponse<InterviewDto>.ErrorResponse($"Candidate {dto.CandidateId} not found."));
-        if (!await _uow.InterviewTypes.ExistsAsync(dto.TypeId))
-            return BadRequest(ApiResponse<InterviewDto>.ErrorResponse($"InterviewType {dto.TypeId} not found."));
-
-        var entity = new Interview
-        {
-            Grade       = dto.Grade,
-            Comments    = dto.Comments,
-            CandidateId = dto.CandidateId,
-            TypeId      = dto.TypeId
-        };
-
-        await _uow.Interviews.AddAsync(entity);
-        await _uow.SaveChangesAsync();
-
-        var created = await _uow.Interviews.GetByIdWithDetailsAsync(entity.Id);
-        return StatusCode(201, ApiResponse<InterviewDto>.CreatedResponse(created!.ToDto()));
-    }
-
-    /// <summary>Update the grade and optional comments for an interview. HR only.</summary>
-    /// <param name="id">Interview ID.</param>
-    /// <param name="dto">New grade and optional comments.</param>
-    /// <returns>The updated interview.</returns>
-    [HttpPatch("{id:int}/grade")]
-    [Authorize(Roles = "HR")]
-    public async Task<ActionResult<ApiResponse<InterviewDto>>> PatchGrade(
-        int id, [FromBody] PatchInterviewGradeDto dto)
-    {
-        var entity = await _uow.Interviews.GetByIdAsync(id);
-        if (entity is null) return NotFound(ApiResponse<InterviewDto>.NotFoundResponse());
-
-        entity.Grade    = dto.Grade;
-        entity.Comments = dto.Comments ?? entity.Comments;
-        _uow.Interviews.Update(entity);
-        await _uow.SaveChangesAsync();
-
-        var updated = await _uow.Interviews.GetByIdWithDetailsAsync(entity.Id);
-        return Ok(ApiResponse<InterviewDto>.SuccessResponse(updated!.ToDto(), "Grade updated."));
-    }
-
    
 
-    /// <summary>Delete an interview. HR only.</summary>
-    /// <param name="id">Interview ID.</param>
     /// <returns>Success status.</returns>
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "HR")]

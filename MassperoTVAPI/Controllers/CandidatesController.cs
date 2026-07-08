@@ -84,11 +84,11 @@ public class CandidatesController : ControllerBase
             return NotFound(ApiResponse<CandidateDetailDto>.NotFoundResponse());
 
         // Compute ranking among all candidates for the same job
-        var rank = await _uow.Candidates.GetRankInJobAsync(entity.Id, entity.JobId);
+        var rankInfo = await _uow.Candidates.GetRankInJobAsync(entity.Id, entity.JobId);
 
         var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
         return Ok(ApiResponse<CandidateDetailDto>.SuccessResponse(
-            entity.ToDetailDto(rank, cvBaseUrl, profileBaseUrl)));
+            entity.ToDetailDto(rankInfo.Rank, rankInfo.TotalCandidates, cvBaseUrl, profileBaseUrl)));
     }
 
     /// <summary>
@@ -290,11 +290,11 @@ public class CandidatesController : ControllerBase
 
         // Re-fetch to get updated rankings/scores
         var updated = await _uow.Candidates.GetByIdWithDetailsAsync(id);
-        var rank = await _uow.Candidates.GetRankInJobAsync(id, updated!.JobId);
+        var rankInfo = await _uow.Candidates.GetRankInJobAsync(id, updated!.JobId);
         var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
 
         return Ok(ApiResponse<CandidateDetailDto>.SuccessResponse(
-            updated.ToDetailDto(rank, cvBaseUrl, profileBaseUrl), "Interview grade updated."));
+            updated.ToDetailDto(rankInfo.Rank, rankInfo.TotalCandidates, cvBaseUrl, profileBaseUrl), "Interview grade updated."));
     }
 
 

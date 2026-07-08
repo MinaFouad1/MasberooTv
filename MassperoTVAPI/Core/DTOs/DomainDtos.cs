@@ -40,6 +40,7 @@ public record CreateCategoryDto
 {
     [Required] [MaxLength(150)] public string Name { get; init; } = string.Empty;
     [MaxLength(50)] public string? CategoryCode { get; init; }
+     public string? CategoryDec { get; init; }
     public bool IsActive { get; init; } = true;
 }
 
@@ -719,4 +720,19 @@ public record CandidatePipelineDto(
 
     // Ordered list of pipeline steps (Application → HR → Technical → Offer → Security Clearance → Hired).
     IEnumerable<CandidatePipelineStepDto> Steps
+);
+
+// ── User Statistics ────────────────────────────────────────────────────────
+public record UserStatDto(
+    int Count,
+    decimal Percentage
+);
+
+public record UserStatisticsDto(
+    int TotalUsers,
+    UserStatDto ActiveUsers,
+    UserStatDto InactiveUsers,
+    UserStatDto Administrators,
+    UserStatDto LockedAccounts,
+    UserStatDto BlockedAccounts
 );

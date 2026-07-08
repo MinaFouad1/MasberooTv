@@ -60,6 +60,7 @@ public class CategoriesController : ControllerBase
         { 
             Name = dto.Name,
             CategoryCode = dto.CategoryCode,
+            Description=dto.CategoryDec ?? "",
             IsActive = dto.IsActive
         };
         await _uow.Categories.AddAsync(entity);

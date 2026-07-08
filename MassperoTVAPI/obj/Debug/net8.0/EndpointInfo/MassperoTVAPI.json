@@ -1521,54 +1521,6 @@
             }
           }
         }
-      },
-      "post": {
-        "tags": [
-          "Interviews"
-        ],
-        "summary": "Schedule a new interview for a candidate. HR only.",
-        "requestBody": {
-          "description": "Interview details including candidate, type, grade, and comments.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateInterviewDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateInterviewDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateInterviewDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/InterviewDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InterviewDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InterviewDtoApiResponse"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/api/Interviews/{id}": {
@@ -1616,12 +1568,10 @@
         "tags": [
           "Interviews"
         ],
-        "summary": "Delete an interview. HR only.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "Interview ID.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1721,68 +1671,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/InterviewDtoIEnumerableApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Interviews/{id}/grade": {
-      "patch": {
-        "tags": [
-          "Interviews"
-        ],
-        "summary": "Update the grade and optional comments for an interview. HR only.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Interview ID.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "New grade and optional comments.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PatchInterviewGradeDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PatchInterviewGradeDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PatchInterviewGradeDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/InterviewDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InterviewDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InterviewDtoApiResponse"
                 }
               }
             }
@@ -1935,6 +1823,36 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RiskStatisticsDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Issues/top-risks": {
+      "get": {
+        "tags": [
+          "Issues"
+        ],
+        "summary": "Get top 5 unresolved issues ordered by priority (Critical first).",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskResponseDtoIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskResponseDtoIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskResponseDtoIEnumerableApiResponse"
                 }
               }
             }
@@ -4773,8 +4691,6 @@
         "tags": [
           "Users"
         ],
-        "summary": "Advanced user search. All filters are optional. Use `mode=AND` (default)\r\nto require all filters match, or `mode=OR` to match any filter.",
-        "description": "Example — AND: `?userName=john&status=Active&mode=AND`\r\n\r\nExample — OR:  `?email=@eta.com&role=HR&mode=OR`",
         "parameters": [
           {
             "name": "UserName",
@@ -4834,6 +4750,36 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UserSearchResultDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Users/statistics": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get statistics for all users including total counts and percentages.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserStatisticsDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserStatisticsDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserStatisticsDtoApiResponse"
                 }
               }
             }
@@ -5896,6 +5842,10 @@
             "type": "string",
             "nullable": true
           },
+          "categoryDec": {
+            "type": "string",
+            "nullable": true
+          },
           "isActive": {
             "type": "boolean"
           }
@@ -5922,34 +5872,6 @@
           "password": {
             "minLength": 8,
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateInterviewDto": {
-        "required": [
-          "candidateId",
-          "typeId"
-        ],
-        "type": "object",
-        "properties": {
-          "grade": {
-            "maxLength": 50,
-            "type": "string",
-            "nullable": true
-          },
-          "comments": {
-            "maxLength": 2000,
-            "type": "string",
-            "nullable": true
-          },
-          "candidateId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "typeId": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -7268,26 +7190,6 @@
         },
         "additionalProperties": false,
         "description": "PATCH body to update only the candidate application status."
-      },
-      "PatchInterviewGradeDto": {
-        "required": [
-          "grade"
-        ],
-        "type": "object",
-        "properties": {
-          "grade": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "comments": {
-            "maxLength": 2000,
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "PATCH body to update the grade (and optionally comments) of an interview."
       },
       "PatchIssueResolvedDto": {
         "required": [
@@ -8867,6 +8769,72 @@
               "$ref": "#/components/schemas/UserSearchResultDto"
             },
             "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserStatDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "percentage": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserStatisticsDto": {
+        "type": "object",
+        "properties": {
+          "totalUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activeUsers": {
+            "$ref": "#/components/schemas/UserStatDto"
+          },
+          "inactiveUsers": {
+            "$ref": "#/components/schemas/UserStatDto"
+          },
+          "administrators": {
+            "$ref": "#/components/schemas/UserStatDto"
+          },
+          "lockedAccounts": {
+            "$ref": "#/components/schemas/UserStatDto"
+          },
+          "blockedAccounts": {
+            "$ref": "#/components/schemas/UserStatDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserStatisticsDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/UserStatisticsDto"
           },
           "statusCode": {
             "type": "integer",

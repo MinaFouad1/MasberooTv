@@ -34,41 +34,6 @@ public class UsersController : ControllerBase
         _roleManager = roleManager;
     }
 
-    // ── GET /api/users?search= ────────────────────────────────────────────────
-    /// <summary>List all users. Optional search by username or email.</summary>
-    //[HttpGet]
-    //[ProducesResponseType(typeof(ApiResponse<IEnumerable<UserDto>>), StatusCodes.Status200OK)]
-    //public async Task<ActionResult<ApiResponse<IEnumerable<UserDto>>>> GetAll(
-    //    [FromQuery] string? search)
-    //{
-    //    var query = _userManager.Users.AsQueryable();
-
-    //    if (!string.IsNullOrWhiteSpace(search))
-    //        query = query.Where(u =>
-    //            u.UserName!.Contains(search) ||
-    //            u.Email!.Contains(search));
-
-    //    var users = await query.ToListAsync();
-
-    //    var dtos = new List<UserDto>();
-    //    foreach (var u in users)
-    //    {
-    //        var roles = await _userManager.GetRolesAsync(u);
-    //        dtos.Add(new UserDto(u.Id, u.UserName!,u.PhoneNumber ,u.Email!, u.IsVerified, roles, u.AccountStatus, u.LastLoginAt));
-    //    }
-
-    //    return Ok(ApiResponse<IEnumerable<UserDto>>.SuccessResponse(dtos));
-    //}
-
-    // ── GET /api/users/search ─────────────────────────────────────────────────
-    /// <summary>
-    /// Advanced user search. All filters are optional. Use <c>mode=AND</c> (default)
-    /// to require all filters match, or <c>mode=OR</c> to match any filter.
-    /// </summary>
-    /// <remarks>
-    /// Example — AND: <c>?userName=john&amp;status=Active&amp;mode=AND</c><br/>
-    /// Example — OR:  <c>?email=@eta.com&amp;role=HR&amp;mode=OR</c>
-    /// </remarks>
     [HttpGet("search")]
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<UserSearchResultDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IEnumerable<UserSearchResultDto>>>> Search(
@@ -148,6 +113,37 @@ public class UsersController : ControllerBase
 
         return Ok(ApiResponse<IEnumerable<UserSearchResultDto>>.SuccessResponse(
             results, $"{results.Count} user(s) found."));
+    }
+
+    // ── GET /api/users/statistics ─────────────────────────────────────────────
+    /// <summary>Get statistics for all users including total counts and percentages.</summary>
+    [HttpGet("statistics")]
+    [ProducesResponseType(typeof(ApiResponse<UserStatisticsDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResponse<UserStatisticsDto>>> GetStatistics()
+    {
+        var users = await _userManager.Users.ToListAsync();
+        int total = users.Count;
+        
+        int activeCount = users.Count(u => u.AccountStatus == AccountStatus.Active);
+        int lockedCount = users.Count(u => u.AccountStatus == AccountStatus.Locked);
+        int blockedCount = users.Count(u => u.AccountStatus == AccountStatus.Blocked);
+        int inactiveCount = lockedCount + blockedCount;
+        
+        var admins = await _userManager.GetUsersInRoleAsync("Admin");
+        int adminCount = admins.Count;
+
+        decimal CalcPercentage(int count) => total > 0 ? Math.Round((decimal)count / total * 100, 2) : 0;
+
+        var stats = new UserStatisticsDto(
+            total,
+            new UserStatDto(activeCount, CalcPercentage(activeCount)),
+            new UserStatDto(inactiveCount, CalcPercentage(inactiveCount)),
+            new UserStatDto(adminCount, CalcPercentage(adminCount)),
+            new UserStatDto(lockedCount, CalcPercentage(lockedCount)),
+            new UserStatDto(blockedCount, CalcPercentage(blockedCount))
+        );
+
+        return Ok(ApiResponse<UserStatisticsDto>.SuccessResponse(stats));
     }
 
     // ── GET /api/users/{id} ───────────────────────────────────────────────────
