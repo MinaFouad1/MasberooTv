@@ -477,10 +477,11 @@
         <member name="T:MassperoTVAPI.Controllers.UsersController">
             <summary>
             User management — Admin only.
-            GET /api/users          → list / search all users
-            GET /api/users/{id}     → get user by ID
-            POST /api/users/hr      → create a user with the HR role
-            DELETE /api/users/{id}  → delete a user
+            GET    /api/users              → list / search all users
+            GET    /api/users/{id}         → get user by ID
+            POST   /api/users/hr           → create a user with the HR role
+            PATCH  /api/users/{id}/status  → set AccountStatus (Active / Blocked / Locked)
+            DELETE /api/users/{id}         → delete a user
             </summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.UsersController.GetAll(System.String)">
@@ -492,11 +493,20 @@
         <member name="M:MassperoTVAPI.Controllers.UsersController.CreateHr(MassperoTVAPI.Core.DTOs.CreateHrUserDto)">
             <summary>Create a new user and automatically assign the HR role.</summary>
         </member>
+        <member name="M:MassperoTVAPI.Controllers.UsersController.UpdateStatus(System.String,MassperoTVAPI.Core.DTOs.UpdateUserStatusDto)">
+            <summary>
+            Set the account status of a user (Active / Blocked / Locked).
+            Setting to Active also resets the failed login attempt counter.
+            </summary>
+        </member>
         <member name="M:MassperoTVAPI.Controllers.UsersController.Delete(System.String)">
             <summary>Delete a user account.</summary>
         </member>
         <member name="P:MassperoTVAPI.Core.DTOs.RegisterDto.Role">
             <summary>Optional role to assign on registration (e.g. "Admin", "HR").</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.DTOs.AuthResponseDto.LastLoginAt">
+            <summary>UTC timestamp of this user's last successful login (null on first login).</summary>
         </member>
         <member name="T:MassperoTVAPI.Core.DTOs.InterviewSummaryDto">
             <summary>Single interview summary used inside CandidateDetailDto.</summary>
@@ -521,6 +531,9 @@
         </member>
         <member name="T:MassperoTVAPI.Core.DTOs.PatchCandidateSecurityDto">
             <summary>PATCH body to update only the candidate security clearance status.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.UpdateUserStatusDto">
+            <summary>Payload for admin to change a user's account status.</summary>
         </member>
         <member name="T:MassperoTVAPI.Core.DTOs.PatchInterviewGradeDto">
             <summary>PATCH body to update the grade (and optionally comments) of an interview.</summary>
@@ -666,6 +679,15 @@
         <member name="P:MassperoTVAPI.Core.Entities.ApplicationUser.IsVerified">
             <summary>Whether the user's email/account has been verified.</summary>
         </member>
+        <member name="P:MassperoTVAPI.Core.Entities.ApplicationUser.AccountStatus">
+            <summary>Current account status: Active, Blocked (admin), or Locked (auto after 3 failed attempts).</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.ApplicationUser.FailedLoginAttempts">
+            <summary>Number of consecutive failed login attempts. Resets to 0 on successful login.</summary>
+        </member>
+        <member name="P:MassperoTVAPI.Core.Entities.ApplicationUser.LastLoginAt">
+            <summary>UTC timestamp of the user's last successful login.</summary>
+        </member>
         <member name="P:MassperoTVAPI.Core.Entities.Offer.OfferStatusId">
             <summary>Offer lifecycle status (Pending, Accepted, Declined, Expired).</summary>
         </member>
@@ -695,6 +717,20 @@
         </member>
         <member name="P:MassperoTVAPI.Core.Entities.ProcessDependency.DependsOnProcessId">
             <summary>The process that must be completed first.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.Enums.AccountStatus">
+            <summary>
+            Represents the account status of an application user.
+            </summary>
+        </member>
+        <member name="F:MassperoTVAPI.Core.Enums.AccountStatus.Active">
+            <summary>Account is active and can log in.</summary>
+        </member>
+        <member name="F:MassperoTVAPI.Core.Enums.AccountStatus.Blocked">
+            <summary>Account has been manually blocked by an administrator.</summary>
+        </member>
+        <member name="F:MassperoTVAPI.Core.Enums.AccountStatus.Locked">
+            <summary>Account has been automatically locked after too many failed login attempts.</summary>
         </member>
         <member name="T:MassperoTVAPI.Core.Enums.IssuePriority">
             <summary>
@@ -1015,6 +1051,18 @@
             <inheritdoc />
         </member>
         <member name="M:MassperoTVAPI.Migrations.Cateogry.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddAccountStatusAndLockout">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddAccountStatusAndLockout.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddAccountStatusAndLockout.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddAccountStatusAndLockout.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="F:MassperoTVAPI.Services.FileUploadService.AllowedExtensions">

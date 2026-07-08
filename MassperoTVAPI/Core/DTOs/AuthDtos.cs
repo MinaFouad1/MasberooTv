@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using MassperoTVAPI.Core.Enums;
 
 namespace MassperoTVAPI.Core.DTOs;
 
@@ -38,6 +39,8 @@ public record AuthResponseDto
     public string Email { get; init; } = string.Empty;
     public string UserName { get; init; } = string.Empty;
     public List<string> Roles { get; init; } = [];
+    /// <summary>UTC timestamp of this user's last successful login (null on first login).</summary>
+    public DateTime? LastLoginAt { get; init; }
 }
 
 public record UpdateProfileDto
@@ -58,6 +61,8 @@ public record ProfileDto
     public string Email { get; init; } = string.Empty;
     public string UserName { get; init; } = string.Empty;
     public List<string> Roles { get; init; } = [];
+    public AccountStatus AccountStatus { get; init; }
+    public DateTime? LastLoginAt { get; init; }
     public int? CompanyId { get; init; }
     public string? Address { get; init; }
 }

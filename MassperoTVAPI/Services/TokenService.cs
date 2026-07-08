@@ -31,6 +31,13 @@ public class TokenService : ITokenService
             new(ClaimTypes.Email, user.Email!),
             new(ClaimTypes.Name, user.UserName!),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            // Issued-at: Unix epoch seconds (standard JWT claim)
+            new(JwtRegisteredClaimNames.Iat,
+                DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
+                ClaimValueTypes.Integer64),
+            // Last login: ISO-8601 string (null becomes current time on first login)
+            new("last_login",
+                (user.LastLoginAt ?? DateTime.UtcNow).ToString("o")),
         };
 
         // Add each role as a separate claim

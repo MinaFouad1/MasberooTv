@@ -345,8 +345,10 @@ public record UserDto(
     string Id,
     string UserName,
     string Email,
-    bool   IsVerified,
-    IList<string> Roles
+    bool IsVerified,
+    IList<string> Roles,
+    AccountStatus AccountStatus,
+    DateTime? LastLoginAt
 );
 
 public record CreateHrUserDto
@@ -359,6 +361,13 @@ public record CreateHrUserDto
 
     [Required] [MinLength(8)]
     public string Password { get; init; } = string.Empty;
+}
+
+/// <summary>Payload for admin to change a user's account status.</summary>
+public record UpdateUserStatusDto
+{
+    [Required(ErrorMessage = "Status is required.")]
+    public AccountStatus Status { get; init; }
 }
 
 // ── Admin dashboard statistics ─────────────────────────────────────────────────

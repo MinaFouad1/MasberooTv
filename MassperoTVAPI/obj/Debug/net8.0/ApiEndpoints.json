@@ -31,6 +31,15 @@
           "text/json"
         ],
         "StatusCode": 401
+      },
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.AuthResponseDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 403
       }
     ]
   },
@@ -353,6 +362,37 @@
   },
   {
     "ContainingType": "MassperoTVAPI.Controllers.CandidatesController",
+    "Method": "PatchGrade",
+    "RelativePath": "api/Candidates/{id}/grade",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MassperoTVAPI.Core.DTOs.PatchCandidateInterviewGradeDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.CandidateDetailDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.CandidatesController",
     "Method": "GetPipeline",
     "RelativePath": "api/Candidates/{id}/pipeline",
     "HttpMethod": "GET",
@@ -440,16 +480,63 @@
     ]
   },
   {
+    "ContainingType": "MassperoTVAPI.Controllers.CandidatesController",
+    "Method": "GetJobRanking",
+    "RelativePath": "api/Candidates/job/{jobId}/ranking",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[System.Collections.Generic.IEnumerable\u00601[[MassperoTVAPI.Core.DTOs.CandidateRankingDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "MassperoTVAPI.Controllers.CategoriesController",
     "Method": "GetAll",
     "RelativePath": "api/Categories",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "CategoryName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsActive",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "Page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
-        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[System.Collections.Generic.IEnumerable\u00601[[MassperoTVAPI.Core.DTOs.CategoryDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.PagedResult\u00601[[MassperoTVAPI.Core.DTOs.CategoryDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -2765,6 +2852,55 @@
       },
       {
         "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.UsersController",
+    "Method": "UpdateStatus",
+    "RelativePath": "api/Users/{id}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MassperoTVAPI.Core.DTOs.UpdateUserStatusDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.UserDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.UserDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.UserDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

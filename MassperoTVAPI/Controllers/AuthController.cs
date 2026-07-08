@@ -97,27 +97,60 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     [ProducesResponseType(typeof(ApiResponse<AuthResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<AuthResponseDto>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiResponse<AuthResponseDto>), StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ApiResponse<AuthResponseDto>>> Login([FromBody] LoginDto dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user is null)
             return Unauthorized(ApiResponse<AuthResponseDto>.ErrorResponse("Invalid email or password."));
 
+        // ── Account status guard ─────────────────────────────────────────────
+        if (user.AccountStatus == Core.Enums.AccountStatus.Locked)
+            return StatusCode(403, ApiResponse<AuthResponseDto>.ForbiddenResponse(
+                "Your account has been locked due to too many failed login attempts. Please contact an administrator."));
+
+        if (user.AccountStatus == Core.Enums.AccountStatus.Blocked)
+            return StatusCode(403, ApiResponse<AuthResponseDto>.ForbiddenResponse(
+                "Your account has been blocked by an administrator. Please contact support."));
+
+        // ── Password check ───────────────────────────────────────────────────
         var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
         if (!result.Succeeded)
-            return Unauthorized(ApiResponse<AuthResponseDto>.ErrorResponse("Invalid email or password."));
+        {
+            user.FailedLoginAttempts++;
+
+            if (user.FailedLoginAttempts >= 3)
+            {
+                user.AccountStatus = Core.Enums.AccountStatus.Locked;
+                await _userManager.UpdateAsync(user);
+                return StatusCode(403, ApiResponse<AuthResponseDto>.ForbiddenResponse(
+                    "Your account has been locked after 3 failed login attempts. Please contact an administrator."));
+            }
+
+            await _userManager.UpdateAsync(user);
+            int remaining = 3 - user.FailedLoginAttempts;
+            return Unauthorized(ApiResponse<AuthResponseDto>.ErrorResponse(
+                $"Invalid email or password. {remaining} attempt(s) remaining before lockout."));
+        }
+
+        // ── Successful login ─────────────────────────────────────────────────
+        user.FailedLoginAttempts = 0;
+        user.LastLoginAt = DateTime.UtcNow;
+        await _userManager.UpdateAsync(user);
 
         var token = await _tokenService.CreateTokenAsync(user);
         var roles = await _userManager.GetRolesAsync(user);
 
         return Ok(ApiResponse<AuthResponseDto>.SuccessResponse(new AuthResponseDto
         {
-            Token = token,
-            Email = user.Email!,
-            UserName = user.UserName!,
-            Roles = roles.ToList()
+            Token       = token,
+            Email       = user.Email!,
+            UserName    = user.UserName!,
+            Roles       = roles.ToList(),
+            LastLoginAt = user.LastLoginAt
         }, "Login successful."));
     }
+
 
     /// <summary>Get current authenticated user's profile.</summary>
     [HttpGet("me")]

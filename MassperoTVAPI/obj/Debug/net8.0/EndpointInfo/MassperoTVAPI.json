@@ -164,6 +164,26 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDtoApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -771,6 +791,68 @@
         }
       }
     },
+    "/api/Candidates/{id}/grade": {
+      "patch": {
+        "tags": [
+          "Candidates"
+        ],
+        "summary": "Update interview grade for a candidate (e.g. HR or Technical).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Candidate ID.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Interview type, grade, and comments.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchCandidateInterviewGradeDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchCandidateInterviewGradeDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchCandidateInterviewGradeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateDetailDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateDetailDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateDetailDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Candidates/{id}/pipeline": {
       "get": {
         "tags": [
@@ -812,29 +894,106 @@
         }
       }
     },
-    "/api/Categories": {
+    "/api/Candidates/job/{jobId}/ranking": {
       "get": {
         "tags": [
-          "Categories"
+          "Candidates"
         ],
-        "summary": "Retrieve all job categories.",
+        "summary": "Returns a ranked list of all candidates for a specific job.\r\nOrdered by their Overall Score (descending).",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CategoryDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/CandidateRankingDtoIEnumerableApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CategoryDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/CandidateRankingDtoIEnumerableApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CategoryDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/CandidateRankingDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Retrieve all job categories with pagination and filtering.",
+        "parameters": [
+          {
+            "name": "CategoryName",
+            "in": "query",
+            "description": "Filter by category name (partial match).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IsActive",
+            "in": "query",
+            "description": "Filter by active status.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "Page number (1-based). Defaults to 1.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page. Defaults to 10.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryDtoPagedResultApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryDtoPagedResultApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryDtoPagedResultApiResponse"
                 }
               }
             }
@@ -4837,10 +4996,118 @@
           }
         }
       }
+    },
+    "/api/Users/{id}/status": {
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Set the account status of a user (Active / Blocked / Locked).\r\nSetting to Active also resets the failed login attempt counter.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserStatusDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserStatusDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AccountStatus": {
+        "enum": [
+          "Active",
+          "Blocked",
+          "Locked"
+        ],
+        "type": "string",
+        "description": "Represents the account status of an application user."
+      },
       "AdminDashboardDto": {
         "type": "object",
         "properties": {
@@ -4956,6 +5223,12 @@
             "items": {
               "type": "string"
             },
+            "nullable": true
+          },
+          "lastLoginAt": {
+            "type": "string",
+            "description": "UTC timestamp of this user's last successful login (null on first login).",
+            "format": "date-time",
             "nullable": true
           }
         },
@@ -5398,6 +5671,68 @@
         "additionalProperties": false,
         "description": "Represents a single step in the candidate hiring pipeline.\r\nStatus: \"Completed\" | \"InProgress\" | \"Pending\""
       },
+      "CandidateRankingDto": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "candidateId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "candidateName": {
+            "type": "string",
+            "nullable": true
+          },
+          "candidateCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileImage": {
+            "type": "string",
+            "nullable": true
+          },
+          "overallScore": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CandidateRankingDtoIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CandidateRankingDto"
+            },
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CategoryDto": {
         "type": "object",
         "properties": {
@@ -5408,6 +5743,21 @@
           "name": {
             "type": "string",
             "nullable": true
+          },
+          "categoryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "jobsCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -5439,7 +5789,37 @@
         },
         "additionalProperties": false
       },
-      "CategoryDtoIEnumerableApiResponse": {
+      "CategoryDtoPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryDto"
+            },
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Generic paged result returned by list endpoints that support pagination."
+      },
+      "CategoryDtoPagedResultApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -5450,11 +5830,7 @@
             "nullable": true
           },
           "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CategoryDto"
-            },
-            "nullable": true
+            "$ref": "#/components/schemas/CategoryDtoPagedResult"
           },
           "statusCode": {
             "type": "integer",
@@ -5480,6 +5856,14 @@
             "maxLength": 150,
             "minLength": 1,
             "type": "string"
+          },
+          "categoryCode": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -6800,6 +7184,29 @@
         },
         "additionalProperties": false
       },
+      "PatchCandidateInterviewGradeDto": {
+        "required": [
+          "interviewType"
+        ],
+        "type": "object",
+        "properties": {
+          "interviewType": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "grade": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "maxLength": 2000,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PatchCandidateSecurityDto": {
         "required": [
           "securityClearanceId"
@@ -7475,6 +7882,14 @@
             },
             "nullable": true
           },
+          "accountStatus": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "lastLoginAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "companyId": {
             "type": "integer",
             "format": "int32",
@@ -8035,6 +8450,14 @@
             "maxLength": 150,
             "minLength": 1,
             "type": "string"
+          },
+          "categoryCode": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -8280,6 +8703,19 @@
         },
         "additionalProperties": false
       },
+      "UpdateUserStatusDto": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/AccountStatus"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Payload for admin to change a user's account status."
+      },
       "UserDto": {
         "type": "object",
         "properties": {
@@ -8303,6 +8739,14 @@
             "items": {
               "type": "string"
             },
+            "nullable": true
+          },
+          "accountStatus": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "lastLoginAt": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },
