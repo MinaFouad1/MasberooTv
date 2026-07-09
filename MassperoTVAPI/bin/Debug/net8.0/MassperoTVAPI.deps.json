@@ -14,7 +14,8 @@
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.28",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.28",
           "Microsoft.EntityFrameworkCore.Tools": "8.0.28",
-          "Swashbuckle.AspNetCore": "6.6.2"
+          "Swashbuckle.AspNetCore": "6.6.2",
+          "itext7": "9.7.0"
         },
         "runtime": {
           "MassperoTVAPI.dll": {}
@@ -114,6 +115,75 @@
             "assemblyVersion": "2.14.0.0",
             "fileVersion": "2.14.1.48190"
           }
+        }
+      },
+      "itext/9.7.0": {
+        "dependencies": {
+          "Microsoft.DotNet.PlatformAbstractions": "1.1.0",
+          "Microsoft.Extensions.DependencyModel": "10.0.2",
+          "itext.commons": "9.7.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/itext.barcodes.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.bouncy-castle-connector.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.forms.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.io.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.kernel.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.layout.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.pdfa.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.pdfua.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.sign.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.styledxmlparser.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          },
+          "lib/netstandard2.0/itext.svg.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          }
+        }
+      },
+      "itext.commons/9.7.0": {
+        "dependencies": {
+          "System.Text.Json": "10.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/itext.commons.dll": {
+            "assemblyVersion": "9.7.0.0",
+            "fileVersion": "9.7.0.0"
+          }
+        }
+      },
+      "itext7/9.7.0": {
+        "dependencies": {
+          "itext": "9.7.0"
         }
       },
       "MailKit/4.8.0": {
@@ -424,6 +494,14 @@
           }
         }
       },
+      "Microsoft.DotNet.PlatformAbstractions/1.1.0": {
+        "runtime": {
+          "lib/netstandard1.3/Microsoft.DotNet.PlatformAbstractions.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          }
+        }
+      },
       "Microsoft.EntityFrameworkCore/8.0.28": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Abstractions": "8.0.28"
@@ -448,7 +526,7 @@
           "Humanizer.Core": "2.14.1",
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "4.5.0",
           "Microsoft.EntityFrameworkCore.Relational": "8.0.28",
-          "Microsoft.Extensions.DependencyModel": "8.0.2",
+          "Microsoft.Extensions.DependencyModel": "10.0.2",
           "Mono.TextTemplating": "2.2.1"
         },
         "runtime": {
@@ -486,11 +564,15 @@
           "Microsoft.EntityFrameworkCore.Design": "8.0.28"
         }
       },
-      "Microsoft.Extensions.DependencyModel/8.0.2": {
+      "Microsoft.Extensions.DependencyModel/10.0.2": {
+        "dependencies": {
+          "System.Text.Encodings.Web": "10.0.2",
+          "System.Text.Json": "10.0.2"
+        },
         "runtime": {
           "lib/net8.0/Microsoft.Extensions.DependencyModel.dll": {
-            "assemblyVersion": "8.0.0.2",
-            "fileVersion": "8.0.1024.46610"
+            "assemblyVersion": "10.0.0.2",
+            "fileVersion": "10.0.225.61305"
           }
         }
       },
@@ -825,6 +907,14 @@
           }
         }
       },
+      "System.IO.Pipelines/10.0.2": {
+        "runtime": {
+          "lib/net8.0/System.IO.Pipelines.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.225.61305"
+          }
+        }
+      },
       "System.Memory.Data/1.0.2": {
         "runtime": {
           "lib/netstandard2.0/System.Memory.Data.dll": {
@@ -876,6 +966,34 @@
           "lib/net6.0/System.Security.Permissions.dll": {
             "assemblyVersion": "6.0.0.0",
             "fileVersion": "6.0.21.52210"
+          }
+        }
+      },
+      "System.Text.Encodings.Web/10.0.2": {
+        "runtime": {
+          "lib/net8.0/System.Text.Encodings.Web.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.225.61305"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll": {
+            "rid": "browser",
+            "assetType": "runtime",
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.225.61305"
+          }
+        }
+      },
+      "System.Text.Json/10.0.2": {
+        "dependencies": {
+          "System.IO.Pipelines": "10.0.2",
+          "System.Text.Encodings.Web": "10.0.2"
+        },
+        "runtime": {
+          "lib/net8.0/System.Text.Json.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.225.61305"
           }
         }
       },
@@ -969,6 +1087,27 @@
       "path": "humanizer.core/2.14.1",
       "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
     },
+    "itext/9.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yQMjkvF5MjAzjDWf0AIyD1P1sjp/tRfAkXkKRTQsN1RjjfXcUNPZdbwcklPQTGt3MUGwPD8OYEmB76iTclEW3A==",
+      "path": "itext/9.7.0",
+      "hashPath": "itext.9.7.0.nupkg.sha512"
+    },
+    "itext.commons/9.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QRmNM4ZxzKCXBqsh5Dq6duA/i+TRd5AH/46nkbi762jcb3BnZkm1EY3t+OfpiQLraFSZEFKGDLLSdRdFlgT7Bg==",
+      "path": "itext.commons/9.7.0",
+      "hashPath": "itext.commons.9.7.0.nupkg.sha512"
+    },
+    "itext7/9.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PzHX0+O0q6vQD2cTSzXL3q1PO9O5Lt3IY/nJv9th43rU29HhsRP+sKZvhIJ+uaJWfs4AAAp8Z29iDJJl0/Gsaw==",
+      "path": "itext7/9.7.0",
+      "hashPath": "itext7.9.7.0.nupkg.sha512"
+    },
     "MailKit/4.8.0": {
       "type": "package",
       "serviceable": true,
@@ -1039,6 +1178,13 @@
       "path": "microsoft.data.sqlclient.sni.runtime/5.1.2",
       "hashPath": "microsoft.data.sqlclient.sni.runtime.5.1.2.nupkg.sha512"
     },
+    "Microsoft.DotNet.PlatformAbstractions/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Bl6KYfbFSIW3QIRHAp931iR5h01qHjKghdpAtncwbzNUs0+IUZ+XfwkIU0sQsR33ufGvi3u4dZMIYYFysjpHAA==",
+      "path": "microsoft.dotnet.platformabstractions/1.1.0",
+      "hashPath": "microsoft.dotnet.platformabstractions.1.1.0.nupkg.sha512"
+    },
     "Microsoft.EntityFrameworkCore/8.0.28": {
       "type": "package",
       "serviceable": true,
@@ -1081,12 +1227,12 @@
       "path": "microsoft.entityframeworkcore.tools/8.0.28",
       "hashPath": "microsoft.entityframeworkcore.tools.8.0.28.nupkg.sha512"
     },
-    "Microsoft.Extensions.DependencyModel/8.0.2": {
+    "Microsoft.Extensions.DependencyModel/10.0.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-mUBDZZRgZrSyFOsJ2qJJ9fXfqd/kXJwf3AiDoqLD9m6TjY5OO/vLNOb9fb4juC0487eq4hcGN/M2Rh/CKS7QYw==",
-      "path": "microsoft.extensions.dependencymodel/8.0.2",
-      "hashPath": "microsoft.extensions.dependencymodel.8.0.2.nupkg.sha512"
+      "sha512": "sha512-DHXzj/FKmUDmhzw7AHbMXbNNcgO8Cb9PDbYOUDICjFAdIALy2WbC6pm+dFKiAUNtcYMucZu2iMVw1ef/sdcZFw==",
+      "path": "microsoft.extensions.dependencymodel/10.0.2",
+      "hashPath": "microsoft.extensions.dependencymodel.10.0.2.nupkg.sha512"
     },
     "Microsoft.Identity.Client/4.61.3": {
       "type": "package",
@@ -1305,6 +1451,13 @@
       "path": "system.io.packaging/8.0.1",
       "hashPath": "system.io.packaging.8.0.1.nupkg.sha512"
     },
+    "System.IO.Pipelines/10.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EqMsn9r18ABvTDxrDce4OWDhBE3y+rR23ilG7Y3BudDKrDKrLG/hkD/JmeFZbctAPxSkCjyJ/Ddwbn/g7ufRJA==",
+      "path": "system.io.pipelines/10.0.2",
+      "hashPath": "system.io.pipelines.10.0.2.nupkg.sha512"
+    },
     "System.Memory.Data/1.0.2": {
       "type": "package",
       "serviceable": true,
@@ -1332,6 +1485,20 @@
       "sha512": "sha512-T/uuc7AklkDoxmcJ7LGkyX1CcSviZuLCa4jg3PekfJ7SU0niF0IVTXwUiNVP9DSpzou2PpxJ+eNY2IfDM90ZCg==",
       "path": "system.security.permissions/6.0.0",
       "hashPath": "system.security.permissions.6.0.0.nupkg.sha512"
+    },
+    "System.Text.Encodings.Web/10.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Ro4cLT4qpRy64crfLAy3ekihtXckeXrD5eI6qb6NDSEVyHcHsmH7KgN4dbnIuiBmXIoaCslx4SynLYxag1SLSQ==",
+      "path": "system.text.encodings.web/10.0.2",
+      "hashPath": "system.text.encodings.web.10.0.2.nupkg.sha512"
+    },
+    "System.Text.Json/10.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zy8ey7I16G9neZ6uzxrnYwS7pidElzN8XarsBjGu7lE2m7afTKMEe18KbY3ZSmh/z/bR40oxjd6hlUcmOEaMHw==",
+      "path": "system.text.json/10.0.2",
+      "hashPath": "system.text.json.10.0.2.nupkg.sha512"
     },
     "System.Windows.Extensions/6.0.0": {
       "type": "package",

@@ -50,6 +50,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IFileUploadService,   FileUploadService>();
         services.AddScoped<IConfigService,       ConfigService>();
         services.AddScoped<IExcelImportService,  ExcelImportService>();
+        services.AddScoped<ICvParserService,      CvParserService>();
 
         // Email service
         services.Configure<EmailSettings>(config.GetSection("EmailSettings"));

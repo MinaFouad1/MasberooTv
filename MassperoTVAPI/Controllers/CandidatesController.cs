@@ -27,11 +27,22 @@ public class CandidatesController : ControllerBase
 
     private readonly IUnitOfWork _uow;
     private readonly IFileUploadService _fileUploadService;
+    private readonly ICvParserService _cvParserService;
+    private readonly IConfiguration _config;
+    private readonly IWebHostEnvironment _env;
 
-    public CandidatesController(IUnitOfWork uow, IFileUploadService fileUploadService)
+    public CandidatesController(
+        IUnitOfWork uow,
+        IFileUploadService fileUploadService,
+        ICvParserService cvParserService,
+        IConfiguration config,
+        IWebHostEnvironment env)
     {
         _uow = uow;
         _fileUploadService = fileUploadService;
+        _cvParserService = cvParserService;
+        _config = config;
+        _env = env;
     }
 
     /// <summary>
@@ -203,6 +214,13 @@ public class CandidatesController : ControllerBase
     /// <param name="id">Candidate ID.</param>
     /// <param name="dto">New status ID.</param>
     /// <returns>The updated candidate.</returns>
+    /// 
+    [HttpGet("statuses")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<StatusDto>>>> GetStatuses()
+    {
+        var list = await _uow.Statuses.GetAllAsync();
+        return Ok(ApiResponse<IEnumerable<StatusDto>>.SuccessResponse(list.Select(s => s.ToDto())));
+    }
     [HttpPatch("{id:int}/status")]
     public async Task<ActionResult<ApiResponse<CandidateDto>>> PatchStatus(
         int id, [FromBody] PatchCandidateStatusDto  dto)
@@ -318,6 +336,44 @@ public class CandidatesController : ControllerBase
         }
 
         return Ok(ApiResponse<bool>.SuccessResponse(true, "Deleted successfully"));
+    }
+
+    // ── CV extraction endpoint ─────────────────────────────────────────────────
+
+    /// <summary>
+    /// Extract structured data from a candidate's CV PDF file.
+    /// Returns: Skills, Experience, Languages, Certificates, Education.
+    /// </summary>
+    /// <param name="id">Candidate ID.</param>
+    [HttpGet("{id:int}/extract-cv")]
+    public async Task<ActionResult<ApiResponse<CvExtractedDataDto>>> ExtractCv(int id)
+    {
+        var candidate = await _uow.Candidates.GetByIdWithDetailsAsync(id);
+        if (candidate is null)
+            return NotFound(ApiResponse<CvExtractedDataDto>.NotFoundResponse("Candidate not found."));
+
+        if (string.IsNullOrWhiteSpace(candidate.CvFile))
+            return BadRequest(ApiResponse<CvExtractedDataDto>.ErrorResponse("This candidate does not have a CV file uploaded."));
+
+        // Resolve physical path: PhysicalBasePath / CvFile / filename
+        var physicalBase = _config["FileUpload:PhysicalBasePath"] ?? "Uploads";
+        if (!Path.IsPathRooted(physicalBase))
+            physicalBase = Path.Combine(_env.ContentRootPath, physicalBase);
+
+        var physicalPath = Path.Combine(physicalBase, CvConfigurationKey, candidate.CvFile);
+
+        if (!System.IO.File.Exists(physicalPath))
+            return NotFound(ApiResponse<CvExtractedDataDto>.ErrorResponse($"CV file not found on disk: {candidate.CvFile}"));
+
+        try
+        {
+            var result = _cvParserService.Extract(physicalPath, candidate.Id, candidate.Name);
+            return Ok(ApiResponse<CvExtractedDataDto>.SuccessResponse(result, "CV data extracted successfully."));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ApiResponse<CvExtractedDataDto>.ErrorResponse($"Failed to parse CV: {ex.Message}"));
+        }
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────

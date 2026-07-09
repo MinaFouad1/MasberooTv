@@ -348,6 +348,7 @@ public record UserDto(
     string PhoneNumber,
     string Email,
     bool IsVerified,
+    int? Failed_Login_Attempts,
     IList<string> Roles,
     AccountStatus AccountStatus,
     DateTime? LastLoginAt
@@ -735,4 +736,24 @@ public record UserStatisticsDto(
     UserStatDto Administrators,
     UserStatDto LockedAccounts,
     UserStatDto BlockedAccounts
+);
+
+// ── Dashboard Summary Cards ──────────────────────────────────────────────────
+public record DashboardSummaryCardsDto(
+    int OpenPositions,
+    int JobsWithOpenPositions,
+    int CandidatesPipe,
+    int OpenRisks,
+    int HighPriorityRisks
+);
+
+// ── CV Extracted Data ─────────────────────────────────────────────────────────
+public record CvExtractedDataDto(
+    int CandidateId,
+    string CandidateName,
+    List<string> Skills,
+    List<string> Experience,
+    List<string> Languages,
+    List<string> Certificates,
+    List<string> Education
 );

@@ -231,7 +231,40 @@ public class DashboardController : ControllerBase
         return Ok(ApiResponse<IEnumerable<RiskIssueDto>>.SuccessResponse(result));
     }
 
+    /// <summary>Summary cards: Open Positions, Candidates Pipe, Open Risks.</summary>
+    /// <returns>Dashboard summary metrics.</returns>
+    [HttpGet("summary-cards")]
+    [Authorize(Roles = "Admin,HR,Client")]
+    public async Task<ActionResult<ApiResponse<DashboardSummaryCardsDto>>> GetSummaryCards()
+    {
+        var jobs = await _uow.Jobs.GetAllWithCategoryAsync();
+        int openPositions = jobs.Where(j => j.OpenPositions > 0).Sum(j => j.OpenPositions);
+        int jobsWithOpenPositions = jobs.Count(j => j.OpenPositions > 0);
+
+        var candidates = (await _uow.Candidates.GetAllAsync(null, null, null)).ToList();
+        int candidatesPipe = candidates.Count(c => 
+            string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.Status?.Name, "In Process", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.Status?.Name, "Process", StringComparison.OrdinalIgnoreCase));
+
+        var issues = (await _uow.Issues.GetAllWithDetailsAsync()).ToList();
+        var openIssues = issues.Where(i => i.Resolved != true).ToList();
+        int openRisks = openIssues.Count;
+        int highPriorityRisks = openIssues.Count(i => i.Priority == IssuePriority.High);
+
+        var data = new DashboardSummaryCardsDto(
+            OpenPositions: openPositions,
+            JobsWithOpenPositions: jobsWithOpenPositions,
+            CandidatesPipe: candidatesPipe,
+            OpenRisks: openRisks,
+            HighPriorityRisks: highPriorityRisks
+        );
+
+        return Ok(ApiResponse<DashboardSummaryCardsDto>.SuccessResponse(data));
+    }
+
     // ── Private helper ────────────────────────────────────────────────────────
+
     private async Task<ProcessDashboardDto> BuildProcessProgress(int? phaseId = null)
     {
         var processes = (await _uow.Processes.GetAllWithDetailsAsync()).ToList();

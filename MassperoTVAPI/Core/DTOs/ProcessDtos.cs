@@ -52,3 +52,5 @@ public record UpdateProcessDto(
 /// Pass an empty list to clear all dependencies.
 /// </summary>
 public record ProcessDependencyDto(IEnumerable<int> DependsOnProcessIds);
+
+public record ChangeProcessStatusDto(int StatusId);

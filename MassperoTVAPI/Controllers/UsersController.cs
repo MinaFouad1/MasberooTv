@@ -159,7 +159,7 @@ public class UsersController : ControllerBase
 
         var roles = await _userManager.GetRolesAsync(user);
         return Ok(ApiResponse<UserDto>.SuccessResponse(
-            new UserDto(user.Id, user.UserName!,user.PhoneNumber!, user.Email!, user.IsVerified, roles, user.AccountStatus, user.LastLoginAt)));
+            new UserDto(user.Id, user.UserName!,user.PhoneNumber!, user.Email!, user.IsVerified ,user.FailedLoginAttempts, roles, user.AccountStatus, user.LastLoginAt)));
     }
 
     // ── POST /api/users/hr ────────────────────────────────────────────────────
@@ -203,7 +203,7 @@ public class UsersController : ControllerBase
         var roles = await _userManager.GetRolesAsync(user);
 
         return StatusCode(201, ApiResponse<UserDto>.CreatedResponse(
-            new UserDto(user.Id, user.UserName!,user.PhoneNumber!, user.Email!, user.IsVerified, roles, user.AccountStatus, user.LastLoginAt),
+            new UserDto(user.Id, user.UserName!,user.PhoneNumber!, user.Email!, user.IsVerified, user.FailedLoginAttempts, roles, user.AccountStatus, user.LastLoginAt),
             "HR user created successfully."));
     }
 
@@ -243,7 +243,7 @@ public class UsersController : ControllerBase
 
         var roles = await _userManager.GetRolesAsync(user);
         return Ok(ApiResponse<UserDto>.SuccessResponse(
-            new UserDto(user.Id, user.UserName!,user.PhoneNumber!, user.Email!, user.IsVerified, roles, user.AccountStatus, user.LastLoginAt),
+            new UserDto(user.Id, user.UserName!,user.PhoneNumber!, user.Email!, user.IsVerified, user.FailedLoginAttempts, roles, user.AccountStatus, user.LastLoginAt),
             $"User status updated to '{dto.Status}' successfully."));
     }
 
@@ -266,5 +266,85 @@ public class UsersController : ControllerBase
 
         return Ok(ApiResponse<bool>.SuccessResponse(true, "Deleted successfully."));
     }
-}
 
+    // ── POST /api/users/{id}/reset-password ───────────────────────────────────
+    /// <summary>Reset a user's password (Admin only).</summary>
+    [HttpPost("{id}/reset-password")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ResetPassword(string id, [FromBody] AdminResetPasswordDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errs = ModelState.Values
+                .SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList();
+            return BadRequest(ApiResponse<object>.ErrorResponse("Validation failed.", 400, errs));
+        }
+
+        var user = await _userManager.FindByIdAsync(id);
+        if (user is null)
+            return NotFound(ApiResponse<object>.NotFoundResponse("User not found."));
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, token, dto.NewPassword);
+
+        if (!result.Succeeded)
+            return BadRequest(ApiResponse<object>.ErrorResponse(
+                "Failed to reset password.", 400,
+                result.Errors.Select(e => e.Description).ToList()));
+
+        return Ok(ApiResponse<bool>.SuccessResponse(true, "Password reset successfully."));
+    }
+
+    // ── PUT /api/users/{id} ───────────────────────────────────────────────────
+    /// <summary>Edit user details (Admin only).</summary>
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<UserDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> UpdateUser(string id, [FromBody] AdminUpdateUserDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errs = ModelState.Values
+                .SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList();
+            return BadRequest(ApiResponse<object>.ErrorResponse("Validation failed.", 400, errs));
+        }
+
+        var user = await _userManager.FindByIdAsync(id);
+        if (user is null)
+            return NotFound(ApiResponse<object>.NotFoundResponse("User not found."));
+
+        if (!string.Equals(user.Email, dto.Email, StringComparison.OrdinalIgnoreCase))
+        {
+            var existingByEmail = await _userManager.FindByEmailAsync(dto.Email);
+            if (existingByEmail is not null)
+                return Conflict(ApiResponse<object>.ErrorResponse("Email is already registered by another user.", 409));
+        }
+
+        if (!string.Equals(user.UserName, dto.UserName, StringComparison.OrdinalIgnoreCase))
+        {
+            var existingByName = await _userManager.FindByNameAsync(dto.UserName);
+            if (existingByName is not null)
+                return Conflict(ApiResponse<object>.ErrorResponse("Username is already taken by another user.", 409));
+        }
+
+        user.Email = dto.Email;
+        user.UserName = dto.UserName;
+        user.PhoneNumber = dto.PhoneNumber;
+
+        var result = await _userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+            return BadRequest(ApiResponse<object>.ErrorResponse(
+                "Failed to update user.", 400,
+                result.Errors.Select(e => e.Description).ToList()));
+
+        var roles = await _userManager.GetRolesAsync(user);
+        return Ok(ApiResponse<UserDto>.SuccessResponse(
+            new UserDto(user.Id, user.UserName!, user.PhoneNumber!, user.Email!, user.IsVerified, user.FailedLoginAttempts, roles, user.AccountStatus, user.LastLoginAt),
+            "User updated successfully."));
+    }
+}

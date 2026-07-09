@@ -46,11 +46,12 @@
             <param name="dto">Updated candidate data.</param>
             <returns>The updated candidate.</returns>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.CandidatesController.PatchStatus(System.Int32,MassperoTVAPI.Core.DTOs.PatchCandidateStatusDto)">
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetStatuses">
             <summary>Update only the application status for a candidate (e.g. Under Vetting, Approved, Rejected).</summary>
             <param name="id">Candidate ID.</param>
             <param name="dto">New status ID.</param>
             <returns>The updated candidate.</returns>
+            
         </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.PatchSecurityClearance(System.Int32,MassperoTVAPI.Core.DTOs.PatchCandidateSecurityDto)">
             <summary>Update only the security clearance status for a candidate (e.g. In Check, Cleared, Denied).</summary>
@@ -68,6 +69,13 @@
             <summary>Delete a candidate. Admin only.</summary>
             <param name="id">Candidate ID.</param>
             <returns>Success status.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.ExtractCv(System.Int32)">
+            <summary>
+            Extract structured data from a candidate's CV PDF file.
+            Returns: Skills, Experience, Languages, Certificates, Education.
+            </summary>
+            <param name="id">Candidate ID.</param>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetBaseUrlsAsync">
             <summary>Fetches both the CV and Profile base URLs in a single async call.</summary>
@@ -156,6 +164,10 @@
             <param name="priority">Optional. Filter by priority level (1=Low, 2=Medium, 3=High, 4=Critical).</param>
             <param name="resolved">Optional. Filter by resolved status.</param>
             <returns>List of risk issues ordered by priority descending (Critical first).</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetSummaryCards">
+            <summary>Summary cards: Open Positions, Candidates Pipe, Open Risks.</summary>
+            <returns>Dashboard summary metrics.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.ImportController.ImportCandidates(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>Import candidates from an Excel (.xlsx) or CSV file. Each imported candidate gets the default Pending process status and is logged.</summary>
@@ -444,6 +456,16 @@
             <param name="dependsOnId">The dependency process ID to remove.</param>
             <returns>No content.</returns>
         </member>
+        <member name="M:MassperoTVAPI.Controllers.ProcessesController.ChangeStatus(System.Int32,MassperoTVAPI.Core.DTOs.ChangeProcessStatusDto)">
+            <summary>Change the status of a process.</summary>
+            <param name="id">Process ID.</param>
+            <param name="dto">New status ID.</param>
+            <returns>The updated process.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.ProcessesController.GetAllStatuses">
+            <summary>Get all available process statuses.</summary>
+            <returns>List of process statuses.</returns>
+        </member>
         <member name="M:MassperoTVAPI.Controllers.RolesController.GetAll">
             <summary>List all available roles.</summary>
         </member>
@@ -493,6 +515,12 @@
         </member>
         <member name="M:MassperoTVAPI.Controllers.UsersController.Delete(System.String)">
             <summary>Delete a user account.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.UsersController.ResetPassword(System.String,MassperoTVAPI.Core.DTOs.AdminResetPasswordDto)">
+            <summary>Reset a user's password (Admin only).</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.UsersController.UpdateUser(System.String,MassperoTVAPI.Core.DTOs.AdminUpdateUserDto)">
+            <summary>Edit user details (Admin only).</summary>
         </member>
         <member name="P:MassperoTVAPI.Core.DTOs.RegisterDto.Role">
             <summary>Optional role to assign on registration (e.g. "Admin", "HR").</summary>
@@ -1102,6 +1130,30 @@
         <member name="M:MassperoTVAPI.Migrations.Desc.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="F:MassperoTVAPI.Services.CvParserService.SectionHeadingRegex">
+            <summary>
+            Builds a regex that matches any known section heading at the start of a line.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Services.CvParserService.Extract(System.String,System.Int32,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:MassperoTVAPI.Services.CvParserService.MatchSectionHeading(System.String)">
+            <summary>
+            Checks if a line is a section heading and returns the canonical section name.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Services.CvParserService.CleanLines(System.Collections.Generic.List{System.String})">
+            <summary>
+            Cleans raw lines: removes empty lines, strips bullet markers.
+            </summary>
+        </member>
+        <member name="M:MassperoTVAPI.Services.CvParserService.BuildSectionRegex">
+            <summary>
+            Builds a compiled regex that matches known section headings
+            with optional leading/trailing decorators.
+            </summary>
+        </member>
         <member name="F:MassperoTVAPI.Services.FileUploadService.AllowedExtensions">
             <summary>Allowed file extensions.</summary>
         </member>
@@ -1116,6 +1168,15 @@
         </member>
         <member name="M:MassperoTVAPI.Services.FileUploadService.DeletePhysicalFile(System.String)">
             <inheritdoc/>
+        </member>
+        <member name="M:MassperoTVAPI.Services.ICvParserService.Extract(System.String,System.Int32,System.String)">
+            <summary>
+            Extracts structured data from a PDF CV file.
+            </summary>
+            <param name="pdfFilePath">Absolute physical path to the PDF file.</param>
+            <param name="candidateId">The candidate's ID.</param>
+            <param name="candidateName">The candidate's name.</param>
+            <returns>Extracted CV data including skills, experience, languages, certificates, and education.</returns>
         </member>
         <member name="M:MassperoTVAPI.Services.IFileUploadService.UploadAsync(Microsoft.AspNetCore.Http.IFormFile,System.String)">
             <summary>

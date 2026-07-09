@@ -181,6 +181,40 @@ public class ProcessesController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>Change the status of a process.</summary>
+    /// <param name="id">Process ID.</param>
+    /// <param name="dto">New status ID.</param>
+    /// <returns>The updated process.</returns>
+    [HttpPatch("{id:int}/status")]
+    [Authorize(Roles = "Admin,HR")]
+    public async Task<ActionResult<ApiResponse<ProcessDto>>> ChangeStatus(int id, [FromBody] ChangeProcessStatusDto dto)
+    {
+        var entity = await _uow.Processes.GetWithDependenciesAsync(id);
+        if (entity is null) return NotFound(ApiResponse<ProcessDto>.NotFoundResponse("Process not found."));
+
+        var status = await _uow.ProcessStatuses.GetByIdAsync(dto.StatusId);
+        if (status is null)
+            return BadRequest(ApiResponse<ProcessDto>.ErrorResponse($"ProcessStatus {dto.StatusId} not found."));
+
+        entity.ProcessStatusId = dto.StatusId;
+
+        _uow.Processes.Update(entity);
+        await _uow.SaveChangesAsync();
+
+        var updated = await _uow.Processes.GetWithDependenciesAsync(id);
+        return Ok(ApiResponse<ProcessDto>.SuccessResponse(updated!.ToDto(), "Status updated successfully."));
+    }
+
+    /// <summary>Get all available process statuses.</summary>
+    /// <returns>List of process statuses.</returns>
+    [HttpGet("statuses")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<ProcessStatusDto>>>> GetAllStatuses()
+    {
+        var statuses = await _uow.ProcessStatuses.GetAllAsync();
+        var result = statuses.Select(s => new ProcessStatusDto(s.Id, s.Name, s.Percentage));
+        return Ok(ApiResponse<IEnumerable<ProcessStatusDto>>.SuccessResponse(result));
+    }
+
     private async Task<ProcessStatus?> GetProcessStatusByNameAsync(string name)
         => (await _uow.ProcessStatuses.GetAllAsync())
             .FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
