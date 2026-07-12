@@ -110,15 +110,15 @@ public class DashboardController : ControllerBase
     public async Task<ActionResult<ApiResponse<IssueStatisticsDto>>> GetIssueStatistics()
     {
         var issues = (await _uow.Issues.GetAllWithDetailsAsync()).ToList();
-        var resolvedIssues   = issues.Count(i => i.Resolved == true);
+        var resolvedIssues   = issues.Count(i => i.Status == IssueStatus.Solved);
         var unresolvedIssues = issues.Count - resolvedIssues;
 
         var data = new IssueStatisticsDto(
             TotalIssues:      issues.Count,
-            ResolvedIssues:   resolvedIssues,
-            UnresolvedIssues: unresolvedIssues,
-            ByResolvedStatus: issues
-                .GroupBy(i => i.Resolved == true ? "Resolved" : "Unresolved")
+            SolvedIssues:   resolvedIssues,
+            OpenIssues: unresolvedIssues,
+            ByStatus: issues
+                .GroupBy(i => i.Status == IssueStatus.Solved ? "Resolved" : "Unresolved")
                 .Select(g => new StatusCountDto(g.Key, g.Count())),
             ByProcess: issues
                 .GroupBy(i => i.Process?.Name ?? "Unknown")
@@ -145,6 +145,43 @@ public class DashboardController : ControllerBase
         );
 
         return Ok(ApiResponse<PhaseStatisticsDto>.SuccessResponse(data));
+    }
+
+    /// <summary>Get phase summary with start and end dates and average completion per phase.</summary>
+    /// <returns>Phases summary data.</returns>
+    [HttpGet("phases-summary")]
+    [Authorize(Roles = "Admin,HR,Client")]
+    public async Task<ActionResult<ApiResponse<PhasesSummaryDto>>> GetPhasesSummary()
+    {
+        var processes = (await _uow.Processes.GetAllWithDetailsAsync()).ToList();
+        var phases = (await _uow.Phases.GetAllAsync()).ToList();
+
+        var phaseItems = phases.Select(ph =>
+        {
+            var phaseProcesses = processes.Where(p => p.PhaseId == ph.Id).ToList();
+            var totalProcesses = phaseProcesses.Count;
+            var avgComp = totalProcesses > 0
+                ? Math.Round(phaseProcesses.Average(p => p.ProcessStatus?.Percentage ?? 0m), 1)
+                : 0m;
+            var startDate = phaseProcesses.Any() ? phaseProcesses.Min(p => (DateTime?)p.StartDate) : null;
+            var endDate = phaseProcesses.Any(p => p.EndDate.HasValue) ? phaseProcesses.Max(p => p.EndDate) : null;
+
+            return new PhaseSummaryItemDto(
+                Id: ph.Id,
+                Name: ph.Name,
+                AverageCompletion: avgComp,
+                StartDate: startDate,
+                EndDate: endDate,
+                TotalProcesses: totalProcesses
+            );
+        }).ToList();
+
+        var data = new PhasesSummaryDto(
+            TotalPhases: phases.Count,
+            Phases: phaseItems
+        );
+
+        return Ok(ApiResponse<PhasesSummaryDto>.SuccessResponse(data));
     }
 
     /// <summary>Recruitment funnel: counts of candidates at each stage (total, HR interview, technical interview, offers sent, accepted, hired).</summary>
@@ -209,15 +246,15 @@ public class DashboardController : ControllerBase
     [Authorize(Roles = "Admin,HR,Client")]
     public async Task<ActionResult<ApiResponse<IEnumerable<RiskIssueDto>>>> GetRiskIssues(
         [FromQuery] IssuePriority? priority,
-        [FromQuery] bool? resolved)
+        [FromQuery] IssueStatus? status)
     {
         var issues = (await _uow.Issues.GetAllWithDetailsAsync()).ToList();
 
         if (priority.HasValue)
             issues = issues.Where(i => i.Priority == priority.Value).ToList();
 
-        if (resolved.HasValue)
-            issues = issues.Where(i => i.Resolved == resolved.Value).ToList();
+        if (status.HasValue)
+            issues = issues.Where(i => i.Status == status.Value).ToList();
 
         var result = issues
             .OrderByDescending(i => i.Priority)
@@ -225,7 +262,8 @@ public class DashboardController : ControllerBase
                 Id:        i.Id,
                 IssueName: i.Name,
                 Priority:  i.Priority,
-                Resolved:  i.Resolved
+                Status:  i.Status,
+                DueDate: i.DueDate
             ));
 
         return Ok(ApiResponse<IEnumerable<RiskIssueDto>>.SuccessResponse(result));
@@ -248,7 +286,7 @@ public class DashboardController : ControllerBase
             string.Equals(c.Status?.Name, "Process", StringComparison.OrdinalIgnoreCase));
 
         var issues = (await _uow.Issues.GetAllWithDetailsAsync()).ToList();
-        var openIssues = issues.Where(i => i.Resolved != true).ToList();
+        var openIssues = issues.Where(i => i.Status != IssueStatus.Solved).ToList();
         int openRisks = openIssues.Count;
         int highPriorityRisks = openIssues.Count(i => i.Priority == IssuePriority.High);
 

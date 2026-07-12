@@ -773,6 +773,26 @@
   },
   {
     "ContainingType": "MassperoTVAPI.Controllers.DashboardController",
+    "Method": "GetPhasesSummary",
+    "RelativePath": "api/Dashboard/phases-summary",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "MassperoTVAPI.Core.Helpers.ApiResponse\u00601[[MassperoTVAPI.Core.DTOs.PhasesSummaryDto, MassperoTVAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MassperoTVAPI.Controllers.DashboardController",
     "Method": "GetProcessStatistics",
     "RelativePath": "api/Dashboard/process-statistics",
     "HttpMethod": "GET",
@@ -851,8 +871,8 @@
         "IsRequired": false
       },
       {
-        "Name": "resolved",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Name": "status",
+        "Type": "System.String",
         "IsRequired": false
       }
     ],
@@ -1062,8 +1082,8 @@
         "IsRequired": false
       },
       {
-        "Name": "resolved",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Name": "status",
+        "Type": "System.String",
         "IsRequired": false
       }
     ],
@@ -1180,8 +1200,8 @@
   },
   {
     "ContainingType": "MassperoTVAPI.Controllers.IssuesController",
-    "Method": "PatchResolved",
-    "RelativePath": "api/Issues/{id}/resolved",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/Issues/{id}/status",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -1193,7 +1213,7 @@
       },
       {
         "Name": "dto",
-        "Type": "MassperoTVAPI.Core.DTOs.PatchIssueResolvedDto",
+        "Type": "MassperoTVAPI.Core.DTOs.PatchIssueStatusDto",
         "IsRequired": true
       }
     ],

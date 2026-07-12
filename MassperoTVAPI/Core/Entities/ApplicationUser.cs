@@ -19,4 +19,6 @@ public class ApplicationUser : IdentityUser
 
     // Navigation Properties
     public ICollection<Candidate> Candidates { get; set; } = [];
+    public ICollection<Issue> CreatedIssues { get; set; } = [];
+    public ICollection<Job>   ManagedJobs   { get; set; } = [];
 }

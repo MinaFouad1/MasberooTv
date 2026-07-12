@@ -1404,6 +1404,36 @@
         }
       }
     },
+    "/api/Dashboard/phases-summary": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Get phase summary with start and end dates and average completion per phase.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhasesSummaryDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhasesSummaryDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhasesSummaryDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Dashboard/recruitment-funnel": {
       "get": {
         "tags": [
@@ -1480,11 +1510,10 @@
             }
           },
           {
-            "name": "resolved",
+            "name": "status",
             "in": "query",
-            "description": "Optional. Filter by resolved status.",
             "schema": {
-              "type": "boolean"
+              "$ref": "#/components/schemas/IssueStatus"
             }
           }
         ],
@@ -1819,11 +1848,10 @@
             }
           },
           {
-            "name": "resolved",
+            "name": "status",
             "in": "query",
-            "description": "Optional. Filter by resolved/unresolved status.",
             "schema": {
-              "type": "boolean"
+              "$ref": "#/components/schemas/IssueStatus"
             }
           }
         ],
@@ -2126,12 +2154,12 @@
         }
       }
     },
-    "/api/Issues/{id}/resolved": {
+    "/api/Issues/{id}/status": {
       "patch": {
         "tags": [
           "Issues"
         ],
-        "summary": "Toggle the resolved status of an issue.",
+        "summary": "Change the status of an issue.",
         "parameters": [
           {
             "name": "id",
@@ -2145,21 +2173,21 @@
           }
         ],
         "requestBody": {
-          "description": "New resolved state.",
+          "description": "The new status.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PatchIssueResolvedDto"
+                "$ref": "#/components/schemas/PatchIssueStatusDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/PatchIssueResolvedDto"
+                "$ref": "#/components/schemas/PatchIssueStatusDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/PatchIssueResolvedDto"
+                "$ref": "#/components/schemas/PatchIssueStatusDto"
               }
             }
           }
@@ -6387,11 +6415,15 @@
             "type": "integer",
             "format": "int32"
           },
-          "resolved": {
-            "type": "boolean",
-            "nullable": true
+          "status": {
+            "$ref": "#/components/schemas/IssueStatus"
           },
           "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dueDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -6440,6 +6472,10 @@
           "locationId": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "hiringManagerId": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -6979,11 +7015,15 @@
             "type": "string",
             "nullable": true
           },
-          "resolved": {
-            "type": "boolean",
-            "nullable": true
+          "status": {
+            "$ref": "#/components/schemas/IssueStatus"
           },
           "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dueDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -6996,6 +7036,14 @@
             "format": "int32"
           },
           "processName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdByUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdByUserName": {
             "type": "string",
             "nullable": true
           }
@@ -7091,15 +7139,15 @@
             "type": "integer",
             "format": "int32"
           },
-          "resolvedIssues": {
+          "solvedIssues": {
             "type": "integer",
             "format": "int32"
           },
-          "unresolvedIssues": {
+          "openIssues": {
             "type": "integer",
             "format": "int32"
           },
-          "byResolvedStatus": {
+          "byStatus": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/StatusCountDto"
@@ -7150,6 +7198,16 @@
         },
         "additionalProperties": false
       },
+      "IssueStatus": {
+        "enum": [
+          "Pending",
+          "Accepted",
+          "Rejected",
+          "Solved"
+        ],
+        "type": "string",
+        "description": "Represents the lifecycle status of an issue.\r\nStored as int in the database."
+      },
       "JobDto": {
         "type": "object",
         "properties": {
@@ -7196,6 +7254,14 @@
             "nullable": true
           },
           "locationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "hiringManagerId": {
+            "type": "string",
+            "nullable": true
+          },
+          "hiringManagerName": {
             "type": "string",
             "nullable": true
           },
@@ -7801,14 +7867,14 @@
         "additionalProperties": false,
         "description": "PATCH body to update only the candidate application status."
       },
-      "PatchIssueResolvedDto": {
+      "PatchIssueStatusDto": {
         "required": [
-          "resolved"
+          "status"
         ],
         "type": "object",
         "properties": {
-          "resolved": {
-            "type": "boolean"
+          "status": {
+            "$ref": "#/components/schemas/IssueStatus"
           }
         },
         "additionalProperties": false
@@ -7929,6 +7995,38 @@
         },
         "additionalProperties": false
       },
+      "PhaseSummaryItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "averageCompletion": {
+            "type": "number",
+            "format": "double"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "totalProcesses": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "PhaseWithProcessesDto": {
         "type": "object",
         "properties": {
@@ -8001,6 +8099,50 @@
               "$ref": "#/components/schemas/PhaseWithProcessesDto"
             },
             "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PhasesSummaryDto": {
+        "type": "object",
+        "properties": {
+          "totalPhases": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "phases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhaseSummaryItemDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PhasesSummaryDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PhasesSummaryDto"
           },
           "statusCode": {
             "type": "integer",
@@ -8597,8 +8739,12 @@
           "priority": {
             "$ref": "#/components/schemas/IssuePriority"
           },
-          "resolved": {
-            "type": "boolean",
+          "status": {
+            "$ref": "#/components/schemas/IssueStatus"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },
@@ -8671,6 +8817,15 @@
           "date": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdByUser": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -9038,11 +9193,15 @@
             "type": "integer",
             "format": "int32"
           },
-          "resolved": {
-            "type": "boolean",
-            "nullable": true
+          "status": {
+            "$ref": "#/components/schemas/IssueStatus"
           },
           "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dueDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -9091,6 +9250,10 @@
           "locationId": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "hiringManagerId": {
+            "type": "string",
             "nullable": true
           }
         },

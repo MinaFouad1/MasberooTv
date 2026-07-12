@@ -5,6 +5,7 @@ using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace MassperoTVAPI.Controllers;
 
@@ -13,9 +14,14 @@ namespace MassperoTVAPI.Controllers;
 [Authorize(Roles = "Admin,HR")]
 public class JobsController : ControllerBase
 {
-    private readonly IUnitOfWork _uow;
+    private readonly IUnitOfWork                  _uow;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public JobsController(IUnitOfWork uow) => _uow = uow;
+    public JobsController(IUnitOfWork uow, UserManager<ApplicationUser> userManager)
+    {
+        _uow         = uow;
+        _userManager = userManager;
+    }
 
     /// <summary>List all jobs with their category names. Optionally filter by title, category, creation date, or location.</summary>
     /// <param name="search">Optional search keyword for job title.</param>
@@ -25,12 +31,13 @@ public class JobsController : ControllerBase
     /// <returns>List of jobs with applicant and interview counts.</returns>
     [HttpGet]
     public async Task<ActionResult<ApiResponse<IEnumerable<JobDto>>>> GetAll(
-        [FromQuery] string?   search     = null,
-        [FromQuery] int?      categoryId = null,
-        [FromQuery] DateTime? date       = null,
-        [FromQuery] int?      locationId = null)
+        [FromQuery] string?   search          = null,
+        [FromQuery] int?      categoryId      = null,
+        [FromQuery] DateTime? date            = null,
+        [FromQuery] int?      locationId      = null,
+        [FromQuery] string?   hiringManagerId = null)
     {
-        var list = await _uow.Jobs.GetAllWithCategoryAsync(search, categoryId, date, locationId);
+        var list = await _uow.Jobs.GetAllWithCategoryAsync(search, categoryId, date, locationId, hiringManagerId);
         return Ok(ApiResponse<IEnumerable<JobDto>>.SuccessResponse(
             list.Select(j => j.ToDto())));
     }
@@ -90,6 +97,13 @@ public class JobsController : ControllerBase
         if (dto.LocationId.HasValue && !await _uow.Locations.ExistsAsync(dto.LocationId.Value))
             return BadRequest(ApiResponse<JobDto>.ErrorResponse($"Location {dto.LocationId} not found."));
 
+        if (!string.IsNullOrEmpty(dto.HiringManagerId))
+        {
+            var manager = await _userManager.FindByIdAsync(dto.HiringManagerId);
+            if (manager is null)
+                return BadRequest(ApiResponse<JobDto>.ErrorResponse($"User '{dto.HiringManagerId}' not found."));
+        }
+
         var entity = new Job
         {
             Name             = dto.Name,
@@ -98,7 +112,8 @@ public class JobsController : ControllerBase
             OpenPositions    = dto.OpenPositions,
             EmploymentType   = dto.EmploymentType,
             TargetHiringDate = dto.TargetHiringDate,
-            LocationId       = dto.LocationId
+            LocationId       = dto.LocationId,
+            HiringManagerId  = dto.HiringManagerId
         };
         await _uow.Jobs.AddAsync(entity);
         await _uow.SaveChangesAsync();
@@ -126,6 +141,13 @@ public class JobsController : ControllerBase
         if (dto.LocationId.HasValue && !await _uow.Locations.ExistsAsync(dto.LocationId.Value))
             return BadRequest(ApiResponse<JobDto>.ErrorResponse($"Location {dto.LocationId} not found."));
 
+        if (!string.IsNullOrEmpty(dto.HiringManagerId))
+        {
+            var manager = await _userManager.FindByIdAsync(dto.HiringManagerId);
+            if (manager is null)
+                return BadRequest(ApiResponse<JobDto>.ErrorResponse($"User '{dto.HiringManagerId}' not found."));
+        }
+
         entity.Name             = dto.Name;
         entity.Desc             = dto.Desc;
         entity.CategoryId       = dto.CategoryId;
@@ -133,6 +155,7 @@ public class JobsController : ControllerBase
         entity.EmploymentType   = dto.EmploymentType;
         entity.TargetHiringDate = dto.TargetHiringDate;
         entity.LocationId       = dto.LocationId;
+        entity.HiringManagerId  = dto.HiringManagerId;
 
         _uow.Jobs.Update(entity);
         await _uow.SaveChangesAsync();

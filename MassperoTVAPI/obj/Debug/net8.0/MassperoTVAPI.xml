@@ -151,6 +151,10 @@
             <summary>Get phase statistics: total phases, each phase with its process progress.</summary>
             <returns>Phase statistics data.</returns>
         </member>
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetPhasesSummary">
+            <summary>Get phase summary with start and end dates and average completion per phase.</summary>
+            <returns>Phases summary data.</returns>
+        </member>
         <member name="M:MassperoTVAPI.Controllers.DashboardController.GetRecruitmentFunnel">
             <summary>Recruitment funnel: counts of candidates at each stage (total, HR interview, technical interview, offers sent, accepted, hired).</summary>
             <returns>Recruitment funnel counts.</returns>
@@ -159,7 +163,7 @@
             <summary>Job status: each job with its title, number of open positions, and count of applicants.</summary>
             <returns>List of job status entries.</returns>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetRiskIssues(System.Nullable{MassperoTVAPI.Core.Enums.IssuePriority},System.Nullable{System.Boolean})">
+        <member name="M:MassperoTVAPI.Controllers.DashboardController.GetRiskIssues(System.Nullable{MassperoTVAPI.Core.Enums.IssuePriority},System.Nullable{MassperoTVAPI.Core.Enums.IssueStatus})">
             <summary>Risk management issues: list of all issues with their name, priority, and resolved status.</summary>
             <param name="priority">Optional. Filter by priority level (1=Low, 2=Medium, 3=High, 4=Critical).</param>
             <param name="resolved">Optional. Filter by resolved status.</param>
@@ -195,7 +199,7 @@
         <member name="M:MassperoTVAPI.Controllers.InterviewsController.Delete(System.Int32)">
             <returns>Success status.</returns>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.IssuesController.GetAll(System.String,System.Nullable{MassperoTVAPI.Core.Enums.IssuePriority},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.Boolean})">
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.GetAll(System.String,System.Nullable{MassperoTVAPI.Core.Enums.IssuePriority},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{MassperoTVAPI.Core.Enums.IssueStatus})">
             <summary>List all issues with optional filters by name, priority, process ID, date, or resolved status.</summary>
             <param name="name">Optional. Filter by issue/risk name.</param>
             <param name="priority">Optional. Filter by priority.</param>
@@ -233,10 +237,10 @@
             <param name="dto">Updated issue data.</param>
             <returns>The updated issue.</returns>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.IssuesController.PatchResolved(System.Int32,MassperoTVAPI.Core.DTOs.PatchIssueResolvedDto)">
-            <summary>Toggle the resolved status of an issue.</summary>
+        <member name="M:MassperoTVAPI.Controllers.IssuesController.ChangeStatus(System.Int32,MassperoTVAPI.Core.DTOs.PatchIssueStatusDto)">
+            <summary>Change the status of an issue.</summary>
             <param name="id">Issue ID.</param>
-            <param name="dto">New resolved state.</param>
+            <param name="dto">The new status.</param>
             <returns>The updated issue.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.IssuesController.Delete(System.Int32)">
@@ -244,7 +248,7 @@
             <param name="id">Issue ID.</param>
             <returns>Success status.</returns>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.JobsController.GetAll(System.String,System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.Int32})">
+        <member name="M:MassperoTVAPI.Controllers.JobsController.GetAll(System.String,System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.String)">
             <summary>List all jobs with their category names. Optionally filter by title, category, creation date, or location.</summary>
             <param name="search">Optional search keyword for job title.</param>
             <param name="categoryId">Optional category ID filter.</param>
@@ -792,6 +796,12 @@
             Stored as int in the database.
             </summary>
         </member>
+        <member name="T:MassperoTVAPI.Core.Enums.IssueStatus">
+            <summary>
+            Represents the lifecycle status of an issue.
+            Stored as int in the database.
+            </summary>
+        </member>
         <member name="T:MassperoTVAPI.Core.Enums.OfferStatus">
             <summary>
             Represents the lifecycle status of a job offer.
@@ -1128,6 +1138,30 @@
             <inheritdoc />
         </member>
         <member name="M:MassperoTVAPI.Migrations.Desc.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.iSSUES">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.iSSUES.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.iSSUES.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.iSSUES.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddHiringManagerToJob">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddHiringManagerToJob.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddHiringManagerToJob.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddHiringManagerToJob.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="F:MassperoTVAPI.Services.CvParserService.SectionHeadingRegex">

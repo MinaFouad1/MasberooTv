@@ -17,6 +17,8 @@ public static class JobMapper
         j.TargetHiringDate,
         j.LocationId,
         j.Location?.Name,
+        j.HiringManagerId,
+        j.HiringManager?.UserName,
         Applicants:  j.Candidates.Count,
         Interviews:  j.Candidates.Count(c =>
             string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase))

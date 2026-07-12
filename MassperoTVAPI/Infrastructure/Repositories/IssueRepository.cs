@@ -17,7 +17,7 @@ public class IssueRepository : GenericRepository<Issue>, IIssueRepository
             .AsNoTracking()
             .ToListAsync();
 
-    public async Task<IEnumerable<Issue>> GetAllWithDetailsAsync(int? processId, DateTime? date, bool? resolved, string? name = null, IssuePriority? priority = null)
+    public async Task<IEnumerable<Issue>> GetAllWithDetailsAsync(int? processId, DateTime? date, IssueStatus? status, string? name = null, IssuePriority? priority = null)
     {
         var query = _context.Issues
             .Include(i => i.Process)
@@ -33,8 +33,8 @@ public class IssueRepository : GenericRepository<Issue>, IIssueRepository
             query = query.Where(i => i.Date.HasValue && i.Date.Value.Date == searchDate);
         }
 
-        if (resolved.HasValue)
-            query = query.Where(i => i.Resolved == resolved.Value);
+        if (status.HasValue)
+            query = query.Where(i => i.Status == status.Value);
 
         if (!string.IsNullOrWhiteSpace(name))
             query = query.Where(i => i.Name.Contains(name));
@@ -61,7 +61,7 @@ public class IssueRepository : GenericRepository<Issue>, IIssueRepository
     {
         return await _context.Issues
             .Include(i => i.Process)
-            .Where(i => i.Resolved != true)
+            .Where(i => i.Status != IssueStatus.Solved)
             .OrderByDescending(i => i.Priority)
             .Take(count)
             .AsNoTracking()

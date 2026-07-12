@@ -6,6 +6,7 @@ using MassperoTVAPI.Core.Mappers;
 using MassperoTVAPI.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MassperoTVAPI.Controllers;
 
@@ -31,9 +32,9 @@ public class IssuesController : ControllerBase
         [FromQuery] IssuePriority? priority,
         [FromQuery] int? processId,
         [FromQuery] DateTime? date,
-        [FromQuery] bool? resolved)
+        [FromQuery] IssueStatus? status)
     {
-        var list = await _uow.Issues.GetAllWithDetailsAsync(processId, date, resolved, name, priority);
+        var list = await _uow.Issues.GetAllWithDetailsAsync(processId, date, status, name, priority);
         return Ok(ApiResponse<IEnumerable<RiskResponseDto>>.SuccessResponse(
             list.Select(i => i.ToRiskResponseDto())));
     }
@@ -106,13 +107,17 @@ public class IssuesController : ControllerBase
         if (!await _uow.Processes.ExistsAsync(dto.ProcessId))
             return BadRequest(ApiResponse<IssueDetailDto>.ErrorResponse($"Process {dto.ProcessId} not found."));
 
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
         var entity = new Issue
         {
             Name = dto.Name,
             ProcessId = dto.ProcessId,
-            Resolved = dto.Resolved ?? false,
             Date = dto.Date ?? DateTime.UtcNow,
-            Priority = dto.Priority
+            DueDate = dto.DueDate,
+            Priority = dto.Priority,
+            Status = dto.Status ?? IssueStatus.Pending,
+            CreatedByUserId = userId
         };
         await _uow.Issues.AddAsync(entity);
         await _uow.SaveChangesAsync();
@@ -139,9 +144,13 @@ public class IssuesController : ControllerBase
 
         entity.Name      = dto.Name;
         entity.ProcessId = dto.ProcessId;
-        entity.Resolved  = dto.Resolved ?? entity.Resolved;
         entity.Date      = dto.Date ?? entity.Date;
+        entity.DueDate   = dto.DueDate ?? entity.DueDate;
         entity.Priority  = dto.Priority ?? entity.Priority;
+        if (dto.Status.HasValue)
+        {
+            entity.Status = dto.Status.Value;
+        }
 
         _uow.Issues.Update(entity);
         await _uow.SaveChangesAsync();
@@ -150,23 +159,25 @@ public class IssuesController : ControllerBase
         return Ok(ApiResponse<IssueDetailDto>.SuccessResponse(updated!.ToDto()));
     }
 
-    /// <summary>Toggle the resolved status of an issue.</summary>
+    /// <summary>Change the status of an issue.</summary>
     /// <param name="id">Issue ID.</param>
-    /// <param name="dto">New resolved state.</param>
+    /// <param name="dto">The new status.</param>
     /// <returns>The updated issue.</returns>
-    [HttpPatch("{id:int}/resolved")]
-    public async Task<ActionResult<ApiResponse<IssueDetailDto>>> PatchResolved(
-        int id, [FromBody] PatchIssueResolvedDto dto)
+    [HttpPatch("{id:int}/status")]
+    public async Task<ActionResult<ApiResponse<IssueDetailDto>>> ChangeStatus(int id, [FromBody] PatchIssueStatusDto dto)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ApiResponse<IssueDetailDto>.ErrorResponse("Validation failed."));
+
         var entity = await _uow.Issues.GetByIdAsync(id);
         if (entity is null) return NotFound(ApiResponse<IssueDetailDto>.NotFoundResponse());
 
-        entity.Resolved = dto.Resolved;
+        entity.Status = dto.Status;
         _uow.Issues.Update(entity);
         await _uow.SaveChangesAsync();
 
         var updated = await _uow.Issues.GetByIdWithDetailsAsync(entity.Id);
-        return Ok(ApiResponse<IssueDetailDto>.SuccessResponse(updated!.ToDto(), "Issue resolved status updated."));
+        return Ok(ApiResponse<IssueDetailDto>.SuccessResponse(updated!.ToDto()));
     }
 
     /// <summary>Delete an issue. Admin only.</summary>

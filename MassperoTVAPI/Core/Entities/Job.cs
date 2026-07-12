@@ -19,6 +19,10 @@ public class Job
     public int?      LocationId { get; set; }
     public Location? Location   { get; set; }
 
+    // FK → HiringManager (ApplicationUser, optional)
+    public string?          HiringManagerId { get; set; }
+    public ApplicationUser? HiringManager   { get; set; }
+
     // Navigation
     public ICollection<Candidate> Candidates { get; set; } = [];
 }

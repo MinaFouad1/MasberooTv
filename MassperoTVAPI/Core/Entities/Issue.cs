@@ -7,10 +7,14 @@ public class Issue
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
 
-    public bool? Resolved { get; set; } = false;
+    public IssueStatus Status { get; set; } = IssueStatus.Pending;
 
     public IssuePriority? Priority { get; set; }
     public DateTime? Date { get; set; } = DateTime.UtcNow;
+    public DateTime? DueDate { get; set; }
+
+    public string? CreatedByUserId { get; set; }
+    public ApplicationUser? CreatedByUser { get; set; }
 
     // FK → Process
     public int ProcessId { get; set; }

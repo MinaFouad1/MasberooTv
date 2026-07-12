@@ -98,6 +98,8 @@ public record JobDto(
     DateTime? TargetHiringDate,
     int?     LocationId,
     string?  LocationName,
+    string?  HiringManagerId,
+    string?  HiringManagerName,
     int      Applicants,
     int      Interviews
 );
@@ -110,6 +112,7 @@ public record CreateJobDto
     [MaxLength(100)]            public string?   EmploymentType   { get; init; }
                                 public DateTime? TargetHiringDate { get; init; }
                                 public int?      LocationId       { get; init; }
+                                public string?   HiringManagerId  { get; init; }
 }
 public record UpdateJobDto
 {
@@ -120,6 +123,7 @@ public record UpdateJobDto
     [MaxLength(100)]            public string?   EmploymentType   { get; init; }
                                 public DateTime? TargetHiringDate { get; init; }
                                 public int?      LocationId       { get; init; }
+                                public string?   HiringManagerId  { get; init; }
 }
 
 // ── Candidate ─────────────────────────────────────────────────────────────────
@@ -272,11 +276,14 @@ public record UpdateInterviewDto
 public record IssueDetailDto(
     int Id,
     string Name,
-    bool? Resolved,
+    IssueStatus Status,
     DateTime? Date,
+    DateTime? DueDate,
     IssuePriority? Priority,
     int ProcessId,
-    string ProcessName
+    string ProcessName,
+    string? CreatedByUserId,
+    string? CreatedByUserName
 );
 
 public record RiskResponseDto(
@@ -284,27 +291,31 @@ public record RiskResponseDto(
     string RiskTitle,
     string? Priority,
     string Status,
-    DateTime? Date
+    DateTime? Date,
+    DateTime? DueDate,
+    string? CreatedByUser
 );
 public record CreateIssueDto
 {
     [Required] [MaxLength(300)] public string         Name      { get; init; } = string.Empty;
     [Required]                  public int            ProcessId { get; init; }
-    public bool?          Resolved  { get; init; }
+    public IssueStatus?   Status    { get; init; }
     public DateTime?      Date      { get; init; }
+    public DateTime?      DueDate   { get; init; }
     public IssuePriority? Priority  { get; init; }
 }
 public record UpdateIssueDto
 {
     [Required] [MaxLength(300)] public string         Name      { get; init; } = string.Empty;
     [Required]                  public int            ProcessId { get; init; }
-    public bool?          Resolved  { get; init; }
+    public IssueStatus?   Status    { get; init; }
     public DateTime?      Date      { get; init; }
+    public DateTime?      DueDate   { get; init; }
     public IssuePriority? Priority  { get; init; }
 }
-public record PatchIssueResolvedDto
+public record PatchIssueStatusDto
 {
-    [Required] public bool Resolved { get; init; }
+    [Required] public IssueStatus Status { get; init; }
 }
 
 // ── Roles ─────────────────────────────────────────────────────────────────────
@@ -459,9 +470,9 @@ public record ProcessStatisticsDto(
 
 public record IssueStatisticsDto(
     int TotalIssues,
-    int ResolvedIssues,
-    int UnresolvedIssues,
-    IEnumerable<StatusCountDto> ByResolvedStatus,
+    int SolvedIssues,
+    int OpenIssues,
+    IEnumerable<StatusCountDto> ByStatus,
     IEnumerable<StatusCountDto> ByProcess,
     IEnumerable<StatusCountDto> ByPriority
 );
@@ -469,6 +480,20 @@ public record IssueStatisticsDto(
 public record PhaseStatisticsDto(
     int TotalPhases,
     IEnumerable<ProcessPhaseProgressDto> Phases
+);
+
+public record PhaseSummaryItemDto(
+    int Id,
+    string Name,
+    decimal AverageCompletion,
+    DateTime? StartDate,
+    DateTime? EndDate,
+    int TotalProcesses
+);
+
+public record PhasesSummaryDto(
+    int TotalPhases,
+    IEnumerable<PhaseSummaryItemDto> Phases
 );
 
 // ── Recruitment Funnel ────────────────────────────────────────────────────────
@@ -493,7 +518,8 @@ public record RiskIssueDto(
     int            Id,
     string         IssueName,
     IssuePriority? Priority,
-    bool?          Resolved
+    IssueStatus    Status,
+    DateTime?      DueDate
 );
 
 public record RiskStatisticsDto(

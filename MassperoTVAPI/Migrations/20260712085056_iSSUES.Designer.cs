@@ -4,6 +4,7 @@ using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MassperoTVAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260712085056_iSSUES")]
+    partial class iSSUES
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -331,9 +334,6 @@ namespace MassperoTVAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("HiringManagerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int?>("LocationId")
                         .HasColumnType("int");
 
@@ -351,8 +351,6 @@ namespace MassperoTVAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("HiringManagerId");
 
                     b.HasIndex("LocationId");
 
@@ -788,18 +786,12 @@ namespace MassperoTVAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", "HiringManager")
-                        .WithMany("ManagedJobs")
-                        .HasForeignKey("HiringManagerId");
-
                     b.HasOne("MassperoTVAPI.Core.Entities.Location", "Location")
                         .WithMany("Jobs")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
-
-                    b.Navigation("HiringManager");
 
                     b.Navigation("Location");
                 });
@@ -909,8 +901,6 @@ namespace MassperoTVAPI.Migrations
                     b.Navigation("Candidates");
 
                     b.Navigation("CreatedIssues");
-
-                    b.Navigation("ManagedJobs");
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Candidate", b =>
