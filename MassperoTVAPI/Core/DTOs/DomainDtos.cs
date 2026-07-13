@@ -146,15 +146,65 @@ public record CandidateDto(
     string?   ApplicationUserId,
     string?   ApplicationUserName,
     DateTime? HiringDate,
+    string?   CurrentEmployer,
+    string?   CurrentPosition,
+    int?      YearsOfExperience,
+    decimal?  ExpectedSalary,
+    string?   NoticePeriod,
+    string?   Availability,
+    decimal?  CurrentSalary,
+    string?   Summary,
+    IEnumerable<CandidateSkillDto> Skills,
+    IEnumerable<CandidateLanguageDto> Languages,
+    IEnumerable<CandidateCertificationDto> Certifications,
+    IEnumerable<CandidateEducationDto> Educations,
     string?   HrScore,
     string?   TechnicalScore
 );
+public record CandidateSkillDto(int Id, int SkillId, string Name, int YearsOfExperience);
+public record CandidateLanguageDto(int Id, int LanguageId, string Name);
+public record CandidateCertificationDto(int Id, string Name, string? Url);
+public record CandidateEducationDto(int Id, string Degree, string University, int GraduationYear, string? Grade);
+
+public record UpsertCandidateSkillDto
+{
+    [Required] [MaxLength(150)] public string Name { get; init; } = string.Empty;
+    [Range(0, 100)] public int YearsOfExperience { get; init; }
+}
+public record UpsertCandidateLanguageDto
+{
+    [Required] [MaxLength(100)] public string Name { get; init; } = string.Empty;
+}
+public record UpsertCandidateCertificationDto
+{
+    [Required] [MaxLength(200)] public string Name { get; init; } = string.Empty;
+    [MaxLength(500)] public string? Url { get; init; }
+}
+public record UpsertCandidateEducationDto
+{
+    [Required] [MaxLength(200)] public string Degree { get; init; } = string.Empty;
+    [Required] [MaxLength(200)] public string University { get; init; } = string.Empty;
+    public int GraduationYear { get; init; }
+    [MaxLength(100)] public string? Grade { get; init; }
+}
 public record CreateCandidateDto
 {
     [Required] [MaxLength(200)] public string    Name         { get; init; } = string.Empty;
     public IFormFile?                            CvFile       { get; init; }
     public IFormFile?                            ProfileImage { get; init; }
     [Required]                  public int       JobId        { get; init; }
+    [MaxLength(200)]            public string?   CurrentEmployer    { get; init; }
+    [MaxLength(200)]            public string?   CurrentPosition    { get; init; }
+                                public int?      YearsOfExperience  { get; init; }
+                                public decimal?  ExpectedSalary     { get; init; }
+    [MaxLength(100)]            public string?   NoticePeriod       { get; init; }
+    [MaxLength(100)]            public string?   Availability       { get; init; }
+                                public decimal?  CurrentSalary      { get; init; }
+    public string? Summary { get; init; }
+    public List<UpsertCandidateSkillDto>?         Skills             { get; init; }
+    public List<UpsertCandidateLanguageDto>?      Languages          { get; init; }
+    public List<UpsertCandidateCertificationDto>? Certifications     { get; init; }
+    public List<UpsertCandidateEducationDto>?     Educations         { get; init; }
 }
 public record UpdateCandidateDto
 {
@@ -164,6 +214,18 @@ public record UpdateCandidateDto
     [MaxLength(1000)]           public string?   ReasonOfAccept { get; init; }
     [MaxLength(1000)]           public string?   ReasonOfReject { get; init; }
     [Required]                  public int       JobId          { get; init; }
+    [MaxLength(200)]            public string?   CurrentEmployer    { get; init; }
+    [MaxLength(200)]            public string?   CurrentPosition    { get; init; }
+                                public int?      YearsOfExperience  { get; init; }
+                                public decimal?  ExpectedSalary     { get; init; }
+    [MaxLength(100)]            public string?   NoticePeriod       { get; init; }
+    [MaxLength(100)]            public string?   Availability       { get; init; }
+                                public decimal?  CurrentSalary      { get; init; }
+    public string? Summary { get; init; }
+    public List<UpsertCandidateSkillDto>?         Skills             { get; init; }
+    public List<UpsertCandidateLanguageDto>?      Languages          { get; init; }
+    public List<UpsertCandidateCertificationDto>? Certifications     { get; init; }
+    public List<UpsertCandidateEducationDto>?     Educations         { get; init; }
 }
 
 public record PatchCandidateInterviewGradeDto
@@ -215,6 +277,7 @@ public record CandidateDetailDto(
     int       CategoryId,
     string    CategoryName,
     string?   WorkLocation,
+    string? Summary,
     DateTime  JobCreatedAt,
     DateTime? TargetHiringDate,
 
@@ -233,6 +296,17 @@ public record CandidateDetailDto(
     string?   ReasonOfAccept,
     string?   ReasonOfReject,
     bool?     Accepted,
+    string?   CurrentEmployer,
+    string?   CurrentPosition,
+    int?      YearsOfExperience,
+    decimal?  ExpectedSalary,
+    string?   NoticePeriod,
+    string?   Availability,
+    decimal?  CurrentSalary,
+    IEnumerable<CandidateSkillDto> Skills,
+    IEnumerable<CandidateLanguageDto> Languages,
+    IEnumerable<CandidateCertificationDto> Certifications,
+    IEnumerable<CandidateEducationDto> Educations,
 
     // ── Interview scores ──────────────────────────────────────────────────────
     string?   HrScore,

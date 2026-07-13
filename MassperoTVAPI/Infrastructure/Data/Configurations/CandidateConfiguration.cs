@@ -26,6 +26,26 @@ public class CandidateConfiguration : IEntityTypeConfiguration<Candidate>
         builder.Property(x => x.ReasonOfReject)
                .HasMaxLength(1000);
 
+        builder.Property(x => x.CurrentEmployer)
+               .HasMaxLength(200);
+
+        builder.Property(x => x.CurrentPosition)
+               .HasMaxLength(200);
+
+        builder.Property(x => x.ExpectedSalary)
+               .HasColumnType("decimal(18,2)");
+
+        builder.Property(x => x.NoticePeriod)
+               .HasMaxLength(100);
+
+
+
+        builder.Property(x => x.Availability)
+               .HasMaxLength(100);
+
+        builder.Property(x => x.CurrentSalary)
+               .HasColumnType("decimal(18,2)");
+
         // FK → Job (1 Job : M Candidates)
         builder.HasOne(x => x.Job)
                .WithMany(j => j.Candidates)

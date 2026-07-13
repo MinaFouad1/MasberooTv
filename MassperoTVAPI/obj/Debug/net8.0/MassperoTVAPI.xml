@@ -544,7 +544,7 @@
             Includes computed analytics: overall score, ranking, hiring probability.
             </summary>
         </member>
-        <member name="M:MassperoTVAPI.Core.DTOs.CandidateDetailDto.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.DateTime,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Decimal},System.String,System.Int32,System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.InterviewSummaryDto})">
+        <member name="M:MassperoTVAPI.Core.DTOs.CandidateDetailDto.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.DateTime,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Decimal},System.String,System.String,System.Nullable{System.Decimal},System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.CandidateSkillDto},System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.CandidateLanguageDto},System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.CandidateCertificationDto},System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.CandidateEducationDto},System.String,System.String,System.Nullable{System.Decimal},System.String,System.Int32,System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.InterviewSummaryDto})">
             <summary>
             Rich single-candidate response for GET /api/candidates/{id}.
             Includes computed analytics: overall score, ranking, hiring probability.
@@ -829,6 +829,9 @@
         </member>
         <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetByIdWithDetailsAsync(System.Int32)">
             <summary>Get a candidate by ID with all related entities included.</summary>
+        </member>
+        <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.SyncProfileCollectionsAsync(MassperoTVAPI.Core.Entities.Candidate,System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.UpsertCandidateSkillDto},System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.UpsertCandidateLanguageDto},System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.UpsertCandidateCertificationDto},System.Collections.Generic.IEnumerable{MassperoTVAPI.Core.DTOs.UpsertCandidateEducationDto})">
+            <summary>Replace candidate profile collections when a collection is supplied.</summary>
         </member>
         <member name="M:MassperoTVAPI.Core.Interfaces.Repositories.ICandidateRepository.GetAllWithInterviewsAsync">
             <summary>Get all candidates including their Interviews and InterviewType for funnel analytics.</summary>
@@ -1162,6 +1165,42 @@
             <inheritdoc />
         </member>
         <member name="M:MassperoTVAPI.Migrations.AddHiringManagerToJob.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddCandidateProfileRelations">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddCandidateProfileRelations.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddCandidateProfileRelations.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddCandidateProfileRelations.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.AddCandidateEmploymentFields">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddCandidateEmploymentFields.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddCandidateEmploymentFields.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.AddCandidateEmploymentFields.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MassperoTVAPI.Migrations.Summary">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Summary.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Summary.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.Summary.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="F:MassperoTVAPI.Services.CvParserService.SectionHeadingRegex">

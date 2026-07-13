@@ -17,11 +17,17 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Phase>                  Phases                    => Set<Phase>();
     public DbSet<ProcessStatus>          ProcessStatuses           => Set<ProcessStatus>();
     public DbSet<Location>               Locations                 => Set<Location>();
+    public DbSet<Skill>                  Skills                    => Set<Skill>();
+    public DbSet<Language>               Languages                 => Set<Language>();
 
     // ── Main entities ─────────────────────────────────────────────────────────
     public DbSet<Job>                    Jobs                    => Set<Job>();
     public DbSet<Candidate>              Candidates              => Set<Candidate>();
     public DbSet<Interview>              Interviews              => Set<Interview>();
+    public DbSet<CandidateSkill>          CandidateSkills          => Set<CandidateSkill>();
+    public DbSet<CandidateLanguage>       CandidateLanguages       => Set<CandidateLanguage>();
+    public DbSet<Certification>           Certifications           => Set<Certification>();
+    public DbSet<Education>               Educations               => Set<Education>();
     public DbSet<Process>                Processes               => Set<Process>();
     public DbSet<ProcessDependency>      ProcessDependencies     => Set<ProcessDependency>();
     public DbSet<Issue>                  Issues                  => Set<Issue>();

@@ -1,3 +1,4 @@
+using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Entities;
 
 namespace MassperoTVAPI.Core.Interfaces.Repositories;
@@ -23,6 +24,14 @@ public interface ICandidateRepository : IGenericRepository<Candidate>
 
     /// <summary>Get a candidate by ID with all related entities included.</summary>
     Task<Candidate?> GetByIdWithDetailsAsync(int id);
+
+    /// <summary>Replace candidate profile collections when a collection is supplied.</summary>
+    Task SyncProfileCollectionsAsync(
+        Candidate candidate,
+        IEnumerable<UpsertCandidateSkillDto>? skills,
+        IEnumerable<UpsertCandidateLanguageDto>? languages,
+        IEnumerable<UpsertCandidateCertificationDto>? certifications,
+        IEnumerable<UpsertCandidateEducationDto>? educations);
 
     /// <summary>Get all candidates including their Interviews and InterviewType for funnel analytics.</summary>
     Task<IEnumerable<Candidate>> GetAllWithInterviewsAsync();

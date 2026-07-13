@@ -1,4 +1,5 @@
 using MassperoTV.Infrastructure.Repositories;
+using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
@@ -17,6 +18,12 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
             .Include(c => c.Status)
             .Include(c => c.SecurityClearance)
             .Include(c => c.User)
+            .Include(c => c.CandidateSkills)
+                .ThenInclude(cs => cs.Skill)
+            .Include(c => c.CandidateLanguages)
+                .ThenInclude(cl => cl.Language)
+            .Include(c => c.Certifications)
+            .Include(c => c.Educations)
             .AsNoTracking()
             .AsQueryable();
 
@@ -50,6 +57,12 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
             .Include(c => c.User)
             .Include(c => c.Interviews)
                 .ThenInclude(i => i.Type)
+            .Include(c => c.CandidateSkills)
+                .ThenInclude(cs => cs.Skill)
+            .Include(c => c.CandidateLanguages)
+                .ThenInclude(cl => cl.Language)
+            .Include(c => c.Certifications)
+            .Include(c => c.Educations)
             .AsNoTracking()
             .AsQueryable();
 
@@ -98,7 +111,108 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
             .Include(c => c.User)
             .Include(c => c.Interviews)
                 .ThenInclude(i => i.Type)
+            .Include(c => c.CandidateSkills)
+                .ThenInclude(cs => cs.Skill)
+            .Include(c => c.CandidateLanguages)
+                .ThenInclude(cl => cl.Language)
+            .Include(c => c.Certifications)
+            .Include(c => c.Educations)
             .FirstOrDefaultAsync(c => c.Id == id);
+
+    public async Task SyncProfileCollectionsAsync(
+        Candidate candidate,
+        IEnumerable<UpsertCandidateSkillDto>? skills,
+        IEnumerable<UpsertCandidateLanguageDto>? languages,
+        IEnumerable<UpsertCandidateCertificationDto>? certifications,
+        IEnumerable<UpsertCandidateEducationDto>? educations)
+    {
+        if (skills is not null)
+        {
+            _context.CandidateSkills.RemoveRange(candidate.CandidateSkills);
+            candidate.CandidateSkills.Clear();
+
+            foreach (var item in skills.Where(s => !string.IsNullOrWhiteSpace(s.Name))
+                         .GroupBy(s => s.Name.Trim(), StringComparer.OrdinalIgnoreCase)
+                         .Select(g => g.First()))
+            {
+                var name = item.Name.Trim();
+                var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Name == name);
+                if (skill is null)
+                {
+                    skill = new Skill { Name = name };
+                    await _context.Skills.AddAsync(skill);
+                }
+
+                candidate.CandidateSkills.Add(new CandidateSkill
+                {
+                    CandidateId = candidate.Id,
+                    Skill = skill,
+                    YearsOfExperience = item.YearsOfExperience
+                });
+            }
+        }
+
+        if (languages is not null)
+        {
+            _context.CandidateLanguages.RemoveRange(candidate.CandidateLanguages);
+            candidate.CandidateLanguages.Clear();
+
+            foreach (var item in languages.Where(l => !string.IsNullOrWhiteSpace(l.Name))
+                         .GroupBy(l => l.Name.Trim(), StringComparer.OrdinalIgnoreCase)
+                         .Select(g => g.First()))
+            {
+                var name = item.Name.Trim();
+                var language = await _context.Languages.FirstOrDefaultAsync(l => l.Name == name);
+                if (language is null)
+                {
+                    language = new Language { Name = name };
+                    await _context.Languages.AddAsync(language);
+                }
+
+                candidate.CandidateLanguages.Add(new CandidateLanguage
+                {
+                    CandidateId = candidate.Id,
+                    Language = language
+                });
+            }
+        }
+
+        if (certifications is not null)
+        {
+            _context.Certifications.RemoveRange(candidate.Certifications);
+            candidate.Certifications.Clear();
+
+            foreach (var item in certifications.Where(c => !string.IsNullOrWhiteSpace(c.Name)))
+            {
+                candidate.Certifications.Add(new Certification
+                {
+                    CandidateId = candidate.Id,
+                    Name = item.Name.Trim(),
+                    Url = string.IsNullOrWhiteSpace(item.Url) ? null : item.Url.Trim()
+                });
+            }
+        }
+
+        if (educations is not null)
+        {
+            _context.Educations.RemoveRange(candidate.Educations);
+            candidate.Educations.Clear();
+
+            foreach (var item in educations.Where(e =>
+                         !string.IsNullOrWhiteSpace(e.Degree) &&
+                         !string.IsNullOrWhiteSpace(e.University)))
+            {
+                candidate.Educations.Add(new Education
+                {
+                    CandidateId = candidate.Id,
+                    Degree = item.Degree.Trim(),
+                    University = item.University.Trim(),
+                    GraduationYear = item.GraduationYear,
+                    Grade = string.IsNullOrWhiteSpace(item.Grade) ? null : item.Grade.Trim()
+                });
+            }
+        }
+    }
 
     public async Task<IEnumerable<Candidate>> GetAllWithInterviewsAsync()
         => await _context.Candidates

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj": {}
+    "F:\\Projects\\Maspero\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj": {
+    "F:\\Projects\\Maspero\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj",
+        "projectUniqueName": "F:\\Projects\\Maspero\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj",
         "projectName": "MassperoTVAPI",
-        "projectPath": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj",
-        "packagesPath": "C:\\Users\\Edgecom\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\obj\\",
+        "projectPath": "F:\\Projects\\Maspero\\MasberooTv\\MassperoTVAPI\\MassperoTVAPI.csproj",
+        "packagesPath": "C:\\Users\\z240\\.nuget\\packages\\",
+        "outputPath": "F:\\Projects\\Maspero\\MasberooTv\\MassperoTVAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Edgecom\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\z240\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -30,6 +30,7 @@
         },
         "frameworks": {
           "net8.0": {
+            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -44,10 +45,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net8.0": {
+          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "ClosedXML": {
@@ -96,24 +98,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.22, 8.0.22]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.22, 8.0.22]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.22, 8.0.22]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.22, 8.0.22]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -122,7 +106,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

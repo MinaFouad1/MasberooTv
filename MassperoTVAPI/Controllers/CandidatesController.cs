@@ -153,9 +153,24 @@ public class CandidatesController : ControllerBase
             JobId               = dto.JobId,
             StatusId            = initialStatus.Id,
             SecurityClearanceId = initialSecurityClearance.Id,
+            CurrentEmployer     = dto.CurrentEmployer,
+            CurrentPosition     = dto.CurrentPosition,
+            YearsOfExperience   = dto.YearsOfExperience,
+            ExpectedSalary      = dto.ExpectedSalary,
+            NoticePeriod        = dto.NoticePeriod,
+            Availability        = dto.Availability,
+            Summary             = dto.Summary,
+            CurrentSalary       = dto.CurrentSalary,
         };
 
         await _uow.Candidates.AddAsync(entity);
+        await _uow.SaveChangesAsync();
+        await _uow.Candidates.SyncProfileCollectionsAsync(
+            entity,
+            dto.Skills,
+            dto.Languages,
+            dto.Certifications,
+            dto.Educations);
         await _uow.SaveChangesAsync();
 
         var created = await _uow.Candidates.GetByIdWithDetailsAsync(entity.Id);
@@ -173,7 +188,7 @@ public class CandidatesController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ApiResponse<CandidateDto>.ErrorResponse("Validation failed."));
 
-        var entity = await _uow.Candidates.GetByIdAsync(id);
+        var entity = await _uow.Candidates.GetByIdWithDetailsAsync(id);
         if (entity is null) return NotFound(ApiResponse<CandidateDto>.NotFoundResponse());
 
         if (!await _uow.Jobs.ExistsAsync(dto.JobId))
@@ -201,6 +216,21 @@ public class CandidatesController : ControllerBase
         entity.ReasonOfAccept = dto.ReasonOfAccept;
         entity.ReasonOfReject = dto.ReasonOfReject;
         entity.JobId          = dto.JobId;
+        entity.CurrentEmployer   = dto.CurrentEmployer;
+        entity.CurrentPosition   = dto.CurrentPosition;
+        entity.YearsOfExperience = dto.YearsOfExperience;
+        entity.ExpectedSalary    = dto.ExpectedSalary;
+        entity.NoticePeriod      = dto.NoticePeriod;
+        entity.Availability      = dto.Availability;
+        entity.Summary           = dto.Summary;
+        entity.CurrentSalary     = dto.CurrentSalary;
+
+        await _uow.Candidates.SyncProfileCollectionsAsync(
+            entity,
+            dto.Skills,
+            dto.Languages,
+            dto.Certifications,
+            dto.Educations);
 
         _uow.Candidates.Update(entity);
         await _uow.SaveChangesAsync();

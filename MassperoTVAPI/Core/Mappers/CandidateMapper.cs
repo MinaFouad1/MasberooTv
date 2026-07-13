@@ -31,6 +31,18 @@ public static class CandidateMapper
         c.ApplicationUserId,
         c.User?.UserName,
         c.HiringDate,
+        c.CurrentEmployer,
+        c.CurrentPosition,
+        c.YearsOfExperience,
+        c.ExpectedSalary,
+        c.NoticePeriod,
+        c.Availability,
+        c.CurrentSalary,
+        c.Summary,
+        MapSkills(c),
+        MapLanguages(c),
+        MapCertifications(c),
+        MapEducations(c),
         GetScoreByType(c.Interviews, HrTypeName),
         GetScoreByType(c.Interviews, TechnicalTypeName)
     );
@@ -82,6 +94,18 @@ public static class CandidateMapper
             ReasonOfAccept:         c.ReasonOfAccept,
             ReasonOfReject:         c.ReasonOfReject,
             Accepted:               c.Accepted,
+            CurrentEmployer:        c.CurrentEmployer,
+            CurrentPosition:        c.CurrentPosition,
+            YearsOfExperience:      c.YearsOfExperience,
+            ExpectedSalary:         c.ExpectedSalary,
+            NoticePeriod:           c.NoticePeriod,
+            Availability:           c.Availability,
+            CurrentSalary:          c.CurrentSalary,
+            Summary:                c.Summary,
+            Skills:                 MapSkills(c),
+            Languages:              MapLanguages(c),
+            Certifications:         MapCertifications(c),
+            Educations:             MapEducations(c),
 
             // Scores
             HrScore:                GetScoreByType(c.Interviews, HrTypeName),
@@ -115,6 +139,38 @@ public static class CandidateMapper
             .FirstOrDefault(i => i.Type?.Name != null &&
                                  i.Type.Name.Contains(typeKeyword, StringComparison.OrdinalIgnoreCase))
             ?.Grade;
+
+    private static IEnumerable<CandidateSkillDto> MapSkills(Candidate c)
+        => c.CandidateSkills
+            .OrderBy(x => x.Skill?.Name)
+            .Select(x => new CandidateSkillDto(
+                x.Id,
+                x.SkillId,
+                x.Skill?.Name ?? string.Empty,
+                x.YearsOfExperience));
+
+    private static IEnumerable<CandidateLanguageDto> MapLanguages(Candidate c)
+        => c.CandidateLanguages
+            .OrderBy(x => x.Language?.Name)
+            .Select(x => new CandidateLanguageDto(
+                x.Id,
+                x.LanguageId,
+                x.Language?.Name ?? string.Empty));
+
+    private static IEnumerable<CandidateCertificationDto> MapCertifications(Candidate c)
+        => c.Certifications
+            .OrderBy(x => x.Name)
+            .Select(x => new CandidateCertificationDto(x.Id, x.Name, x.Url));
+
+    private static IEnumerable<CandidateEducationDto> MapEducations(Candidate c)
+        => c.Educations
+            .OrderByDescending(x => x.GraduationYear)
+            .Select(x => new CandidateEducationDto(
+                x.Id,
+                x.Degree,
+                x.University,
+                x.GraduationYear,
+                x.Grade));
 
     /// <summary>
     /// Averages the numeric grades of all interviews whose Grade parses as a decimal.
