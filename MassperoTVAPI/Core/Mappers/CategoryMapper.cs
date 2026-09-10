@@ -10,8 +10,8 @@ public static class CategoryMapper
         c.Name, 
         c.CategoryCode, 
         c.IsActive, 
-        c.CreatedAt, 
-        c.Jobs?.Count ?? 0
+        c.CreatedAt,
+        c?.Jobs.Sum(j => j.OpenPositions) ?? 0
     );
 
     //public static InterviewDto CV(this Interview x) => new(x.Id, x.Grade, x.Comments, x.CandidateId, null, x.TypeId, x.Type?.Name ?? string.Empty);

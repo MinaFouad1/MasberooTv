@@ -1,3 +1,5 @@
+using MassperoTVAPI.Core.Enums;
+
 namespace MassperoTVAPI.Core.Entities;
 
 public class Candidate
@@ -17,6 +19,21 @@ public class Candidate
     public string? NoticePeriod { get; set; }
     public string? Availability { get; set; }
     public decimal? CurrentSalary { get; set; }
+
+    // ── Personal info (all optional) ──────────────────────────────────────────
+    public Gender?        Gender               { get; set; }
+    public string?        NationalId           { get; set; }
+    public string?        Address              { get; set; }
+    public string?        Mobile               { get; set; }
+    public string?        AlternateMobile      { get; set; }
+    public string?        Email                { get; set; }
+    public MaritalStatus? MaritalStatus        { get; set; }
+    public DateTime?      DateOfBeginning      { get; set; }
+    public string?        Nationality          { get; set; }
+    public string?        PreferredJobLocation { get; set; }
+    public PreferredShift? PreferredShift      { get; set; }
+    public string?        City                 { get; set; }
+    public Country?       Country              { get; set; }
 
     // FK → Job
     public int JobId { get; set; }

@@ -25,127 +25,127 @@ public class DashboardController : ControllerBase
 
     /// <summary>Admin dashboard with aggregated statistics: total candidates, jobs, users, interviews, and breakdowns by status, security clearance, job, and process progress.</summary>
     /// <returns>Comprehensive admin dashboard data.</returns>
-    [HttpGet("admin")]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<ApiResponse<AdminDashboardDto>>> GetAdminDashboard()
-    {
-        var candidates  = (await _uow.Candidates.GetAllAsync(null, null, null)).ToList();
-        var jobs        = await _uow.Jobs.GetAllWithCategoryAsync();
-        var interviews  = await _uow.Interviews.GetAllWithDetailsAsync();
-        var totalUsers  = _userManager.Users.Count();
+    //[HttpGet("admin")]
+    //[Authorize(Roles = "Admin")]
+    //public async Task<ActionResult<ApiResponse<AdminDashboardDto>>> GetAdminDashboard()
+    //{
+    //    var candidates  = (await _uow.Candidates.GetAllAsync(null, null, null)).ToList();
+    //    var jobs        = await _uow.Jobs.GetAllWithCategoryAsync();
+    //    var interviews  = await _uow.Interviews.GetAllWithDetailsAsync();
+    //    var totalUsers  = _userManager.Users.Count();
 
-        // Candidates by status
-        var byStatus = candidates
-            .GroupBy(c => c.Status?.Name ?? "Unknown")
-            .Select(g => new StatusCountDto(g.Key, g.Count()));
+    //    // Candidates by status
+    //    var byStatus = candidates
+    //        .GroupBy(c => c.Status?.Name ?? "Unknown")
+    //        .Select(g => new StatusCountDto(g.Key, g.Count()));
 
-        // Candidates by security clearance
-        var bySecurity = candidates
-            .GroupBy(c => c.SecurityClearance?.Name ?? "Unknown")
-            .Select(g => new StatusCountDto(g.Key, g.Count()));
+    //    // Candidates by security clearance
+    //    var bySecurity = candidates
+    //        .GroupBy(c => c.SecurityClearance?.Name ?? "Unknown")
+    //        .Select(g => new StatusCountDto(g.Key, g.Count()));
 
-        // Candidates by job
-        var byJob = candidates
-            .GroupBy(c => c.Job?.Name ?? "Unknown")
-            .Select(g => new StatusCountDto(g.Key, g.Count()));
+    //    // Candidates by job
+    //    var byJob = candidates
+    //        .GroupBy(c => c.Job?.Name ?? "Unknown")
+    //        .Select(g => new StatusCountDto(g.Key, g.Count()));
 
-        // Process progress per phase
-        var processProgress = (await BuildProcessProgress()).Phases;
+    //    // Process progress per phase
+    //    var processProgress = (await BuildProcessProgress()).Phases;
 
-        return Ok(ApiResponse<AdminDashboardDto>.SuccessResponse(new AdminDashboardDto(
-            TotalCandidates:               candidates.Count,
-            TotalJobs:                     jobs.Count(),
-            TotalUsers:                    totalUsers,
-            TotalInterviews:               interviews.Count(),
-            CandidatesByStatus:            byStatus,
-            CandidatesBySecurityClearance: bySecurity,
-            CandidatesByJob:               byJob,
-            ProcessProgress:               processProgress
-        )));
-    }
+    //    return Ok(ApiResponse<AdminDashboardDto>.SuccessResponse(new AdminDashboardDto(
+    //        TotalCandidates:               candidates.Count,
+    //        TotalJobs:                     jobs.Count(),
+    //        TotalUsers:                    totalUsers,
+    //        TotalInterviews:               interviews.Count(),
+    //        CandidatesByStatus:            byStatus,
+    //        CandidatesBySecurityClearance: bySecurity,
+    //        CandidatesByJob:               byJob,
+    //        ProcessProgress:               processProgress
+    //    )));
+    //}
 
-    /// <summary>Process dashboard showing all phases (or a single phase) with their processes, average completion, and overall progress.</summary>
-    /// <param name="phaseId">Optional phase ID to filter results to a single phase.</param>
-    /// <returns>Overall progress and list of phases with their associated process progress.</returns>
-    [HttpGet("processes")]
-    [Authorize(Roles = "Admin,HR,Client")]
-    public async Task<ActionResult<ApiResponse<ProcessDashboardDto>>> GetProcessDashboard([FromQuery] int? phaseId = null)
-    {
-        var data = await BuildProcessProgress(phaseId);
-        return Ok(ApiResponse<ProcessDashboardDto>.SuccessResponse(data));
-    }
+    ///// <summary>Process dashboard showing all phases (or a single phase) with their processes, average completion, and overall progress.</summary>
+    ///// <param name="phaseId">Optional phase ID to filter results to a single phase.</param>
+    ///// <returns>Overall progress and list of phases with their associated process progress.</returns>
+    //[HttpGet("processes")]
+    //[Authorize(Roles = "Admin,HR,Client")]
+    //public async Task<ActionResult<ApiResponse<ProcessDashboardDto>>> GetProcessDashboard([FromQuery] int? phaseId = null)
+    //{
+    //    var data = await BuildProcessProgress(phaseId);
+    //    return Ok(ApiResponse<ProcessDashboardDto>.SuccessResponse(data));
+    //}
 
-    /// <summary>Get process statistics: total, active, completed counts, average completion percentage, breakdown by status and phase.</summary>
-    /// <returns>Process statistics data.</returns>
-    [HttpGet("process-statistics")]
-    [Authorize(Roles = "Admin,HR,Client")]
-    public async Task<ActionResult<ApiResponse<ProcessStatisticsDto>>> GetProcessStatistics()
-    {
-        var processes = (await _uow.Processes.GetAllWithDetailsAsync()).ToList();
-        var completedProcesses = processes.Count(p =>
-            string.Equals(p.ProcessStatus?.Name, "Completed", StringComparison.OrdinalIgnoreCase));
+    ///// <summary>Get process statistics: total, active, completed counts, average completion percentage, breakdown by status and phase.</summary>
+    ///// <returns>Process statistics data.</returns>
+    //[HttpGet("process-statistics")]
+    //[Authorize(Roles = "Admin,HR,Client")]
+    //public async Task<ActionResult<ApiResponse<ProcessStatisticsDto>>> GetProcessStatistics()
+    //{
+    //    var processes = (await _uow.Processes.GetAllWithDetailsAsync()).ToList();
+    //    var completedProcesses = processes.Count(p =>
+    //        string.Equals(p.ProcessStatus?.Name, "Completed", StringComparison.OrdinalIgnoreCase));
 
-        var data = new ProcessStatisticsDto(
-            TotalProcesses: processes.Count,
-            ActiveProcesses: processes.Count - completedProcesses,
-            CompletedProcesses: completedProcesses,
-            AverageCompletion: processes.Count == 0
-                ? 0
-                : Math.Round(processes.Average(p => p.ProcessStatus?.Percentage ?? 0), 1),
-            ByStatus: processes
-                .GroupBy(p => p.ProcessStatus?.Name ?? "Unknown")
-                .Select(g => new StatusCountDto(g.Key, g.Count())),
-            ByPhase: processes
-                .GroupBy(p => p.Phase?.Name ?? "Unknown")
-                .Select(g => new StatusCountDto(g.Key, g.Count()))
-        );
+    //    var data = new ProcessStatisticsDto(
+    //        TotalProcesses: processes.Count,
+    //        ActiveProcesses: processes.Count - completedProcesses,
+    //        CompletedProcesses: completedProcesses,
+    //        AverageCompletion: processes.Count == 0
+    //            ? 0
+    //            : Math.Round(processes.Average(p => p.ProcessStatus?.Percentage ?? 0), 1),
+    //        ByStatus: processes
+    //            .GroupBy(p => p.ProcessStatus?.Name ?? "Unknown")
+    //            .Select(g => new StatusCountDto(g.Key, g.Count())),
+    //        ByPhase: processes
+    //            .GroupBy(p => p.Phase?.Name ?? "Unknown")
+    //            .Select(g => new StatusCountDto(g.Key, g.Count()))
+    //    );
 
-        return Ok(ApiResponse<ProcessStatisticsDto>.SuccessResponse(data));
-    }
+    //    return Ok(ApiResponse<ProcessStatisticsDto>.SuccessResponse(data));
+    //}
 
-    /// <summary>Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status, process, and priority.</summary>
-    /// <returns>Issue statistics data.</returns>
-    [HttpGet("issue-statistics")]
-    [Authorize(Roles = "Admin,HR,Client")]
-    public async Task<ActionResult<ApiResponse<IssueStatisticsDto>>> GetIssueStatistics()
-    {
-        var issues = (await _uow.Issues.GetAllWithDetailsAsync()).ToList();
-        var resolvedIssues   = issues.Count(i => i.Status == IssueStatus.Solved);
-        var unresolvedIssues = issues.Count - resolvedIssues;
+    ///// <summary>Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status, process, and priority.</summary>
+    ///// <returns>Issue statistics data.</returns>
+    //[HttpGet("issue-statistics")]
+    //[Authorize(Roles = "Admin,HR,Client")]
+    //public async Task<ActionResult<ApiResponse<IssueStatisticsDto>>> GetIssueStatistics()
+    //{
+    //    var issues = (await _uow.Issues.GetAllWithDetailsAsync()).ToList();
+    //    var resolvedIssues   = issues.Count(i => i.Status == IssueStatus.Solved);
+    //    var unresolvedIssues = issues.Count - resolvedIssues;
 
-        var data = new IssueStatisticsDto(
-            TotalIssues:      issues.Count,
-            SolvedIssues:   resolvedIssues,
-            OpenIssues: unresolvedIssues,
-            ByStatus: issues
-                .GroupBy(i => i.Status == IssueStatus.Solved ? "Resolved" : "Unresolved")
-                .Select(g => new StatusCountDto(g.Key, g.Count())),
-            ByProcess: issues
-                .GroupBy(i => i.Process?.Name ?? "Unknown")
-                .Select(g => new StatusCountDto(g.Key, g.Count())),
-            ByPriority: issues
-                .GroupBy(i => i.Priority.HasValue ? i.Priority.Value.ToString() : "None")
-                .OrderBy(g => g.Key)
-                .Select(g => new StatusCountDto(g.Key, g.Count()))
-        );
+    //    var data = new IssueStatisticsDto(
+    //        TotalIssues:      issues.Count,
+    //        SolvedIssues:   resolvedIssues,
+    //        OpenIssues: unresolvedIssues,
+    //        ByStatus: issues
+    //            .GroupBy(i => i.Status == IssueStatus.Solved ? "Resolved" : "Unresolved")
+    //            .Select(g => new StatusCountDto(g.Key, g.Count())),
+    //        ByProcess: issues
+    //            .GroupBy(i => i.Process?.Name ?? "Unknown")
+    //            .Select(g => new StatusCountDto(g.Key, g.Count())),
+    //        ByPriority: issues
+    //            .GroupBy(i => i.Priority.HasValue ? i.Priority.Value.ToString() : "None")
+    //            .OrderBy(g => g.Key)
+    //            .Select(g => new StatusCountDto(g.Key, g.Count()))
+    //    );
 
-        return Ok(ApiResponse<IssueStatisticsDto>.SuccessResponse(data));
-    }
+    //    return Ok(ApiResponse<IssueStatisticsDto>.SuccessResponse(data));
+    //}
 
-    /// <summary>Get phase statistics: total phases, each phase with its process progress.</summary>
-    /// <returns>Phase statistics data.</returns>
-    [HttpGet("phase-statistics")]
-    [Authorize(Roles = "Admin,HR,Client")]
-    public async Task<ActionResult<ApiResponse<PhaseStatisticsDto>>> GetPhaseStatistics()
-    {
-        var dashboard = await BuildProcessProgress();
-        var data = new PhaseStatisticsDto(
-            TotalPhases: (await _uow.Phases.GetAllAsync()).Count(),
-            Phases: dashboard.Phases
-        );
+    ///// <summary>Get phase statistics: total phases, each phase with its process progress.</summary>
+    ///// <returns>Phase statistics data.</returns>
+    //[HttpGet("phase-statistics")]
+    //[Authorize(Roles = "Admin,HR,Client")]
+    //public async Task<ActionResult<ApiResponse<PhaseStatisticsDto>>> GetPhaseStatistics()
+    //{
+    //    var dashboard = await BuildProcessProgress();
+    //    var data = new PhaseStatisticsDto(
+    //        TotalPhases: (await _uow.Phases.GetAllAsync()).Count(),
+    //        Phases: dashboard.Phases
+    //    );
 
-        return Ok(ApiResponse<PhaseStatisticsDto>.SuccessResponse(data));
-    }
+    //    return Ok(ApiResponse<PhaseStatisticsDto>.SuccessResponse(data));
+    //}
 
     /// <summary>Get phase summary with start and end dates and average completion per phase.</summary>
     /// <returns>Phases summary data.</returns>
@@ -192,7 +192,8 @@ public class DashboardController : ControllerBase
     {
         var candidates = (await _uow.Candidates.GetAllWithInterviewsAsync()).ToList();
 
-        var candidatesCount = candidates.Count;
+        var candidatesCount = candidates.Count(c =>
+            !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase));
 
         var hrInterviewCount = candidates.Count(c =>
             c.Interviews.Any(i =>
@@ -232,7 +233,12 @@ public class DashboardController : ControllerBase
         var result = jobs.Select(j => new JobStatusDto(
             JobTitle:      j.Name,
             OpenPositions: j.OpenPositions,
-            Applications:  j.Candidates.Count
+            Applications: j.Candidates.Count(c =>
+        !string.Equals(
+            c.Status?.Name,
+            "Hired",
+            StringComparison.OrdinalIgnoreCase
+        ))
         ));
 
         return Ok(ApiResponse<IEnumerable<JobStatusDto>>.SuccessResponse(result));

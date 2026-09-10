@@ -2,6 +2,7 @@ using MassperoTV.Infrastructure.Repositories;
 using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Core.Interfaces.Repositories;
+using MassperoTVAPI.Core.Mappers;
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -92,6 +93,47 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
         var safePageSize = Math.Clamp(pageSize, 1, 100);
 
         var items = await query
+            .OrderByDescending(c => c.Id)
+            .Skip((safePage - 1) * safePageSize)
+            .Take(safePageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
+    }
+
+    public async Task<(IEnumerable<Candidate> Items, int TotalCount)> GetApplicantsAsync(GetApplicantsQueryDto queryDto)
+    {
+        var dbQuery = _context.Candidates
+            .Include(c => c.Job)
+                .ThenInclude(j => j.Category)
+            .Include(c => c.Status)
+            .Include(c => c.Interviews)
+                .ThenInclude(i => i.Type)
+            .Where(c => c.Status.Name != "Hired")
+            .AsNoTracking()
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(queryDto.CandidateName))
+            dbQuery = dbQuery.Where(c => c.Name.Contains(queryDto.CandidateName));
+
+        if (!string.IsNullOrWhiteSpace(queryDto.JobPosition))
+            dbQuery = dbQuery.Where(c => c.Job.Name.Contains(queryDto.JobPosition));
+
+        if (queryDto.CategoryId.HasValue)
+            dbQuery = dbQuery.Where(c => c.Job.CategoryId == queryDto.CategoryId.Value);
+
+        if (!string.IsNullOrWhiteSpace(queryDto.CategoryName))
+            dbQuery = dbQuery.Where(c => c.Job.Category.Name.Contains(queryDto.CategoryName));
+
+        if (queryDto.StatusId.HasValue)
+            dbQuery = dbQuery.Where(c => c.StatusId == queryDto.StatusId.Value);
+
+        var totalCount = await dbQuery.CountAsync();
+
+        var safePage = Math.Max(1, queryDto.PageNumber);
+        var safePageSize = Math.Clamp(queryDto.PageSize, 1, 100);
+
+        var items = await dbQuery
             .OrderByDescending(c => c.Id)
             .Skip((safePage - 1) * safePageSize)
             .Take(safePageSize)

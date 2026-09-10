@@ -16,6 +16,24 @@ public class InterviewConfiguration : IEntityTypeConfiguration<Interview>
         builder.Property(x => x.Comments)
                .HasMaxLength(2000);
 
+        builder.Property(x => x.InterviewMode)
+               .HasMaxLength(20);
+
+        builder.Property(x => x.InterviewDate)
+               .HasColumnType("date");
+
+        builder.Property(x => x.StartTime)
+               .HasColumnType("time");
+
+        builder.Property(x => x.EndTime)
+               .HasColumnType("time");
+
+        // Optional FK → evaluator (ApplicationUser). Existing interviews may not have one.
+        builder.HasOne(x => x.Evaluator)
+               .WithMany(u => u.EvaluatedInterviews)
+               .HasForeignKey(x => x.EvaluatorId)
+               .OnDelete(DeleteBehavior.SetNull);
+
         // FK → Candidate
         builder.HasOne(x => x.Candidate)
                .WithMany(c => c.Interviews)

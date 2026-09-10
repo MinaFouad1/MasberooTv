@@ -36,6 +36,34 @@ public record CategoryDto(
     int JobsCount
 );
 
+public record CategoryDetailsDto(
+    int Id,
+    string Name,
+    string? CategoryCode,
+    string? Description,
+    bool IsActive,
+    string Status,
+    DateTime CreatedAt,
+    int OpenPositions,
+    int Applications,
+    int Interviews,
+    int OffersSent
+);
+
+public record CategorySummaryDto(
+    int CategoryId,
+    string CategoryName,
+    string? CategoryCode,
+    string? Description,
+    bool IsActive,
+    string Status,
+    DateTime CreatedAt,
+    int OpenPositions,
+    int Applications,
+    int Interviews,
+    int OffersSent
+);
+
 public record CreateCategoryDto
 {
     [Required] [MaxLength(150)] public string Name { get; init; } = string.Empty;
@@ -87,41 +115,62 @@ public record UpdateProcessStatusDto
 
 // ── Job ───────────────────────────────────────────────────────────────────────
 public record JobDto(
-    int      Id,
-    string   Name,
-    string?  Desc,
-    int      CategoryId,
-    string   CategoryName,
-    int      OpenPositions,
-    DateTime CreatedAt,
-    string?  EmploymentType,
+    int       Id,
+    string    Name,
+    string?   JobDescription,
+    int       CategoryId,
+    string    CategoryName,
+    int       OpenPositions,
+    DateTime  CreatedAt,
+    string?   EmploymentType,
     DateTime? TargetHiringDate,
-    int?     LocationId,
-    string?  LocationName,
-    string?  HiringManagerId,
-    string?  HiringManagerName,
-    int      Applicants,
-    int      Interviews
+    DateTime? DeadLineDate,
+    bool      IsOpend,
+    string    Status,
+    int?      LocationId,
+    string?   LocationName,
+    string?   HiringManagerId,
+    string?   HiringManagerName,
+    int       Applicants,
+    int       Interviews,
+    int       Offers
 );
+
+public record JobRecruitmentProgressDto(
+    int    JobId,
+    string JobName,
+    int    Applications,
+    int    HrInterviews,
+    int    TechnicalInterviews,
+    int    OffersSent,
+    int    Accepted,
+    int    Hired,
+    int    TotalApplications
+);
+
 public record CreateJobDto
 {
     [Required] [MaxLength(200)] public string    Name             { get; init; } = string.Empty;
-    [MaxLength(1000)]           public string?   Desc             { get; init; }
+    [MaxLength(1000)]           public string?   JobDescription   { get; init; }
     [Required]                  public int       CategoryId       { get; init; }
                                 public int       OpenPositions    { get; init; } = 0;
     [MaxLength(100)]            public string?   EmploymentType   { get; init; }
                                 public DateTime? TargetHiringDate { get; init; }
+                                public DateTime? DeadLineDate     { get; init; }
+                                public bool      IsOpend          { get; init; } = true;
                                 public int?      LocationId       { get; init; }
                                 public string?   HiringManagerId  { get; init; }
 }
 public record UpdateJobDto
 {
     [Required] [MaxLength(200)] public string    Name             { get; init; } = string.Empty;
-    [MaxLength(1000)]           public string?   Desc             { get; init; }
+    [MaxLength(1000)]           public string?   JobDescription   { get; init; }
     [Required]                  public int       CategoryId       { get; init; }
                                 public int       OpenPositions    { get; init; } = 0;
     [MaxLength(100)]            public string?   EmploymentType   { get; init; }
                                 public DateTime? TargetHiringDate { get; init; }
+                                public DateTime? DeadLineDate     { get; init; }
+                                public bool      IsOpend          { get; init; } = true;
                                 public int?      LocationId       { get; init; }
                                 public string?   HiringManagerId  { get; init; }
 }
@@ -166,6 +215,21 @@ public record CandidateLanguageDto(int Id, int LanguageId, string Name);
 public record CandidateCertificationDto(int Id, string Name, string? Url);
 public record CandidateEducationDto(int Id, string Degree, string University, int GraduationYear, string? Grade);
 
+public record ApplicantDto(
+    int       Id,
+    string    Candidate,
+    string?   ProfileImage,
+    int       JobId,
+    string    AppliedJob,
+    int       CategoryId,
+    string    Category,
+    DateTime? AppliedDate,
+    string    Stage,
+    string?   HrScore,
+    string?   TechnicalScore,
+    string    Status
+);
+
 public record UpsertCandidateSkillDto
 {
     [Required] [MaxLength(150)] public string Name { get; init; } = string.Empty;
@@ -200,7 +264,24 @@ public record CreateCandidateDto
     [MaxLength(100)]            public string?   NoticePeriod       { get; init; }
     [MaxLength(100)]            public string?   Availability       { get; init; }
                                 public decimal?  CurrentSalary      { get; init; }
-    public string? Summary { get; init; }
+    public string?              Summary { get; init; }
+
+    // ── Personal info (all optional) ──────────────────────────────────────────
+    public Gender?         Gender               { get; init; }
+    [MaxLength(50)]  public string?   NationalId           { get; init; }
+    [MaxLength(500)] public string?   Address              { get; init; }
+    [MaxLength(20)]  public string?   Mobile               { get; init; }
+    [MaxLength(20)]  public string?   AlternateMobile      { get; init; }
+    [EmailAddress]
+    [MaxLength(200)] public string?   Email                { get; init; }
+    public MaritalStatus?  MaritalStatus        { get; init; }
+                     public DateTime? DateOfBeginning      { get; init; }
+    [MaxLength(100)] public string?   Nationality          { get; init; }
+    [MaxLength(200)] public string?   PreferredJobLocation { get; init; }
+    public PreferredShift? PreferredShift       { get; init; }
+    [MaxLength(100)] public string?   City                 { get; init; }
+    public Country?        Country              { get; init; }
+
     public List<UpsertCandidateSkillDto>?         Skills             { get; init; }
     public List<UpsertCandidateLanguageDto>?      Languages          { get; init; }
     public List<UpsertCandidateCertificationDto>? Certifications     { get; init; }
@@ -221,7 +302,24 @@ public record UpdateCandidateDto
     [MaxLength(100)]            public string?   NoticePeriod       { get; init; }
     [MaxLength(100)]            public string?   Availability       { get; init; }
                                 public decimal?  CurrentSalary      { get; init; }
-    public string? Summary { get; init; }
+    public string?              Summary { get; init; }
+
+    // ── Personal info (all optional) ──────────────────────────────────────────
+    public Gender?         Gender               { get; init; }
+    [MaxLength(50)]  public string?   NationalId           { get; init; }
+    [MaxLength(500)] public string?   Address              { get; init; }
+    [MaxLength(20)]  public string?   Mobile               { get; init; }
+    [MaxLength(20)]  public string?   AlternateMobile      { get; init; }
+    [EmailAddress]
+    [MaxLength(200)] public string?   Email                { get; init; }
+    public MaritalStatus?  MaritalStatus        { get; init; }
+                     public DateTime? DateOfBeginning      { get; init; }
+    [MaxLength(100)] public string?   Nationality          { get; init; }
+    [MaxLength(200)] public string?   PreferredJobLocation { get; init; }
+    public PreferredShift? PreferredShift       { get; init; }
+    [MaxLength(100)] public string?   City                 { get; init; }
+    public Country?        Country              { get; init; }
+
     public List<UpsertCandidateSkillDto>?         Skills             { get; init; }
     public List<UpsertCandidateLanguageDto>?      Languages          { get; init; }
     public List<UpsertCandidateCertificationDto>? Certifications     { get; init; }
@@ -252,6 +350,7 @@ public record InterviewSummaryDto(
     string  TypeName,
     string? Grade,
     string? Comments,
+    string? EvaluatorId,
     DateTime CreatedAt
 );
 
@@ -277,7 +376,7 @@ public record CandidateDetailDto(
     int       CategoryId,
     string    CategoryName,
     string?   WorkLocation,
-    string? Summary,
+    string?   Summary,
     DateTime  JobCreatedAt,
     DateTime? TargetHiringDate,
 
@@ -303,6 +402,22 @@ public record CandidateDetailDto(
     string?   NoticePeriod,
     string?   Availability,
     decimal?  CurrentSalary,
+
+    // ── Personal info ─────────────────────────────────────────────────────────
+    Gender?        Gender,
+    string?        NationalId,
+    string?        Address,
+    string?        Mobile,
+    string?        AlternateMobile,
+    string?        Email,
+    MaritalStatus? MaritalStatus,
+    DateTime?      DateOfBeginning,
+    string?        Nationality,
+    string?        PreferredJobLocation,
+    PreferredShift? PreferredShift,
+    string?        City,
+    Country?       Country,
+
     IEnumerable<CandidateSkillDto> Skills,
     IEnumerable<CandidateLanguageDto> Languages,
     IEnumerable<CandidateCertificationDto> Certifications,
@@ -326,10 +441,17 @@ public record InterviewDto(
     int     Id,
     string? Grade,
     string? Comments,
+    DateTime CreatedAt,
+    string? EvaluatorId,
+    string? EvaluatorName,
     int     CandidateId,
     string  CandidateName,
     int     TypeId,
-    string  TypeName
+    string  TypeName,
+    string? InterviewMode,
+    DateTime? InterviewDate,
+    TimeOnly? StartTime,
+    TimeOnly? EndTime
 );
 public record CreateInterviewDto
 {
@@ -344,6 +466,19 @@ public record UpdateInterviewDto
     [MaxLength(2000)] public string? Comments    { get; init; }
     [Required]        public int     CandidateId { get; init; }
     [Required]        public int     TypeId      { get; init; }
+}
+
+/// <summary>Schedules an interview and emails its details to the candidate.</summary>
+public record ScheduleInterviewDto
+{
+    [Required] public int CandidateId { get; init; }
+    [Required] public int TypeId { get; init; }
+    [Required]
+    [RegularExpression("^(Online|Offline)$", ErrorMessage = "InterviewMode must be Online or Offline.")]
+    public string InterviewMode { get; init; } = string.Empty;
+    [Required] public DateTime InterviewDate { get; init; }
+    [Required] public TimeOnly StartTime { get; init; }
+    [Required] public TimeOnly EndTime { get; init; }
 }
 
 // ── Issue ─────────────────────────────────────────────────────────────────────
@@ -680,6 +815,59 @@ public class GetCategoriesQueryDto
     public int       PageSize     { get; init; } = 10;
 }
 
+/// <summary>Query parameters for searching/filtering jobs with pagination.</summary>
+public class GetJobsQueryDto
+{
+    /// <summary>Filter by job name / title (partial match).</summary>
+    public string?   Search          { get; init; }
+
+    /// <summary>Filter by category ID.</summary>
+    public int?      CategoryId      { get; init; }
+
+    /// <summary>Filter by creation date — created on or after this date.</summary>
+    public DateTime? Date            { get; init; }
+
+    /// <summary>Filter by location ID.</summary>
+    public int?      LocationId      { get; init; }
+
+    /// <summary>Filter by hiring manager ID.</summary>
+    public string?   HiringManagerId { get; init; }
+
+    /// <summary>Filter by opened/closed status.</summary>
+    public bool?     IsOpend         { get; init; }
+
+    /// <summary>Page number (1-based). Defaults to 1.</summary>
+    public int       Page            { get; init; } = 1;
+
+    /// <summary>Number of items per page. Defaults to 10.</summary>
+    public int       PageSize        { get; init; } = 10;
+}
+
+/// <summary>Query parameters for searching/filtering applicants (not hired candidates) with pagination.</summary>
+public class GetApplicantsQueryDto
+{
+    /// <summary>Filter by candidate name (partial match).</summary>
+    public string? CandidateName { get; init; }
+
+    /// <summary>Filter by job position / title (partial match).</summary>
+    public string? JobPosition { get; init; }
+
+    /// <summary>Filter by category ID.</summary>
+    public int? CategoryId { get; init; }
+
+    /// <summary>Filter by category name (partial match).</summary>
+    public string? CategoryName { get; init; }
+
+    /// <summary>Filter by status ID.</summary>
+    public int? StatusId { get; init; }
+
+    /// <summary>Page number (1-based). Defaults to 1.</summary>
+    public int PageNumber { get; init; } = 1;
+
+    /// <summary>Number of items per page. Defaults to 10.</summary>
+    public int PageSize { get; init; } = 10;
+}
+
 // ── Offers ────────────────────────────────────────────────────────────────────
 
 /// <summary>Full offer details — used for list rows and offer preview.</summary>
@@ -701,6 +889,8 @@ public record OfferDto(
     DateTime  OfferDate,
     DateTime  ExpiryDate,
     string?   Benefits,
+    string?   ProfileImage,
+    string?   ReasonOfRejected,
     DateTime  CreatedAt,
     string?   CreatedBy
 );
@@ -715,6 +905,19 @@ public record CreateOfferDto
     [MaxLength(2000)] public string? Benefits  { get; init; }
 }
 
+/// <summary>Sends an offer document by email and creates a pending offer record.</summary>
+public record SendOfferDto
+{
+    [Required] public int CandidateId { get; init; }
+    [Required] public IFormFile OfferFile { get; init; } = null!;
+    [MaxLength(200)] public string? Subject { get; init; }
+    [MaxLength(4000)] public string? Message { get; init; }
+    public decimal? ProposedSalary { get; init; }
+    public DateTime? ExpiryDate { get; init; }
+    public DateTime? StartDate { get; init; }
+    [MaxLength(2000)] public string? Benefits { get; init; }
+}
+
 /// <summary>Request body for updating an existing offer's details.</summary>
 public record UpdateOfferDto
 {
@@ -722,6 +925,18 @@ public record UpdateOfferDto
     [Required] public DateTime  ExpiryDate     { get; init; }
                public DateTime? StartDate      { get; init; }
     [MaxLength(2000)] public string? Benefits  { get; init; }
+}
+
+/// <summary>Request body for changing an offer's lifecycle status.</summary>
+public record UpdateOfferStatusDto
+{
+    /// <summary>1=Pending, 2=Accepted, 3=Declined, 4=Expired.</summary>
+    [Range((int)OfferStatus.Pending, (int)OfferStatus.Expired)]
+    public int OfferStatusId { get; init; }
+
+    /// <summary>Required when OfferStatusId is Declined (3).</summary>
+    [MaxLength(2000)]
+    public string? ReasonOfRejected { get; init; }
 }
 
 /// <summary>Query parameters for searching/filtering offers with pagination.</summary>

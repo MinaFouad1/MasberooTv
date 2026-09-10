@@ -31,4 +31,5 @@ public class Offer
 
     /// <summary>Username / user-id of the HR who created this offer.</summary>
     public string? CreatedBy { get; set; }
+    public string? ReasonOfRejected { get; set; } = null;
 }

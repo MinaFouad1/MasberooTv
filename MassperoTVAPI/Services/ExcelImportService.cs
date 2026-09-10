@@ -2,6 +2,7 @@ using System.Globalization;
 using ClosedXML.Excel;
 using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Entities;
+using MassperoTVAPI.Core.Enums;
 using MassperoTVAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -81,9 +82,14 @@ public class ExcelImportService : IExcelImportService
         var firstRow = ws.FirstRowUsed();
         if (firstRow is null) return rows;
 
+        var lastColUsed = ws.LastColumnUsed()?.ColumnNumber() ?? firstRow.LastCellUsed()?.Address.ColumnNumber ?? 0;
+        if (lastColUsed == 0) return rows;
+
         var headers = new List<string>();
-        foreach (var cell in firstRow.Cells())
-            headers.Add(cell.GetString().Trim());
+        for (int col = 1; col <= lastColUsed; col++)
+        {
+            headers.Add(GetCellString(firstRow.Cell(col)));
+        }
 
         var colMap = BuildColumnMap(headers);
 
@@ -96,8 +102,10 @@ public class ExcelImportService : IExcelImportService
         {
             rowNumber++;
             var values = new List<string>();
-            foreach (var cell in row.Cells())
-                values.Add(cell.GetString().Trim());
+            for (int col = 1; col <= lastColUsed; col++)
+            {
+                values.Add(GetCellString(row.Cell(col)));
+            }
 
             var dto = MapToRow(values, colMap, rowNumber);
             if (dto is not null)
@@ -105,6 +113,14 @@ public class ExcelImportService : IExcelImportService
         }
 
         return rows;
+    }
+
+    private static string GetCellString(IXLCell cell)
+    {
+        if (cell == null || cell.IsEmpty())
+            return string.Empty;
+
+        return cell.Value.ToString().Trim();
     }
 
     private static Dictionary<string, int> BuildColumnMap(List<string> headers)
@@ -121,16 +137,13 @@ public class ExcelImportService : IExcelImportService
 
     private static CandidateImportRowDto? MapToRow(List<string> values, Dictionary<string, int> colMap, int rowNumber)
     {
-        if (!colMap.TryGetValue("Name", out var nameIdx) || nameIdx >= values.Count)
-            return null;
-
-        var name = values[nameIdx].Trim();
+        var name = TryGetString(values, colMap, "Name", "الاسم", "اسم المرشح");
         if (string.IsNullOrWhiteSpace(name))
             return null;
 
-        int? jobId = TryGetInt(values, colMap, "JobId");
-        int? statusId = TryGetInt(values, colMap, "StatusId");
-        int? securityClearanceId = TryGetInt(values, colMap, "SecurityClearanceId");
+        int? jobId = TryGetInt(values, colMap, "JobId", "Job Id", "Job", "الوظيفة");
+        int? statusId = TryGetInt(values, colMap, "StatusId", "Status Id", "Status", "الحالة");
+        int? securityClearanceId = TryGetInt(values, colMap, "SecurityClearanceId", "Security Clearance Id", "SecurityClearance", "الموقف الأمني", "الموقف الامني");
 
         return new CandidateImportRowDto
         {
@@ -139,11 +152,32 @@ public class ExcelImportService : IExcelImportService
             JobId = jobId ?? 0,
             StatusId = statusId ?? 0,
             SecurityClearanceId = securityClearanceId ?? 0,
-            CvFile = TryGetString(values, colMap, "CvFile"),
-            ReasonOfAccept = TryGetString(values, colMap, "ReasonOfAccept"),
-            ReasonOfReject = TryGetString(values, colMap, "ReasonOfReject"),
-            Accepted = TryGetBool(values, colMap, "Accepted"),
-            ApplicationUserId = TryGetString(values, colMap, "ApplicationUserId")
+            CvFile = TryGetString(values, colMap, "CvFile", "CV", "السيرة الذاتية"),
+            ReasonOfAccept = TryGetString(values, colMap, "ReasonOfAccept", "سبب القبول"),
+            ReasonOfReject = TryGetString(values, colMap, "ReasonOfReject", "سبب الرفض"),
+            Accepted = TryGetBool(values, colMap, "Accepted", "مقبول"),
+            ApplicationUserId = TryGetString(values, colMap, "ApplicationUserId", "UserId", "المستخدم"),
+            Gender = TryGetGender(values, colMap, "Gender", "Sex", "النوع", "الجنس"),
+            Email = TryGetString(values, colMap, "Email", "E-mail", "Mail", "البريد الإلكتروني", "البريد الالكتروني"),
+            Address = TryGetString(values, colMap, "Address", "العنوان", "Location"),
+            PhoneNumber = TryGetString(values, colMap, "PhoneNumber", "Phone", "Mobile", "Phone Number", "Mobile Number", "MobileNumber", "الهاتف", "الموبايل", "التليفون", "رقم الهاتف"),
+            AlternatePhoneNumber = TryGetString(values, colMap, "AlternatePhoneNumber", "AlternateMobile", "AlternatePhone", "Phone2", "Mobile2", "هاتف بديل"),
+            Nationality = TryGetString(values, colMap, "Nationality", "Natinality", "الجنسية", "القومية"),
+            NationalId = TryGetString(values, colMap, "NationalId", "National ID", "NationalIdNumber", "الرقم القومي", "رقم البطاقة"),
+            MaritalStatus = TryGetMaritalStatus(values, colMap, "MaritalStatus", "Marital Status", "mtrialstatus", "الحالة الاجتماعية"),
+            DateOfBeginning = TryGetDateTime(values, colMap, "DateOfBeginning", "Date of Beginning", "Start Date", "StartDate", "تاريخ البدء"),
+            HiringDate = TryGetDateTime(values, colMap, "ApplicationDate", "Application Date", "AppliedDate", "Applied Date", "HiringDate", "Hiring Date", "تاريخ التقديم"),
+            PreferredJobLocation = TryGetString(values, colMap, "PreferredJobLocation", "Preferred Location", "PreferredLocation", "Preferred Work Location", "موقع العمل المفضل"),
+            PreferredShift = TryGetPreferredShift(values, colMap, "PreferredShift", "Preferred Shift", "وردية العمل المفضلة"),
+            City = TryGetString(values, colMap, "City", "المدينة", "المحافظة"),
+            Country = TryGetCountry(values, colMap, "Country", "البلد", "الدولة"),
+            CurrentEmployer = TryGetString(values, colMap, "CurrentEmployer", "Current Employer", "جهة العمل الحالية"),
+            CurrentPosition = TryGetString(values, colMap, "CurrentPosition", "Current Position", "المسمى الوظيفي الحالي"),
+            YearsOfExperience = TryGetInt(values, colMap, "YearsOfExperience", "Years of Experience", "yearsofexceince", "Years", "سنوات الخبرة"),
+            ExpectedSalary = TryGetDecimal(values, colMap, "ExpectedSalary", "Expected Salary", "الراتب المتوقع"),
+            CurrentSalary = TryGetDecimal(values, colMap, "CurrentSalary", "Current Salary", "الراتب الحالي"),
+            NoticePeriod = TryGetString(values, colMap, "NoticePeriod", "Notice Period", "notice period", "فترة الإخطار", "فترة الاخطار"),
+            Availability = TryGetString(values, colMap, "Availability", "فترة التوافر")
         };
     }
 
@@ -190,7 +224,28 @@ public class ExcelImportService : IExcelImportService
                 ReasonOfAccept = row.ReasonOfAccept,
                 ReasonOfReject = row.ReasonOfReject,
                 Accepted = row.Accepted,
-                ApplicationUserId = row.ApplicationUserId
+                ApplicationUserId = row.ApplicationUserId,
+                Gender = row.Gender,
+                Email = row.Email,
+                Address = row.Address,
+                Mobile = row.PhoneNumber,
+                AlternateMobile = row.AlternatePhoneNumber,
+                Nationality = row.Nationality,
+                NationalId = row.NationalId,
+                MaritalStatus = row.MaritalStatus,
+                DateOfBeginning = row.DateOfBeginning,
+                HiringDate = row.HiringDate,
+                PreferredJobLocation = row.PreferredJobLocation,
+                PreferredShift = row.PreferredShift,
+                City = row.City,
+                Country = row.Country,
+                CurrentEmployer = row.CurrentEmployer,
+                CurrentPosition = row.CurrentPosition,
+                YearsOfExperience = row.YearsOfExperience,
+                ExpectedSalary = row.ExpectedSalary,
+                CurrentSalary = row.CurrentSalary,
+                NoticePeriod = row.NoticePeriod,
+                Availability = row.Availability
             });
         }
 
@@ -213,6 +268,93 @@ public class ExcelImportService : IExcelImportService
             Failed = errors.Count,
             Errors = errors
         };
+    }
+
+    public byte[] GenerateCandidateTemplate()
+    {
+        using var workbook = new XLWorkbook();
+        var ws = workbook.Worksheets.Add("Candidates");
+
+        var headers = new[]
+        {
+            "Name",
+            "JobId",
+            "StatusId",
+            "SecurityClearanceId",
+            "Gender",
+            "PhoneNumber",
+            "Address",
+            "Email",
+            "Nationality",
+            "NationalId",
+            "MaritalStatus",
+            "DateOfBeginning",
+            "ApplicationDate",
+            "PreferredLocation",
+            "PreferredShift",
+            "City",
+            "Country",
+            "CurrentEmployer",
+            "CurrentPosition",
+            "YearsOfExperience",
+            "ExpectedSalary",
+            "CurrentSalary",
+            "NoticePeriod",
+            "Availability",
+            "CvFile",
+            "ReasonOfAccept",
+            "ReasonOfReject",
+            "Accepted"
+        };
+
+        for (int c = 0; c < headers.Length; c++)
+        {
+            var cell = ws.Cell(1, c + 1);
+            cell.Value = headers[c];
+            cell.Style.Font.Bold = true;
+            cell.Style.Fill.BackgroundColor = XLColor.FromArgb(41, 128, 185);
+            cell.Style.Font.FontColor = XLColor.White;
+            cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        }
+
+        var sampleRows = new[]
+        {
+            new object[] {
+                "أحمد محمود علي", 1, 1, 1, "Male", "01012345678", "القاهرة - مدينة نصر", "ahmed.ali@example.com", "Egyptian",
+                "29801011234567", "Married", "2026-10-01", "2026-09-01", "Cairo", "Morning", "Cairo", "Egypt",
+                "Al-Hayat TV", "Senior Presenter", 8, 25000m, 20000m, "1 Month", "Immediate", "cv_ahmed.pdf", "خبرة ممتازة", "", true
+            },
+            new object[] {
+                "سارة محمد حسن", 2, 2, 2, "Female", "01123456789", "الجيزة - الدقي", "sara.hassan@example.com", "Egyptian",
+                "29902021234568", "Single", "2026-10-15", "2026-09-05", "Giza", "Flexible", "Giza", "Egypt",
+                "DMC Channel", "Production Assistant", 3, 12000m, 9500m, "2 Weeks", "After 2 weeks", "cv_sara.pdf", "", "", false
+            },
+            new object[] {
+                "John Smith", 1002, 1, 1, "Male", "01234567890", "Alexandria - Smouha", "john.smith@example.com", "British",
+                "GBR12345678", "Married", "2026-11-01", "2026-09-08", "Alexandria", "Morning", "Alexandria", "Other",
+                "BBC Arabic", "Broadcast Engineer", 10, 45000m, 38000m, "1 Month", "1 Month", "cv_john.pdf", "Qualified specialist", "", true
+            }
+        };
+
+        for (int r = 0; r < sampleRows.Length; r++)
+        {
+            var rowData = sampleRows[r];
+            for (int c = 0; c < rowData.Length; c++)
+            {
+                var cell = ws.Cell(r + 2, c + 1);
+                var val = rowData[c];
+                if (val is int intVal) cell.Value = intVal;
+                else if (val is decimal decVal) cell.Value = decVal;
+                else if (val is bool boolVal) cell.Value = boolVal;
+                else cell.Value = val?.ToString() ?? string.Empty;
+            }
+        }
+
+        ws.Columns().AdjustToContents();
+
+        using var memoryStream = new MemoryStream();
+        workbook.SaveAs(memoryStream);
+        return memoryStream.ToArray();
     }
 
     private static List<string> ParseCsvLine(string line)
@@ -252,32 +394,159 @@ public class ExcelImportService : IExcelImportService
         return values;
     }
 
-    private static int? TryGetInt(List<string> values, Dictionary<string, int> colMap, string colName)
+    private static int? TryGetInt(List<string> values, Dictionary<string, int> colMap, params string[] columnNames)
     {
-        if (!colMap.TryGetValue(colName, out var idx) || idx >= values.Count)
-            return null;
+        foreach (var colName in columnNames)
+        {
+            if (!colMap.TryGetValue(colName, out var idx) || idx >= values.Count)
+                continue;
 
-        var val = values[idx].Trim();
-        if (string.IsNullOrWhiteSpace(val)) return null;
+            var val = values[idx].Trim();
+            if (string.IsNullOrWhiteSpace(val)) continue;
 
-        return int.TryParse(val, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : null;
+            if (int.TryParse(val, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result))
+                return result;
+        }
+
+        return null;
     }
 
-    private static string? TryGetString(List<string> values, Dictionary<string, int> colMap, string colName)
+    private static decimal? TryGetDecimal(
+        List<string> values,
+        Dictionary<string, int> colMap,
+        params string[] columnNames)
     {
-        if (!colMap.TryGetValue(colName, out var idx) || idx >= values.Count)
+        var value = TryGetString(values, colMap, columnNames);
+        if (string.IsNullOrWhiteSpace(value))
             return null;
 
-        var val = values[idx].Trim();
-        return string.IsNullOrWhiteSpace(val) ? null : val;
+        return decimal.TryParse(value, NumberStyles.Number | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var res) ? res : null;
     }
 
-    private static bool TryGetBool(List<string> values, Dictionary<string, int> colMap, string colName)
+    private static DateTime? TryGetDateTime(
+        List<string> values,
+        Dictionary<string, int> colMap,
+        params string[] columnNames)
     {
-        if (!colMap.TryGetValue(colName, out var idx) || idx >= values.Count)
-            return false;
+        var value = TryGetString(values, colMap, columnNames);
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
 
-        var val = values[idx].Trim().ToLowerInvariant();
-        return val is "true" or "yes" or "1" or "y";
+        if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt))
+            return dt;
+
+        if (DateTime.TryParse(value, out dt))
+            return dt;
+
+        if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var oaDate) && oaDate > 30000 && oaDate < 60000)
+        {
+            try { return DateTime.FromOADate(oaDate); } catch { }
+        }
+
+        return null;
+    }
+
+    private static string? TryGetString(
+        List<string> values,
+        Dictionary<string, int> colMap,
+        params string[] columnNames)
+    {
+        foreach (var columnName in columnNames)
+        {
+            if (!colMap.TryGetValue(columnName, out var idx) || idx >= values.Count)
+                continue;
+
+            var value = values[idx].Trim();
+            if (!string.IsNullOrWhiteSpace(value))
+                return value;
+        }
+
+        return null;
+    }
+
+    private static Gender? TryGetGender(
+        List<string> values,
+        Dictionary<string, int> colMap,
+        params string[] columnNames)
+    {
+        var value = TryGetString(values, colMap, columnNames);
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        var normalized = value.Trim().ToLowerInvariant();
+
+        if (normalized is "male" or "m" or "1" or "ذكر" or "ولد" or "رجل")
+            return Gender.Male;
+
+        if (normalized is "female" or "f" or "2" or "أنثى" or "انثى" or "بنت" or "سيدة")
+            return Gender.Female;
+
+        return null;
+    }
+
+    private static MaritalStatus? TryGetMaritalStatus(
+        List<string> values,
+        Dictionary<string, int> colMap,
+        params string[] columnNames)
+    {
+        var value = TryGetString(values, colMap, columnNames);
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        var normalized = value.Trim().ToLowerInvariant();
+        if (normalized is "single" or "1" or "اعزب" or "أعزب" or "انسة" or "آنسة")
+            return MaritalStatus.Single;
+        if (normalized is "married" or "2" or "متزوج" or "متزوجة")
+            return MaritalStatus.Married;
+        if (normalized is "divorced" or "3" or "مطلق" or "مطلقة")
+            return MaritalStatus.Divorced;
+        if (normalized is "widowed" or "4" or "ارمل" or "أرمل" or "ارملة" or "أرملة")
+            return MaritalStatus.Widowed;
+
+        return null;
+    }
+
+    private static Country? TryGetCountry(
+        List<string> values,
+        Dictionary<string, int> colMap,
+        params string[] columnNames)
+    {
+        var value = TryGetString(values, colMap, columnNames);
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        if (Enum.TryParse<Country>(value, true, out var country))
+            return country;
+
+        var normalized = value.Trim().ToLowerInvariant();
+        if (normalized is "egypt" or "1" or "مصر") return Country.Egypt;
+        if (normalized is "saudi arabia" or "saudi" or "ksa" or "2" or "السعودية") return Country.SaudiArabia;
+        if (normalized is "uae" or "emirates" or "3" or "الامارات" or "الإمارات") return Country.UAE;
+
+        return Country.Other;
+    }
+
+    private static PreferredShift? TryGetPreferredShift(
+        List<string> values,
+        Dictionary<string, int> colMap,
+        params string[] columnNames)
+    {
+        var value = TryGetString(values, colMap, columnNames);
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        var normalized = value.Trim().ToLowerInvariant();
+        if (normalized is "morning" or "1" or "صباحي" or "صباحية") return PreferredShift.Morning;
+        if (normalized is "evening" or "2" or "مسائي" or "مسائية") return PreferredShift.Evening;
+        if (normalized is "night" or "3" or "ليلي" or "ليلية") return PreferredShift.Night;
+        if (normalized is "flexible" or "4" or "مرن" or "مرنة") return PreferredShift.Flexible;
+
+        return null;
+    }
+
+    private static bool TryGetBool(List<string> values, Dictionary<string, int> colMap, params string[] columnNames)
+    {
+        var val = TryGetString(values, colMap, columnNames)?.Trim().ToLowerInvariant();
+        return val is "true" or "yes" or "1" or "y" or "نعم";
     }
 }

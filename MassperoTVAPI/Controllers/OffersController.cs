@@ -14,6 +14,8 @@ namespace MassperoTVAPI.Controllers;
 [Authorize(Roles = "HR,Admin")]
 public class OffersController : ControllerBase
 {
+    private const string ProfileConfigurationKey = "ProfileImage";
+
     // ── Candidate status names that drive automatic status transitions ─────────
     private const string StatusInOffer   = "Offered";
     private const string StatusHired     = "Hired";
@@ -21,10 +23,12 @@ public class OffersController : ControllerBase
     private const string StatusInProcess = "In Process";
 
     private readonly IUnitOfWork _uow;
+    private readonly IEmailService _emailService;
 
-    public OffersController(IUnitOfWork uow)
+    public OffersController(IUnitOfWork uow, IEmailService emailService)
     {
         _uow = uow;
+        _emailService = emailService;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -53,6 +57,9 @@ public class OffersController : ControllerBase
     public async Task<ActionResult<ApiResponse<PagedResult<OfferDto>>>> GetAll(
         [FromQuery] GetOffersQueryDto query)
     {
+        var profileBaseUrl = (await _uow.Configurations
+            .GetByKeyAsync(ProfileConfigurationKey))?.Value;
+
         var safePage     = Math.Max(1, query.Page);
         var safePageSize = Math.Clamp(query.PageSize, 1, 100);
 
@@ -69,7 +76,7 @@ public class OffersController : ControllerBase
         var totalPages = (int)Math.Ceiling(totalCount / (double)safePageSize);
 
         var result = new PagedResult<OfferDto>(
-            items.Select(o => o.ToDto()),
+            items.Select(o => o.ToDto(profileBaseUrl)),
             totalCount,
             safePage,
             safePageSize,
@@ -107,50 +114,88 @@ public class OffersController : ControllerBase
     /// Creates a new offer for a candidate.
     /// Automatically moves the candidate's status to "In Offer".
     /// </summary>
-    [HttpPost]
-    public async Task<ActionResult<ApiResponse<OfferDto>>> Create([FromBody] CreateOfferDto dto)
+    
+    /// <summary>
+    /// Emails an offer document as an attachment, creates a pending offer record,
+    /// and moves the candidate to "Offered" only after the email is sent.
+    /// </summary>
+    [HttpPost("send")]
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<ApiResponse<OfferDto>>> SendOffer([FromForm] SendOfferDto dto)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ApiResponse<OfferDto>.ErrorResponse("Validation failed."));
+        if (!ModelState.IsValid || dto.OfferFile.Length == 0)
+            return BadRequest(ApiResponse<OfferDto>.ErrorResponse(
+                "CandidateId and a non-empty OfferFile are required."));
 
-        // Validate candidate exists
-        var candidate = await _uow.Candidates.GetByIdWithDetailsAsync(dto.CandidateId);
+        var candidate = await _uow.Candidates.GetByIdAsync(dto.CandidateId);
         if (candidate is null)
-            return NotFound(ApiResponse<OfferDto>.NotFoundResponse($"Candidate {dto.CandidateId} not found."));
+            return NotFound(ApiResponse<OfferDto>.NotFoundResponse(
+                $"Candidate {dto.CandidateId} not found."));
 
-        // Resolve "In Offer" status
-        var inOfferStatus = await GetStatusByNameAsync(StatusInOffer);
-        if (inOfferStatus is null)
-            return BadRequest(ApiResponse<OfferDto>.ErrorResponse($"Status '{StatusInOffer}' not found in the database."));
+        if (string.IsNullOrWhiteSpace(candidate.Email))
+            return BadRequest(ApiResponse<OfferDto>.ErrorResponse(
+                "The candidate does not have an email address."));
 
-        // Validate expiry date
-        if (dto.ExpiryDate <= DateTime.UtcNow)
-            return BadRequest(ApiResponse<OfferDto>.ErrorResponse("ExpiryDate must be in the future."));
+        var offeredStatus = await GetStatusByNameAsync(StatusInOffer);
+        if (offeredStatus is null)
+            return BadRequest(ApiResponse<OfferDto>.ErrorResponse(
+                $"Status '{StatusInOffer}' not found in the database."));
 
-        // Create the offer
+        byte[] document;
+        await using (var stream = new MemoryStream())
+        {
+            await dto.OfferFile.CopyToAsync(stream);
+            document = stream.ToArray();
+        }
+
+        var subject = string.IsNullOrWhiteSpace(dto.Subject)
+            ? "Your employment offer"
+            : dto.Subject.Trim();
+        var message = string.IsNullOrWhiteSpace(dto.Message)
+            ? "Please find your offer document attached."
+            : dto.Message.Trim();
+        var encodedName = System.Net.WebUtility.HtmlEncode(candidate.Name);
+        var encodedMessage = System.Net.WebUtility.HtmlEncode(message)
+            .Replace(Environment.NewLine, "<br/>");
+
+        try
+        {
+            await _emailService.SendWithAttachmentAsync(
+                candidate.Email,
+                candidate.Name,
+                subject,
+                $"<p>Dear {encodedName},</p><p>{encodedMessage}</p>",
+                document,
+                dto.OfferFile.FileName,
+                dto.OfferFile.ContentType);
+        }
+        catch
+        {
+            return StatusCode(500, ApiResponse<OfferDto>.ErrorResponse(
+                "The offer email could not be sent. The candidate status was not changed."));
+        }
+
         var offer = new Offer
         {
-            CandidateId    = dto.CandidateId,
-            OfferStatusId  = OfferStatus.Pending,
-            ProposedSalary = dto.ProposedSalary,
-            StartDate      = dto.StartDate,
-            ExpiryDate     = dto.ExpiryDate,
-            Benefits       = dto.Benefits,
-            OfferDate      = DateTime.UtcNow,
-            CreatedAt      = DateTime.UtcNow,
-            CreatedBy      = User.Identity?.Name
+            CandidateId = candidate.Id,
+            OfferStatusId = OfferStatus.Pending,
+            ProposedSalary = dto.ProposedSalary ?? 0m,
+            ExpiryDate = dto.ExpiryDate ?? DateTime.UtcNow.AddDays(30),
+            StartDate = dto.StartDate,
+            Benefits = dto.Benefits,
+            OfferDate = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = User.Identity?.Name
         };
 
         await _uow.Offers.AddAsync(offer);
-
-        // Move candidate status → "In Offer"
-        candidate.StatusId = inOfferStatus.Id;
+        candidate.StatusId = offeredStatus.Id;
         _uow.Candidates.Update(candidate);
-
         await _uow.SaveChangesAsync();
 
         var created = await _uow.Offers.GetByIdWithDetailsAsync(offer.Id);
-        return StatusCode(201, ApiResponse<OfferDto>.CreatedResponse(created!.ToDto()));
+        return StatusCode(201, ApiResponse<OfferDto>.CreatedResponse(
+            created!.ToDto(), "Offer email sent and candidate moved to 'Offered'."));
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -191,39 +236,30 @@ public class OffersController : ControllerBase
     //  Accept offer  →  candidate status → "Hired"
     // ─────────────────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Marks the offer as Accepted.
-    /// Automatically moves the candidate's status to "Hired".
-    /// </summary>
-    [HttpPatch("{id:int}/accept")]
-    public async Task<ActionResult<ApiResponse<OfferDto>>> Accept(int id)
-        => await TransitionOffer(id, OfferStatus.Accepted, StatusHired, "Offer accepted. Candidate moved to 'Hired'.");
+    /// <summary>Updates an offer status. A decline requires ReasonOfRejected.</summary>
+    [HttpPatch("{id:int}/status")]
+    public async Task<ActionResult<ApiResponse<OfferDto>>> UpdateStatus(
+        int id,
+        [FromBody] UpdateOfferStatusDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ApiResponse<OfferDto>.ErrorResponse("Validation failed."));
+
+        var newStatus = (OfferStatus)dto.OfferStatusId;
+      
+
+        return await TransitionOffer(id, newStatus, dto.ReasonOfRejected);
+    }
 
     // ─────────────────────────────────────────────────────────────────────────
     //  PATCH /api/offers/{id}/decline
     //  Decline offer  →  candidate status → "Rejected"
     // ─────────────────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Marks the offer as Declined.
-    /// Automatically moves the candidate's status to "Rejected".
-    /// </summary>
-    [HttpPatch("{id:int}/decline")]
-    public async Task<ActionResult<ApiResponse<OfferDto>>> Decline(int id)
-        => await TransitionOffer(id, OfferStatus.Declined, StatusRejected, "Offer declined. Candidate moved to 'Rejected'.");
-
     // ─────────────────────────────────────────────────────────────────────────
     //  PATCH /api/offers/{id}/expire
     //  Expire offer  →  candidate status → "In Process"
     // ─────────────────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Marks the offer as Expired.
-    /// Automatically moves the candidate's status back to "In Process".
-    /// </summary>
-    [HttpPatch("{id:int}/expire")]
-    public async Task<ActionResult<ApiResponse<OfferDto>>> Expire(int id)
-        => await TransitionOffer(id, OfferStatus.Expired, StatusInProcess, "Offer expired. Candidate moved to 'In Process'.");
 
     // ─────────────────────────────────────────────────────────────────────────
     //  DELETE /api/offers/{id}   (Admin only)
@@ -255,14 +291,11 @@ public class OffersController : ControllerBase
     //  Private helpers
     // ─────────────────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Generic offer status transition: updates OfferStatusId and syncs candidate status.
-    /// </summary>
+    /// <summary>Updates an offer status and keeps the candidate status in sync.</summary>
     private async Task<ActionResult<ApiResponse<OfferDto>>> TransitionOffer(
-        int         offerId,
+        int offerId,
         OfferStatus newOfferStatus,
-        string      candidateStatusName,
-        string      successMessage)
+        string? reasonOfRejected)
     {
         var offer = await _uow.Offers.GetByIdWithDetailsAsync(offerId);
         if (offer is null)
@@ -271,23 +304,30 @@ public class OffersController : ControllerBase
         if (offer.OfferStatusId == newOfferStatus)
             return BadRequest(ApiResponse<OfferDto>.ErrorResponse($"Offer is already {newOfferStatus}."));
 
-        // Resolve target candidate status
+        var candidateStatusName = newOfferStatus switch
+        {
+            OfferStatus.Accepted => StatusHired,
+            OfferStatus.Declined => StatusRejected,
+            OfferStatus.Expired  => StatusInProcess,
+            _                    => StatusInOffer
+        };
+
         var targetStatus = await GetStatusByNameAsync(candidateStatusName);
         if (targetStatus is null)
             return BadRequest(ApiResponse<OfferDto>.ErrorResponse(
                 $"Status '{candidateStatusName}' not found in the database."));
 
-        // Update offer status
         offer.OfferStatusId = newOfferStatus;
+        offer.ReasonOfRejected = newOfferStatus == OfferStatus.Declined
+            ? reasonOfRejected?.Trim()
+            : null;
         _uow.Offers.Update(offer);
 
-        // Update candidate status
         var candidate = await _uow.Candidates.GetByIdAsync(offer.CandidateId);
         if (candidate is not null)
         {
             candidate.StatusId = targetStatus.Id;
 
-            // If accepted, set hiring date
             if (newOfferStatus == OfferStatus.Accepted)
                 candidate.HiringDate = DateTime.UtcNow;
 
@@ -297,7 +337,9 @@ public class OffersController : ControllerBase
         await _uow.SaveChangesAsync();
 
         var updated = await _uow.Offers.GetByIdWithDetailsAsync(offer.Id);
-        return Ok(ApiResponse<OfferDto>.SuccessResponse(updated!.ToDto(), successMessage));
+        return Ok(ApiResponse<OfferDto>.SuccessResponse(
+            updated!.ToDto(),
+            "Offer status updated successfully."));
     }
 
     private async Task<Status?> GetStatusByNameAsync(string name)

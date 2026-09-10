@@ -47,6 +47,22 @@ public class CategoriesController : ControllerBase
         return Ok(ApiResponse<CategoryDto>.SuccessResponse(entity.ToDto()));
     }
 
+    /// <summary>Get category details and recruitment summary (open positions, applications, interviews, offers sent).</summary>
+    /// <param name="id">Category ID.</param>
+    /// <param name="isOpened">Optional job open/closed filter (true = opened, false = closed).</param>
+    /// <param name="status">Optional alias for isOpened filter.</param>
+    /// <returns>Category summary and status details.</returns>
+    [HttpGet("summary")]
+    public async Task<ActionResult<ApiResponse<CategoryDetailsDto>>> GetCategorySummary(
+        int id)
+    {
+        var summary = await _uow.Categories.GetCategorySummaryAsync(id);
+        if (summary is null) return NotFound(ApiResponse<CategoryDetailsDto>.NotFoundResponse());
+        return Ok(ApiResponse<CategoryDetailsDto>.SuccessResponse(summary));
+    }
+
+   
+
     /// <summary>Create a new category. Admin or HR required.</summary>
     /// <param name="dto">Category name.</param>
     /// <returns>The created category.</returns>

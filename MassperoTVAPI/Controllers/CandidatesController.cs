@@ -7,6 +7,7 @@ using MassperoTVAPI.Core.Mappers;
 using MassperoTVAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MassperoTVAPI.Controllers;
 
@@ -45,40 +46,29 @@ public class CandidatesController : ControllerBase
         _env = env;
     }
 
-    /// <summary>
-    /// List candidates (applications) with optional filters and pagination.
-    /// Filters: candidateName, jobId, categoryId, statusId, dateFrom (HiringDate), dateTo (HiringDate).
-    /// </summary>
-    /// <param name="query">Search and pagination parameters.</param>
-    /// <returns>Paged list of candidates with full details including HR/Technical scores.</returns>
-    [HttpGet]
-    public async Task<ActionResult<ApiResponse<PagedResult<CandidateDto>>>> GetAll(
-        [FromQuery] GetApplicationsQueryDto query)
+ 
+ 
+    [HttpGet("applicants")]
+    [HttpGet("applicants-not-hired")]
+    public async Task<ActionResult<ApiResponse<PagedResult<ApplicantDto>>>> GetApplicants(
+        [FromQuery] GetApplicantsQueryDto query)
     {
-        var safePage     = Math.Max(1, query.Page);
+        var (_, profileBaseUrl) = await GetBaseUrlsAsync();
+        var (items, totalCount) = await _uow.Candidates.GetApplicantsAsync(query);
+
+        var safePage     = Math.Max(1, query.PageNumber);
         var safePageSize = Math.Clamp(query.PageSize, 1, 100);
 
-        var (items, totalCount) = await _uow.Candidates.GetPagedAsync(
-            query.CandidateName,
-            query.JobId,
-            query.CategoryId,
-            query.StatusId,
-            query.DateFrom,
-            query.DateTo,
-            safePage,
-            safePageSize);
+        var dtos = items.Select(c => c.ToApplicantDto(profileBaseUrl)).ToList();
 
-        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
-        var totalPages = (int)Math.Ceiling(totalCount / (double)safePageSize);
-
-        var result = new PagedResult<CandidateDto>(
-            items.Select(c => c.ToDto(cvBaseUrl, profileBaseUrl)),
+        var result = new PagedResult<ApplicantDto>(
+            dtos,
             totalCount,
             safePage,
             safePageSize,
-            totalPages);
+            (int)Math.Ceiling(totalCount / (double)safePageSize));
 
-        return Ok(ApiResponse<PagedResult<CandidateDto>>.SuccessResponse(result));
+        return Ok(ApiResponse<PagedResult<ApplicantDto>>.SuccessResponse(result));
     }
 
     /// <summary>
@@ -100,6 +90,21 @@ public class CandidatesController : ControllerBase
         var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
         return Ok(ApiResponse<CandidateDetailDto>.SuccessResponse(
             entity.ToDetailDto(rankInfo.Rank, rankInfo.TotalCandidates, cvBaseUrl, profileBaseUrl)));
+    }
+
+    /// <summary>Get all interviews recorded for a candidate.</summary>
+    /// <param name="id">Candidate ID.</param>
+    /// <returns>Interview type, grade, creation time, and evaluator details when available.</returns>
+    [Authorize(Roles = "HR,Admin")]
+    [HttpGet("{id:int}/interviews")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<InterviewDto>>>> GetInterviews(int id)
+    {
+        if (!await _uow.Candidates.ExistsAsync(id))
+            return NotFound(ApiResponse<IEnumerable<InterviewDto>>.NotFoundResponse("Candidate not found."));
+
+        var interviews = await _uow.Interviews.GetByCandidateAsync(id);
+        return Ok(ApiResponse<IEnumerable<InterviewDto>>.SuccessResponse(
+            interviews.OrderByDescending(i => i.CreatedAt).Select(i => i.ToDto())));
     }
 
     /// <summary>
@@ -161,6 +166,21 @@ public class CandidatesController : ControllerBase
             Availability        = dto.Availability,
             Summary             = dto.Summary,
             CurrentSalary       = dto.CurrentSalary,
+
+            // Personal info
+            Gender               = dto.Gender,
+            NationalId           = dto.NationalId,
+            Address              = dto.Address,
+            Mobile               = dto.Mobile,
+            AlternateMobile      = dto.AlternateMobile,
+            Email                = dto.Email,
+            MaritalStatus        = dto.MaritalStatus,
+            DateOfBeginning      = dto.DateOfBeginning,
+            Nationality          = dto.Nationality,
+            PreferredJobLocation = dto.PreferredJobLocation,
+            PreferredShift       = dto.PreferredShift,
+            City                 = dto.City,
+            Country              = dto.Country,
         };
 
         await _uow.Candidates.AddAsync(entity);
@@ -224,6 +244,21 @@ public class CandidatesController : ControllerBase
         entity.Availability      = dto.Availability;
         entity.Summary           = dto.Summary;
         entity.CurrentSalary     = dto.CurrentSalary;
+
+        // Personal info
+        entity.Gender               = dto.Gender;
+        entity.NationalId           = dto.NationalId;
+        entity.Address              = dto.Address;
+        entity.Mobile               = dto.Mobile;
+        entity.AlternateMobile      = dto.AlternateMobile;
+        entity.Email                = dto.Email;
+        entity.MaritalStatus        = dto.MaritalStatus;
+        entity.DateOfBeginning      = dto.DateOfBeginning;
+        entity.Nationality          = dto.Nationality;
+        entity.PreferredJobLocation = dto.PreferredJobLocation;
+        entity.PreferredShift       = dto.PreferredShift;
+        entity.City                 = dto.City;
+        entity.Country              = dto.Country;
 
         await _uow.Candidates.SyncProfileCollectionsAsync(
             entity,
@@ -297,10 +332,15 @@ public class CandidatesController : ControllerBase
     /// <param name="id">Candidate ID.</param>
     /// <param name="dto">Interview type, grade, and comments.</param>
     /// <returns>The updated candidate details.</returns>
+    [Authorize]
     [HttpPatch("{id:int}/grade")]
     public async Task<ActionResult<ApiResponse<CandidateDetailDto>>> PatchGrade(
         int id, [FromBody] PatchCandidateInterviewGradeDto dto)
     {
+        var evaluatorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(evaluatorId))
+            return Unauthorized(ApiResponse<CandidateDetailDto>.UnauthorizedResponse("Authenticated user was not found."));
+
         var candidate = await _uow.Candidates.GetByIdWithDetailsAsync(id);
         if (candidate is null) return NotFound(ApiResponse<CandidateDetailDto>.NotFoundResponse());
 
@@ -312,6 +352,8 @@ public class CandidatesController : ControllerBase
         if (interview is not null)
         {
             interview.Grade = dto.Grade;
+            interview.CreatedAt = DateTime.UtcNow;
+            interview.EvaluatorId = evaluatorId;
             if (dto.Comments is not null)
                 interview.Comments = dto.Comments;
             _uow.Interviews.Update(interview);
@@ -329,7 +371,8 @@ public class CandidatesController : ControllerBase
                 TypeId = type.Id,
                 Grade = dto.Grade,
                 Comments = dto.Comments,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                EvaluatorId = evaluatorId
             };
             await _uow.Interviews.AddAsync(interview);
         }

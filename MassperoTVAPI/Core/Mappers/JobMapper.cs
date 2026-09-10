@@ -15,12 +15,15 @@ public static class JobMapper
         j.CreatedAt,
         j.EmploymentType,
         j.TargetHiringDate,
+        j.DeadLineDate,
+        j.IsOpend,
+        j.IsOpend ? "Opened" : "Closed",
         j.LocationId,
         j.Location?.Name,
         j.HiringManagerId,
         j.HiringManager?.UserName,
-        Applicants:  j.Candidates.Count,
-        Interviews:  j.Candidates.Count(c =>
-            string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase))
+        Applicants:  j.Candidates.Count(c => !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase)),
+        Interviews:  j.Candidates.Count(c => (c.Interviews != null && c.Interviews.Any()) || string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase)),
+        Offers:      j.Candidates.Count(c => string.Equals(c.Status?.Name, "Offered", StringComparison.OrdinalIgnoreCase))
     );
 }

@@ -47,6 +47,24 @@ public static class CandidateMapper
         GetScoreByType(c.Interviews, TechnicalTypeName)
     );
 
+    // ── Applicant DTO (used by GET /api/candidates/applicants) ─────────────────
+    public static ApplicantDto ToApplicantDto(
+        this Candidate c,
+        string? profileBaseUrl = null) => new(
+        Id:             c.Id,
+        Candidate:      c.Name,
+        ProfileImage:   BuildFileUrl(c.Profile, profileBaseUrl),
+        JobId:          c.JobId,
+        AppliedJob:     c.Job?.Name ?? string.Empty,
+        CategoryId:     c.Job?.CategoryId ?? 0,
+        Category:       c.Job?.Category?.Name ?? string.Empty,
+        AppliedDate:    c.HiringDate,
+        Stage:          c.Status?.Name ?? string.Empty,
+        HrScore:        GetScoreByType(c.Interviews, HrTypeName),
+        TechnicalScore: GetScoreByType(c.Interviews, TechnicalTypeName),
+        Status:         c.Status?.Name ?? string.Empty
+    );
+
     // ── Detail DTO (used by GET /api/candidates/{id}) ─────────────────────────
     public static CandidateDetailDto ToDetailDto(
         this Candidate c,
@@ -76,6 +94,7 @@ public static class CandidateMapper
             CategoryId:             c.Job?.CategoryId     ?? 0,
             CategoryName:           c.Job?.Category?.Name ?? string.Empty,
             WorkLocation:           c.Job?.Location?.Name,
+            Summary:                c.Summary,
             JobCreatedAt:           c.Job?.CreatedAt      ?? DateTime.MinValue,
             TargetHiringDate:       c.Job?.TargetHiringDate,
 
@@ -101,7 +120,22 @@ public static class CandidateMapper
             NoticePeriod:           c.NoticePeriod,
             Availability:           c.Availability,
             CurrentSalary:          c.CurrentSalary,
-            Summary:                c.Summary,
+
+            // Personal info
+            Gender:                 c.Gender,
+            NationalId:             c.NationalId,
+            Address:                c.Address,
+            Mobile:                 c.Mobile,
+            AlternateMobile:        c.AlternateMobile,
+            Email:                  c.Email,
+            MaritalStatus:          c.MaritalStatus,
+            DateOfBeginning:        c.DateOfBeginning,
+            Nationality:            c.Nationality,
+            PreferredJobLocation:   c.PreferredJobLocation,
+            PreferredShift:         c.PreferredShift,
+            City:                   c.City,
+            Country:                c.Country,
+
             Skills:                 MapSkills(c),
             Languages:              MapLanguages(c),
             Certifications:         MapCertifications(c),
@@ -124,6 +158,7 @@ public static class CandidateMapper
                                          i.Type?.Name  ?? string.Empty,
                                          i.Grade,
                                          i.Comments,
+                                         i.EvaluatorId,
                                          i.CreatedAt))
         );
     }
@@ -134,7 +169,7 @@ public static class CandidateMapper
     /// Returns the grade of the first interview whose type name contains the given keyword
     /// (case-insensitive). Returns null if no matching interview exists.
     /// </summary>
-    private static string? GetScoreByType(ICollection<Interview> interviews, string typeKeyword)
+    public static string? GetScoreByType(ICollection<Interview> interviews, string typeKeyword)
         => interviews
             .FirstOrDefault(i => i.Type?.Name != null &&
                                  i.Type.Name.Contains(typeKeyword, StringComparison.OrdinalIgnoreCase))

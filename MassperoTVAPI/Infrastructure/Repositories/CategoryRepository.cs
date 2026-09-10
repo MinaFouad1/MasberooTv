@@ -42,4 +42,45 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
             (int)Math.Ceiling(totalCount / (double)query.PageSize)
         );
     }
+
+    public async Task<CategoryDetailsDto?> GetCategorySummaryAsync(int id)
+    {
+        var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        if (category is null) return null;
+
+        var jobsQuery = _context.Jobs
+            .Include(j => j.Candidates)
+                .ThenInclude(c => c.Status)
+            .Include(j => j.Candidates)
+                .ThenInclude(c => c.Interviews)
+            .Where(j => j.CategoryId == id)
+            .AsNoTracking()
+            .AsQueryable();
+
+       
+        var jobs = await jobsQuery.ToListAsync();
+
+        var openPositions = jobs.Sum(j => j.OpenPositions);
+        var applications = jobs.SelectMany(j => j.Candidates)
+            .Count(c => !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase));
+        var interviews = jobs.SelectMany(j => j.Candidates)
+            .SelectMany(c => c.Interviews)
+            .Count();
+        var offersSent = jobs.SelectMany(j => j.Candidates)
+            .Count(c => string.Equals(c.Status?.Name, "Offered", StringComparison.OrdinalIgnoreCase));
+
+        return new CategoryDetailsDto(
+            category.Id,
+            category.Name,
+            category.CategoryCode,
+            category.Description,
+            category.IsActive,
+            category.IsActive ? "Active" : "Inactive",
+            category.CreatedAt,
+            openPositions,
+            applications,
+            interviews,
+            offersSent
+        );
+    }
 }

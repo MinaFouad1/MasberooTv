@@ -6,7 +6,14 @@ public class Interview
     public string? Grade { get; set; }
     public string? Comments { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string? InterviewMode { get; set; }
+    public DateTime? InterviewDate { get; set; }
+    public TimeOnly? StartTime { get; set; }
+    public TimeOnly? EndTime { get; set; }
 
+    // Optional FK → ApplicationUser who submitted the grade.
+    public string? EvaluatorId { get; set; }
+    public ApplicationUser? Evaluator { get; set; }
 
     // FK → Candidate
     public int CandidateId { get; set; }

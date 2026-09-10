@@ -327,12 +327,11 @@
         }
       }
     },
-    "/api/Candidates": {
+    "/api/Candidates/applicants": {
       "get": {
         "tags": [
           "Candidates"
         ],
-        "summary": "List candidates (applications) with optional filters and pagination.\r\nFilters: candidateName, jobId, categoryId, statusId, dateFrom (HiringDate), dateTo (HiringDate).",
         "parameters": [
           {
             "name": "CandidateName",
@@ -343,52 +342,41 @@
             }
           },
           {
-            "name": "JobId",
+            "name": "JobPosition",
             "in": "query",
-            "description": "Filter by job ID.",
+            "description": "Filter by job position / title (partial match).",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
             "name": "CategoryId",
             "in": "query",
-            "description": "Filter by category ID (via Job.CategoryId).",
+            "description": "Filter by category ID.",
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          },
+          {
+            "name": "CategoryName",
+            "in": "query",
+            "description": "Filter by category name (partial match).",
+            "schema": {
+              "type": "string"
             }
           },
           {
             "name": "StatusId",
             "in": "query",
-            "description": "Filter by application status ID.",
+            "description": "Filter by status ID.",
             "schema": {
               "type": "integer",
               "format": "int32"
             }
           },
           {
-            "name": "DateFrom",
-            "in": "query",
-            "description": "Filter by hiring date — from (inclusive).",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "DateTo",
-            "in": "query",
-            "description": "Filter by hiring date — to (inclusive).",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "Page",
+            "name": "PageNumber",
             "in": "query",
             "description": "Page number (1-based). Defaults to 1.",
             "schema": {
@@ -412,181 +400,108 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoPagedResultApiResponse"
+                  "$ref": "#/components/schemas/ApplicantDtoPagedResultApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoPagedResultApiResponse"
+                  "$ref": "#/components/schemas/ApplicantDtoPagedResultApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoPagedResultApiResponse"
+                  "$ref": "#/components/schemas/ApplicantDtoPagedResultApiResponse"
                 }
               }
             }
           }
         }
-      },
-      "post": {
+      }
+    },
+    "/api/Candidates/applicants-not-hired": {
+      "get": {
         "tags": [
           "Candidates"
         ],
-        "summary": "Create a new candidate with initial status and security clearance.\r\nOptionally upload a CV file and/or a profile image.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "JobId",
-                  "Name"
-                ],
-                "type": "object",
-                "properties": {
-                  "Name": {
-                    "maxLength": 200,
-                    "type": "string"
-                  },
-                  "CvFile": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "ProfileImage": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "JobId": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "CurrentEmployer": {
-                    "maxLength": 200,
-                    "type": "string"
-                  },
-                  "CurrentPosition": {
-                    "maxLength": 200,
-                    "type": "string"
-                  },
-                  "YearsOfExperience": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "ExpectedSalary": {
-                    "type": "number",
-                    "format": "double"
-                  },
-                  "NoticePeriod": {
-                    "maxLength": 100,
-                    "type": "string"
-                  },
-                  "Availability": {
-                    "maxLength": 100,
-                    "type": "string"
-                  },
-                  "CurrentSalary": {
-                    "type": "number",
-                    "format": "double"
-                  },
-                  "Summary": {
-                    "type": "string"
-                  },
-                  "Skills": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/UpsertCandidateSkillDto"
-                    }
-                  },
-                  "Languages": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/UpsertCandidateLanguageDto"
-                    }
-                  },
-                  "Certifications": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/UpsertCandidateCertificationDto"
-                    }
-                  },
-                  "Educations": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/UpsertCandidateEducationDto"
-                    }
-                  }
-                }
-              },
-              "encoding": {
-                "Name": {
-                  "style": "form"
-                },
-                "CvFile": {
-                  "style": "form"
-                },
-                "ProfileImage": {
-                  "style": "form"
-                },
-                "JobId": {
-                  "style": "form"
-                },
-                "CurrentEmployer": {
-                  "style": "form"
-                },
-                "CurrentPosition": {
-                  "style": "form"
-                },
-                "YearsOfExperience": {
-                  "style": "form"
-                },
-                "ExpectedSalary": {
-                  "style": "form"
-                },
-                "NoticePeriod": {
-                  "style": "form"
-                },
-                "Availability": {
-                  "style": "form"
-                },
-                "CurrentSalary": {
-                  "style": "form"
-                },
-                "Summary": {
-                  "style": "form"
-                },
-                "Skills": {
-                  "style": "form"
-                },
-                "Languages": {
-                  "style": "form"
-                },
-                "Certifications": {
-                  "style": "form"
-                },
-                "Educations": {
-                  "style": "form"
-                }
-              }
+        "parameters": [
+          {
+            "name": "CandidateName",
+            "in": "query",
+            "description": "Filter by candidate name (partial match).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "JobPosition",
+            "in": "query",
+            "description": "Filter by job position / title (partial match).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "CategoryId",
+            "in": "query",
+            "description": "Filter by category ID.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "CategoryName",
+            "in": "query",
+            "description": "Filter by category name (partial match).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "StatusId",
+            "in": "query",
+            "description": "Filter by status ID.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number (1-based). Defaults to 1.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page. Defaults to 10.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                  "$ref": "#/components/schemas/ApplicantDtoPagedResultApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                  "$ref": "#/components/schemas/ApplicantDtoPagedResultApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                  "$ref": "#/components/schemas/ApplicantDtoPagedResultApiResponse"
                 }
               }
             }
@@ -717,6 +632,55 @@
                   "Summary": {
                     "type": "string"
                   },
+                  "Gender": {
+                    "$ref": "#/components/schemas/Gender"
+                  },
+                  "NationalId": {
+                    "maxLength": 50,
+                    "type": "string"
+                  },
+                  "Address": {
+                    "maxLength": 500,
+                    "type": "string"
+                  },
+                  "Mobile": {
+                    "maxLength": 20,
+                    "type": "string"
+                  },
+                  "AlternateMobile": {
+                    "maxLength": 20,
+                    "type": "string"
+                  },
+                  "Email": {
+                    "maxLength": 200,
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "MaritalStatus": {
+                    "$ref": "#/components/schemas/MaritalStatus"
+                  },
+                  "DateOfBeginning": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "Nationality": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "PreferredJobLocation": {
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "PreferredShift": {
+                    "$ref": "#/components/schemas/PreferredShift"
+                  },
+                  "City": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "Country": {
+                    "$ref": "#/components/schemas/Country"
+                  },
                   "Skills": {
                     "type": "array",
                     "items": {
@@ -786,6 +750,45 @@
                 "Summary": {
                   "style": "form"
                 },
+                "Gender": {
+                  "style": "form"
+                },
+                "NationalId": {
+                  "style": "form"
+                },
+                "Address": {
+                  "style": "form"
+                },
+                "Mobile": {
+                  "style": "form"
+                },
+                "AlternateMobile": {
+                  "style": "form"
+                },
+                "Email": {
+                  "style": "form"
+                },
+                "MaritalStatus": {
+                  "style": "form"
+                },
+                "DateOfBeginning": {
+                  "style": "form"
+                },
+                "Nationality": {
+                  "style": "form"
+                },
+                "PreferredJobLocation": {
+                  "style": "form"
+                },
+                "PreferredShift": {
+                  "style": "form"
+                },
+                "City": {
+                  "style": "form"
+                },
+                "Country": {
+                  "style": "form"
+                },
                 "Skills": {
                   "style": "form"
                 },
@@ -845,6 +848,302 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Candidates/{id}/interviews": {
+      "get": {
+        "tags": [
+          "Candidates"
+        ],
+        "summary": "Get all interviews recorded for a candidate.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Candidate ID.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewDtoIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewDtoIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Candidates": {
+      "post": {
+        "tags": [
+          "Candidates"
+        ],
+        "summary": "Create a new candidate with initial status and security clearance.\r\nOptionally upload a CV file and/or a profile image.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "JobId",
+                  "Name"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "CvFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "ProfileImage": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "JobId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CurrentEmployer": {
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "CurrentPosition": {
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "YearsOfExperience": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "ExpectedSalary": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "NoticePeriod": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "Availability": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "CurrentSalary": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "Summary": {
+                    "type": "string"
+                  },
+                  "Gender": {
+                    "$ref": "#/components/schemas/Gender"
+                  },
+                  "NationalId": {
+                    "maxLength": 50,
+                    "type": "string"
+                  },
+                  "Address": {
+                    "maxLength": 500,
+                    "type": "string"
+                  },
+                  "Mobile": {
+                    "maxLength": 20,
+                    "type": "string"
+                  },
+                  "AlternateMobile": {
+                    "maxLength": 20,
+                    "type": "string"
+                  },
+                  "Email": {
+                    "maxLength": 200,
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "MaritalStatus": {
+                    "$ref": "#/components/schemas/MaritalStatus"
+                  },
+                  "DateOfBeginning": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "Nationality": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "PreferredJobLocation": {
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "PreferredShift": {
+                    "$ref": "#/components/schemas/PreferredShift"
+                  },
+                  "City": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "Country": {
+                    "$ref": "#/components/schemas/Country"
+                  },
+                  "Skills": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/UpsertCandidateSkillDto"
+                    }
+                  },
+                  "Languages": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/UpsertCandidateLanguageDto"
+                    }
+                  },
+                  "Certifications": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/UpsertCandidateCertificationDto"
+                    }
+                  },
+                  "Educations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/UpsertCandidateEducationDto"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "CvFile": {
+                  "style": "form"
+                },
+                "ProfileImage": {
+                  "style": "form"
+                },
+                "JobId": {
+                  "style": "form"
+                },
+                "CurrentEmployer": {
+                  "style": "form"
+                },
+                "CurrentPosition": {
+                  "style": "form"
+                },
+                "YearsOfExperience": {
+                  "style": "form"
+                },
+                "ExpectedSalary": {
+                  "style": "form"
+                },
+                "NoticePeriod": {
+                  "style": "form"
+                },
+                "Availability": {
+                  "style": "form"
+                },
+                "CurrentSalary": {
+                  "style": "form"
+                },
+                "Summary": {
+                  "style": "form"
+                },
+                "Gender": {
+                  "style": "form"
+                },
+                "NationalId": {
+                  "style": "form"
+                },
+                "Address": {
+                  "style": "form"
+                },
+                "Mobile": {
+                  "style": "form"
+                },
+                "AlternateMobile": {
+                  "style": "form"
+                },
+                "Email": {
+                  "style": "form"
+                },
+                "MaritalStatus": {
+                  "style": "form"
+                },
+                "DateOfBeginning": {
+                  "style": "form"
+                },
+                "Nationality": {
+                  "style": "form"
+                },
+                "PreferredJobLocation": {
+                  "style": "form"
+                },
+                "PreferredShift": {
+                  "style": "form"
+                },
+                "City": {
+                  "style": "form"
+                },
+                "Country": {
+                  "style": "form"
+                },
+                "Skills": {
+                  "style": "form"
+                },
+                "Languages": {
+                  "style": "form"
+                },
+                "Certifications": {
+                  "style": "form"
+                },
+                "Educations": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateDtoApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1425,47 +1724,17 @@
         }
       }
     },
-    "/api/Dashboard/admin": {
+    "/api/Categories/summary": {
       "get": {
         "tags": [
-          "Dashboard"
+          "Categories"
         ],
-        "summary": "Admin dashboard with aggregated statistics: total candidates, jobs, users, interviews, and breakdowns by status, security clearance, job, and process progress.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminDashboardDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminDashboardDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminDashboardDtoApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Dashboard/processes": {
-      "get": {
-        "tags": [
-          "Dashboard"
-        ],
-        "summary": "Process dashboard showing all phases (or a single phase) with their processes, average completion, and overall progress.",
+        "summary": "Get category details and recruitment summary (open positions, applications, interviews, offers sent).",
         "parameters": [
           {
-            "name": "phaseId",
+            "name": "id",
             "in": "query",
-            "description": "Optional phase ID to filter results to a single phase.",
+            "description": "Category ID.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1478,107 +1747,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProcessDashboardDtoApiResponse"
+                  "$ref": "#/components/schemas/CategoryDetailsDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProcessDashboardDtoApiResponse"
+                  "$ref": "#/components/schemas/CategoryDetailsDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProcessDashboardDtoApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Dashboard/process-statistics": {
-      "get": {
-        "tags": [
-          "Dashboard"
-        ],
-        "summary": "Get process statistics: total, active, completed counts, average completion percentage, breakdown by status and phase.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcessStatisticsDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcessStatisticsDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcessStatisticsDtoApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Dashboard/issue-statistics": {
-      "get": {
-        "tags": [
-          "Dashboard"
-        ],
-        "summary": "Get issue statistics: total, resolved, unresolved counts, breakdown by resolved status, process, and priority.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IssueStatisticsDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IssueStatisticsDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IssueStatisticsDtoApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Dashboard/phase-statistics": {
-      "get": {
-        "tags": [
-          "Dashboard"
-        ],
-        "summary": "Get phase statistics: total phases, each phase with its process progress.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PhaseStatisticsDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PhaseStatisticsDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PhaseStatisticsDtoApiResponse"
+                  "$ref": "#/components/schemas/CategoryDetailsDtoApiResponse"
                 }
               }
             }
@@ -1803,6 +1982,19 @@
         }
       }
     },
+    "/api/Import/candidates/template": {
+      "get": {
+        "tags": [
+          "Import"
+        ],
+        "summary": "Download a sample/template Excel file for importing candidates.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Interviews": {
       "get": {
         "tags": [
@@ -1981,6 +2173,55 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/InterviewDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Interviews/schedule": {
+      "post": {
+        "tags": [
+          "Interviews"
+        ],
+        "summary": "Creates an interview schedule and sends the details to the candidate by email.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleInterviewDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleInterviewDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleInterviewDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewDtoApiResponse"
                 }
               }
             }
@@ -2403,48 +2644,75 @@
         "tags": [
           "Jobs"
         ],
-        "summary": "List all jobs with their category names. Optionally filter by title, category, creation date, or location.",
+        "summary": "Retrieve all jobs with pagination and filtering.",
         "parameters": [
           {
-            "name": "search",
+            "name": "Search",
             "in": "query",
-            "description": "Optional search keyword for job title.",
+            "description": "Filter by job name / title (partial match).",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "categoryId",
+            "name": "CategoryId",
             "in": "query",
-            "description": "Optional category ID filter.",
+            "description": "Filter by category ID.",
             "schema": {
               "type": "integer",
               "format": "int32"
             }
           },
           {
-            "name": "date",
+            "name": "Date",
             "in": "query",
-            "description": "Optional date filter — returns jobs created on or after this date.",
+            "description": "Filter by creation date — created on or after this date.",
             "schema": {
               "type": "string",
               "format": "date-time"
             }
           },
           {
-            "name": "locationId",
+            "name": "LocationId",
             "in": "query",
-            "description": "Optional location ID filter.",
+            "description": "Filter by location ID.",
             "schema": {
               "type": "integer",
               "format": "int32"
             }
           },
           {
-            "name": "hiringManagerId",
+            "name": "HiringManagerId",
             "in": "query",
+            "description": "Filter by hiring manager ID.",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "IsOpend",
+            "in": "query",
+            "description": "Filter by opened/closed status.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "Page number (1-based). Defaults to 1.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page. Defaults to 10.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -2454,17 +2722,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/JobDtoPagedResultApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/JobDtoPagedResultApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobDtoIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/JobDtoPagedResultApiResponse"
                 }
               }
             }
@@ -2475,7 +2743,7 @@
         "tags": [
           "Jobs"
         ],
-        "summary": "Create a new job. Accepts location, employment type, open positions, and target hiring date.",
+        "summary": "Create a new job. Accepts location, employment type, open positions, target hiring date, deadline date, job description, and isOpend.",
         "requestBody": {
           "description": "Job data.",
           "content": {
@@ -2520,29 +2788,83 @@
         }
       }
     },
-    "/api/Jobs/statistics": {
+    "/api/Jobs/{id}/recruitment-progress": {
       "get": {
         "tags": [
           "Jobs"
         ],
-        "summary": "Get job statistics counts: total jobs, open positions, applications, offers sent.",
+        "summary": "Get recruitment progress for a specific job: applications, HR interviews, technical interviews, offers sent, accepted status \"Hired\", and hired counts.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Job ID.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobStatisticsDtoApiResponse"
+                  "$ref": "#/components/schemas/JobRecruitmentProgressDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobStatisticsDtoApiResponse"
+                  "$ref": "#/components/schemas/JobRecruitmentProgressDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobStatisticsDtoApiResponse"
+                  "$ref": "#/components/schemas/JobRecruitmentProgressDtoApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Jobs/{id}/progress": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Get recruitment progress for a specific job: applications, HR interviews, technical interviews, offers sent, accepted status \"Hired\", and hired counts.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Job ID.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRecruitmentProgressDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRecruitmentProgressDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRecruitmentProgressDtoApiResponse"
                 }
               }
             }
@@ -2555,7 +2877,7 @@
         "tags": [
           "Jobs"
         ],
-        "summary": "Get a single job by ID with its category name and all new fields.",
+        "summary": "Get job statistics counts: total jobs, open positions, applications, offers sent.",
         "parameters": [
           {
             "name": "id",
@@ -2595,7 +2917,7 @@
         "tags": [
           "Jobs"
         ],
-        "summary": "Update an existing job including location, employment type, open positions, and target hiring date.",
+        "summary": "Update an existing job including location, employment type, open positions, target hiring date, deadline date, job description, and isOpend.",
         "parameters": [
           {
             "name": "id",
@@ -3796,53 +4118,6 @@
             }
           }
         }
-      },
-      "post": {
-        "tags": [
-          "Offers"
-        ],
-        "summary": "Creates a new offer for a candidate.\r\nAutomatically moves the candidate's status to \"In Offer\".",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOfferDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOfferDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOfferDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OfferDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OfferDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OfferDtoApiResponse"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/api/offers/{id}": {
@@ -3966,23 +4241,85 @@
         }
       }
     },
-    "/api/offers/{id}/accept": {
-      "patch": {
+    "/api/offers/send": {
+      "post": {
         "tags": [
           "Offers"
         ],
-        "summary": "Marks the offer as Accepted.\r\nAutomatically moves the candidate's status to \"Hired\".",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+        "summary": "Creates a new offer for a candidate.\r\nAutomatically moves the candidate's status to \"In Offer\".",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "CandidateId",
+                  "OfferFile"
+                ],
+                "type": "object",
+                "properties": {
+                  "CandidateId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "OfferFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Subject": {
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "Message": {
+                    "maxLength": 4000,
+                    "type": "string"
+                  },
+                  "ProposedSalary": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ExpiryDate": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "StartDate": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "Benefits": {
+                    "maxLength": 2000,
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "CandidateId": {
+                  "style": "form"
+                },
+                "OfferFile": {
+                  "style": "form"
+                },
+                "Subject": {
+                  "style": "form"
+                },
+                "Message": {
+                  "style": "form"
+                },
+                "ProposedSalary": {
+                  "style": "form"
+                },
+                "ExpiryDate": {
+                  "style": "form"
+                },
+                "StartDate": {
+                  "style": "form"
+                },
+                "Benefits": {
+                  "style": "form"
+                }
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -4007,12 +4344,12 @@
         }
       }
     },
-    "/api/offers/{id}/decline": {
+    "/api/offers/{id}/status": {
       "patch": {
         "tags": [
           "Offers"
         ],
-        "summary": "Marks the offer as Declined.\r\nAutomatically moves the candidate's status to \"Rejected\".",
+        "summary": "Updates an offer status. A decline requires ReasonOfRejected.",
         "parameters": [
           {
             "name": "id",
@@ -4024,47 +4361,25 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OfferDtoApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OfferDtoApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OfferDtoApiResponse"
-                }
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOfferStatusDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOfferStatusDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOfferStatusDto"
               }
             }
           }
-        }
-      }
-    },
-    "/api/offers/{id}/expire": {
-      "patch": {
-        "tags": [
-          "Offers"
-        ],
-        "summary": "Marks the offer as Expired.\r\nAutomatically moves the candidate's status back to \"In Process\".",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -5712,83 +6027,6 @@
         "type": "string",
         "description": "Represents the account status of an application user."
       },
-      "AdminDashboardDto": {
-        "type": "object",
-        "properties": {
-          "totalCandidates": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalJobs": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalInterviews": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "candidatesByStatus": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatusCountDto"
-            },
-            "nullable": true
-          },
-          "candidatesBySecurityClearance": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatusCountDto"
-            },
-            "nullable": true
-          },
-          "candidatesByJob": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatusCountDto"
-            },
-            "nullable": true
-          },
-          "processProgress": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProcessPhaseProgressDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AdminDashboardDtoApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/AdminDashboardDto"
-          },
-          "statusCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "AdminResetPasswordDto": {
         "required": [
           "newPassword"
@@ -5821,6 +6059,118 @@
           "phoneNumber": {
             "type": "string",
             "format": "tel",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApplicantDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "candidate": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileImage": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "appliedJob": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "appliedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "stage": {
+            "type": "string",
+            "nullable": true
+          },
+          "hrScore": {
+            "type": "string",
+            "nullable": true
+          },
+          "technicalScore": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApplicantDtoPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicantDto"
+            },
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Generic paged result returned by list endpoints that support pagination."
+      },
+      "ApplicantDtoPagedResultApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/ApplicantDtoPagedResult"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           }
         },
@@ -6082,6 +6432,55 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "nationalId": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobile": {
+            "type": "string",
+            "nullable": true
+          },
+          "alternateMobile": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "maritalStatus": {
+            "$ref": "#/components/schemas/MaritalStatus"
+          },
+          "dateOfBeginning": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "nationality": {
+            "type": "string",
+            "nullable": true
+          },
+          "preferredJobLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "preferredShift": {
+            "$ref": "#/components/schemas/PreferredShift"
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "$ref": "#/components/schemas/Country"
           },
           "skills": {
             "type": "array",
@@ -6347,63 +6746,6 @@
         },
         "additionalProperties": false
       },
-      "CandidateDtoPagedResult": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CandidateDto"
-            },
-            "nullable": true
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Generic paged result returned by list endpoints that support pagination."
-      },
-      "CandidateDtoPagedResultApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/CandidateDtoPagedResult"
-          },
-          "statusCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "CandidateEducationDto": {
         "type": "object",
         "properties": {
@@ -6611,6 +6953,82 @@
         },
         "additionalProperties": false
       },
+      "CategoryDetailsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "openPositions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "applications": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "interviews": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offersSent": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryDetailsDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CategoryDetailsDto"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CategoryDto": {
         "type": "object",
         "properties": {
@@ -6734,6 +7152,31 @@
         },
         "additionalProperties": false
       },
+      "Country": {
+        "enum": [
+          "Egypt",
+          "SaudiArabia",
+          "UAE",
+          "Kuwait",
+          "Qatar",
+          "Bahrain",
+          "Oman",
+          "Jordan",
+          "Lebanon",
+          "Iraq",
+          "Syria",
+          "Libya",
+          "Tunisia",
+          "Algeria",
+          "Morocco",
+          "Sudan",
+          "Yemen",
+          "Palestine",
+          "Other"
+        ],
+        "type": "string",
+        "description": "Supported countries for candidate address / preferred job location."
+      },
       "CreateCategoryDto": {
         "required": [
           "name"
@@ -6845,7 +7288,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "desc": {
+          "jobDescription": {
             "maxLength": 1000,
             "type": "string",
             "nullable": true
@@ -6868,6 +7311,14 @@
             "format": "date-time",
             "nullable": true
           },
+          "deadLineDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isOpend": {
+            "type": "boolean"
+          },
           "locationId": {
             "type": "integer",
             "format": "int32",
@@ -6879,40 +7330,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "CreateOfferDto": {
-        "required": [
-          "candidateId",
-          "expiryDate",
-          "proposedSalary"
-        ],
-        "type": "object",
-        "properties": {
-          "candidateId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "proposedSalary": {
-            "type": "number",
-            "format": "double"
-          },
-          "expiryDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "benefits": {
-            "maxLength": 2000,
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Request body for creating a new offer."
       },
       "CreatePhaseDto": {
         "required": [
@@ -7142,6 +7559,13 @@
         },
         "additionalProperties": false
       },
+      "Gender": {
+        "enum": [
+          "Male",
+          "Female"
+        ],
+        "type": "string"
+      },
       "ImportErrorDto": {
         "type": "object",
         "properties": {
@@ -7227,6 +7651,18 @@
             "type": "string",
             "nullable": true
           },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "evaluatorId": {
+            "type": "string",
+            "nullable": true
+          },
+          "evaluatorName": {
+            "type": "string",
+            "nullable": true
+          },
           "candidateId": {
             "type": "integer",
             "format": "int32"
@@ -7241,6 +7677,25 @@
           },
           "typeName": {
             "type": "string",
+            "nullable": true
+          },
+          "interviewMode": {
+            "type": "string",
+            "nullable": true
+          },
+          "interviewDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "format": "time",
+            "nullable": true
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time",
             "nullable": true
           }
         },
@@ -7320,6 +7775,10 @@
             "nullable": true
           },
           "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "evaluatorId": {
             "type": "string",
             "nullable": true
           },
@@ -7531,72 +7990,6 @@
         "type": "string",
         "description": "Represents the priority level of an issue.\r\nStored as int in the database."
       },
-      "IssueStatisticsDto": {
-        "type": "object",
-        "properties": {
-          "totalIssues": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "solvedIssues": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "openIssues": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "byStatus": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatusCountDto"
-            },
-            "nullable": true
-          },
-          "byProcess": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatusCountDto"
-            },
-            "nullable": true
-          },
-          "byPriority": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatusCountDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "IssueStatisticsDtoApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/IssueStatisticsDto"
-          },
-          "statusCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "IssueStatus": {
         "enum": [
           "Pending",
@@ -7618,7 +8011,7 @@
             "type": "string",
             "nullable": true
           },
-          "desc": {
+          "jobDescription": {
             "type": "string",
             "nullable": true
           },
@@ -7647,6 +8040,18 @@
             "format": "date-time",
             "nullable": true
           },
+          "deadLineDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isOpend": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
           "locationId": {
             "type": "integer",
             "format": "int32",
@@ -7669,6 +8074,10 @@
             "format": "int32"
           },
           "interviews": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offers": {
             "type": "integer",
             "format": "int32"
           }
@@ -7702,7 +8111,37 @@
         },
         "additionalProperties": false
       },
-      "JobDtoIEnumerableApiResponse": {
+      "JobDtoPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobDto"
+            },
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Generic paged result returned by list endpoints that support pagination."
+      },
+      "JobDtoPagedResultApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -7713,11 +8152,7 @@
             "nullable": true
           },
           "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/JobDto"
-            },
-            "nullable": true
+            "$ref": "#/components/schemas/JobDtoPagedResult"
           },
           "statusCode": {
             "type": "integer",
@@ -7733,18 +8168,26 @@
         },
         "additionalProperties": false
       },
-      "JobStatisticsDto": {
+      "JobRecruitmentProgressDto": {
         "type": "object",
         "properties": {
-          "totalJobs": {
+          "jobId": {
             "type": "integer",
             "format": "int32"
           },
-          "openPositions": {
-            "type": "integer",
-            "format": "int32"
+          "jobName": {
+            "type": "string",
+            "nullable": true
           },
           "applications": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hrInterviews": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "technicalInterviews": {
             "type": "integer",
             "format": "int32"
           },
@@ -7752,14 +8195,22 @@
             "type": "integer",
             "format": "int32"
           },
-          "offersAccepted": {
+          "accepted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hired": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalApplications": {
             "type": "integer",
             "format": "int32"
           }
         },
         "additionalProperties": false
       },
-      "JobStatisticsDtoApiResponse": {
+      "JobRecruitmentProgressDtoApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -7770,7 +8221,7 @@
             "nullable": true
           },
           "data": {
-            "$ref": "#/components/schemas/JobStatisticsDto"
+            "$ref": "#/components/schemas/JobRecruitmentProgressDto"
           },
           "statusCode": {
             "type": "integer",
@@ -7853,6 +8304,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "MaritalStatus": {
+        "enum": [
+          "Single",
+          "Married",
+          "Divorced",
+          "Widowed"
+        ],
+        "type": "string"
       },
       "ObjectApiResponse": {
         "type": "object",
@@ -7950,6 +8410,14 @@
             "format": "date-time"
           },
           "benefits": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileImage": {
+            "type": "string",
+            "nullable": true
+          },
+          "reasonOfRejected": {
             "type": "string",
             "nullable": true
           },
@@ -8350,50 +8818,6 @@
         },
         "additionalProperties": false
       },
-      "PhaseStatisticsDto": {
-        "type": "object",
-        "properties": {
-          "totalPhases": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "phases": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProcessPhaseProgressDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "PhaseStatisticsDtoApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/PhaseStatisticsDto"
-          },
-          "statusCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "PhaseSummaryItemDto": {
         "type": "object",
         "properties": {
@@ -8557,49 +8981,15 @@
         },
         "additionalProperties": false
       },
-      "ProcessDashboardDto": {
-        "type": "object",
-        "properties": {
-          "overallProgress": {
-            "type": "number",
-            "format": "double"
-          },
-          "phases": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProcessPhaseProgressDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProcessDashboardDtoApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/ProcessDashboardDto"
-          },
-          "statusCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
+      "PreferredShift": {
+        "enum": [
+          "Morning",
+          "Evening",
+          "Night",
+          "Flexible"
+        ],
+        "type": "string",
+        "description": "Preferred working shift for a candidate."
       },
       "ProcessDependencyDto": {
         "type": "object",
@@ -8740,98 +9130,6 @@
         },
         "additionalProperties": false
       },
-      "ProcessPhaseProgressDto": {
-        "type": "object",
-        "properties": {
-          "phaseId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "phaseName": {
-            "type": "string",
-            "nullable": true
-          },
-          "totalProcesses": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "averageCompletion": {
-            "type": "number",
-            "format": "double"
-          },
-          "processes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProcessSummaryDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProcessStatisticsDto": {
-        "type": "object",
-        "properties": {
-          "totalProcesses": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "activeProcesses": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "completedProcesses": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "averageCompletion": {
-            "type": "number",
-            "format": "double"
-          },
-          "byStatus": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatusCountDto"
-            },
-            "nullable": true
-          },
-          "byPhase": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatusCountDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProcessStatisticsDtoApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/ProcessStatisticsDto"
-          },
-          "statusCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "ProcessStatusDto": {
         "type": "object",
         "properties": {
@@ -8904,45 +9202,6 @@
               "type": "string"
             },
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProcessSummaryDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "statusName": {
-            "type": "string",
-            "nullable": true
-          },
-          "percentage": {
-            "type": "number",
-            "format": "double"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "issueCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dependencyCount": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -9382,6 +9641,46 @@
         },
         "additionalProperties": false
       },
+      "ScheduleInterviewDto": {
+        "required": [
+          "candidateId",
+          "endTime",
+          "interviewDate",
+          "interviewMode",
+          "startTime",
+          "typeId"
+        ],
+        "type": "object",
+        "properties": {
+          "candidateId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "typeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "interviewMode": {
+            "minLength": 1,
+            "pattern": "^(Online|Offline)$",
+            "type": "string"
+          },
+          "interviewDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Schedules an interview and emails its details to the candidate."
+      },
       "SecurityClearanceStatusDto": {
         "type": "object",
         "properties": {
@@ -9450,20 +9749,6 @@
               "type": "string"
             },
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "StatusCountDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "count": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -9623,7 +9908,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "desc": {
+          "jobDescription": {
             "maxLength": 1000,
             "type": "string",
             "nullable": true
@@ -9645,6 +9930,14 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "deadLineDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isOpend": {
+            "type": "boolean"
           },
           "locationId": {
             "type": "integer",
@@ -9686,6 +9979,26 @@
         },
         "additionalProperties": false,
         "description": "Request body for updating an existing offer's details."
+      },
+      "UpdateOfferStatusDto": {
+        "type": "object",
+        "properties": {
+          "offerStatusId": {
+            "maximum": 4,
+            "minimum": 1,
+            "type": "integer",
+            "description": "1=Pending, 2=Accepted, 3=Declined, 4=Expired.",
+            "format": "int32"
+          },
+          "reasonOfRejected": {
+            "maxLength": 2000,
+            "type": "string",
+            "description": "Required when OfferStatusId is Declined (3).",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body for changing an offer's lifecycle status."
       },
       "UpdatePhaseDto": {
         "required": [

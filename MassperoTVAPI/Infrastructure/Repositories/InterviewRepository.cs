@@ -14,6 +14,7 @@ public class InterviewRepository : GenericRepository<Interview>, IInterviewRepos
         => await _context.Interviews
             .Include(i => i.Candidate)
             .Include(i => i.Type)
+            .Include(i => i.Evaluator)
             .AsNoTracking()
             .ToListAsync();
 
@@ -21,12 +22,14 @@ public class InterviewRepository : GenericRepository<Interview>, IInterviewRepos
         => await _context.Interviews
             .Include(i => i.Candidate)
             .Include(i => i.Type)
+            .Include(i => i.Evaluator)
             .FirstOrDefaultAsync(i => i.Id == id);
 
     public async Task<IEnumerable<Interview>> GetByCandidateAsync(int candidateId)
         => await _context.Interviews
             .Include(i => i.Candidate)
             .Include(i => i.Type)
+            .Include(i => i.Evaluator)
             .Where(i => i.CandidateId == candidateId)
             .AsNoTracking()
             .ToListAsync();
@@ -35,6 +38,7 @@ public class InterviewRepository : GenericRepository<Interview>, IInterviewRepos
         => await _context.Interviews
             .Include(i => i.Candidate)
             .Include(i => i.Type)
+            .Include(i => i.Evaluator)
             .Where(i => i.CandidateId == candidateId && i.TypeId == typeId)
             .AsNoTracking()
             .ToListAsync();

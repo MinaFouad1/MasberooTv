@@ -21,6 +21,28 @@ public class EmailService : IEmailService
     // ── Core send ─────────────────────────────────────────────────────────────
 
     public async Task SendAsync(string toEmail, string toName, string subject, string htmlBody)
+        => await SendInternalAsync(toEmail, toName, subject, htmlBody);
+
+    public async Task SendWithAttachmentAsync(
+        string toEmail,
+        string toName,
+        string subject,
+        string htmlBody,
+        byte[] attachmentContent,
+        string attachmentFileName,
+        string? attachmentContentType)
+        => await SendInternalAsync(
+            toEmail, toName, subject, htmlBody,
+            attachmentContent, attachmentFileName, attachmentContentType);
+
+    private async Task SendInternalAsync(
+        string toEmail,
+        string toName,
+        string subject,
+        string htmlBody,
+        byte[]? attachmentContent = null,
+        string? attachmentFileName = null,
+        string? attachmentContentType = null)
     {
         try
         {
@@ -30,6 +52,12 @@ public class EmailService : IEmailService
             email.Subject = subject;
 
             var bodyBuilder = new BodyBuilder { HtmlBody = htmlBody };
+            if (attachmentContent is not null && !string.IsNullOrWhiteSpace(attachmentFileName))
+                bodyBuilder.Attachments.Add(
+                    attachmentFileName,
+                    attachmentContent,
+                    ContentType.Parse(attachmentContentType ?? "application/octet-stream"));
+
             email.Body = bodyBuilder.ToMessageBody();
 
             using var smtp = new SmtpClient();

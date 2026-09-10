@@ -138,12 +138,24 @@ namespace MassperoTVAPI.Migrations
                     b.Property<bool?>("Accepted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AlternateMobile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Availability")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Country")
+                        .HasColumnType("int");
 
                     b.Property<string>("CurrentEmployer")
                         .HasMaxLength(200)
@@ -160,8 +172,17 @@ namespace MassperoTVAPI.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<DateTime?>("DateOfBeginning")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal?>("ExpectedSalary")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("HiringDate")
                         .HasColumnType("datetime2");
@@ -169,14 +190,32 @@ namespace MassperoTVAPI.Migrations
                     b.Property<int>("JobId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MaritalStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Mobile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("NationalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nationality")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NoticePeriod")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PreferredJobLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PreferredShift")
+                        .HasColumnType("int");
 
                     b.Property<string>("Profile")
                         .HasMaxLength(500)
@@ -197,7 +236,6 @@ namespace MassperoTVAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Summary")
-                        .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("YearsOfExperience")
@@ -213,7 +251,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Candidates");
+                    b.ToTable("Candidates", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.CandidateLanguage", b =>
@@ -237,7 +275,7 @@ namespace MassperoTVAPI.Migrations
                     b.HasIndex("CandidateId", "LanguageId")
                         .IsUnique();
 
-                    b.ToTable("CandidateLanguages");
+                    b.ToTable("CandidateLanguages", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.CandidateSkill", b =>
@@ -264,7 +302,7 @@ namespace MassperoTVAPI.Migrations
                     b.HasIndex("CandidateId", "SkillId")
                         .IsUnique();
 
-                    b.ToTable("CandidateSkills");
+                    b.ToTable("CandidateSkills", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Category", b =>
@@ -294,7 +332,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Certification", b =>
@@ -321,7 +359,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasIndex("CandidateId");
 
-                    b.ToTable("Certifications");
+                    b.ToTable("Certifications", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Education", b =>
@@ -356,7 +394,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasIndex("CandidateId");
 
-                    b.ToTable("Educations");
+                    b.ToTable("Educations", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Interview", b =>
@@ -377,9 +415,25 @@ namespace MassperoTVAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<TimeOnly?>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("EvaluatorId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Grade")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("InterviewDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("InterviewMode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<TimeOnly?>("StartTime")
+                        .HasColumnType("time");
 
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
@@ -388,9 +442,11 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasIndex("CandidateId");
 
+                    b.HasIndex("EvaluatorId");
+
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Interviews");
+                    b.ToTable("Interviews", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.InterviewType", b =>
@@ -408,7 +464,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InterviewTypes");
+                    b.ToTable("InterviewTypes", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Issue", b =>
@@ -448,7 +504,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasIndex("ProcessId");
 
-                    b.ToTable("Issues");
+                    b.ToTable("Issues", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Job", b =>
@@ -465,6 +521,9 @@ namespace MassperoTVAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeadLineDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Desc")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
@@ -475,6 +534,9 @@ namespace MassperoTVAPI.Migrations
 
                     b.Property<string>("HiringManagerId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsOpend")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LocationId")
                         .HasColumnType("int");
@@ -498,7 +560,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Language", b =>
@@ -519,7 +581,7 @@ namespace MassperoTVAPI.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Languages");
+                    b.ToTable("Languages", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Location", b =>
@@ -537,7 +599,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Offer", b =>
@@ -579,6 +641,9 @@ namespace MassperoTVAPI.Migrations
                     b.Property<decimal>("ProposedSalary")
                         .HasColumnType("decimal(12,2)");
 
+                    b.Property<string>("ReasonOfRejected")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2(7)");
 
@@ -604,7 +669,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Phases");
+                    b.ToTable("Phases", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Process", b =>
@@ -638,7 +703,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasIndex("ProcessStatusId");
 
-                    b.ToTable("Processes");
+                    b.ToTable("Processes", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.ProcessDependency", b =>
@@ -653,7 +718,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasIndex("DependsOnProcessId");
 
-                    b.ToTable("ProcessDependencies");
+                    b.ToTable("ProcessDependencies", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.ProcessStatus", b =>
@@ -675,7 +740,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProcessStatuses");
+                    b.ToTable("ProcessStatuses", (string)null);
 
                     b.HasData(
                         new
@@ -719,7 +784,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SecurityClearanceStatuses");
+                    b.ToTable("SecurityClearanceStatuses", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Skill", b =>
@@ -740,7 +805,7 @@ namespace MassperoTVAPI.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Skills");
+                    b.ToTable("Skills", (string)null);
                 });
 
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Status", b =>
@@ -758,7 +823,7 @@ namespace MassperoTVAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Statuses", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -996,6 +1061,11 @@ namespace MassperoTVAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", "Evaluator")
+                        .WithMany("EvaluatedInterviews")
+                        .HasForeignKey("EvaluatorId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("MassperoTVAPI.Core.Entities.InterviewType", "Type")
                         .WithMany("Interviews")
                         .HasForeignKey("TypeId")
@@ -1003,6 +1073,8 @@ namespace MassperoTVAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Candidate");
+
+                    b.Navigation("Evaluator");
 
                     b.Navigation("Type");
                 });
@@ -1153,6 +1225,8 @@ namespace MassperoTVAPI.Migrations
                     b.Navigation("Candidates");
 
                     b.Navigation("CreatedIssues");
+
+                    b.Navigation("EvaluatedInterviews");
 
                     b.Navigation("ManagedJobs");
                 });

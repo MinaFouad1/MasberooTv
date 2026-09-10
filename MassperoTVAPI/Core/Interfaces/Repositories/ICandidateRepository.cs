@@ -22,6 +22,9 @@ public interface ICandidateRepository : IGenericRepository<Candidate>
         int       page,
         int       pageSize);
 
+    /// <summary>Get a paged and filtered list of applicants (candidates with status not "Hired").</summary>
+    Task<(IEnumerable<Candidate> Items, int TotalCount)> GetApplicantsAsync(GetApplicantsQueryDto query);
+
     /// <summary>Get a candidate by ID with all related entities included.</summary>
     Task<Candidate?> GetByIdWithDetailsAsync(int id);
 

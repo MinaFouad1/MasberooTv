@@ -10,7 +10,7 @@ public static class OfferMapper
     private const string TechnicalTypeName = "Technical";
 
     // ── List / table row ──────────────────────────────────────────────────────
-    public static OfferDto ToDto(this Offer o) => new(
+    public static OfferDto ToDto(this Offer o, string? profileBaseUrl = null) => new(
         Id:             o.Id,
         CandidateId:    o.CandidateId,
         CandidateName:  o.Candidate?.Name             ?? string.Empty,
@@ -28,6 +28,8 @@ public static class OfferMapper
         OfferDate:      o.OfferDate,
         ExpiryDate:     o.ExpiryDate,
         Benefits:       o.Benefits,
+        ProfileImage:   CandidateMapper.BuildFileUrl(o.Candidate?.Profile, profileBaseUrl),
+        ReasonOfRejected: o.ReasonOfRejected,
         CreatedAt:      o.CreatedAt,
         CreatedBy:      o.CreatedBy
     );
