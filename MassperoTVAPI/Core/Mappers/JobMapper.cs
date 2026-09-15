@@ -22,8 +22,13 @@ public static class JobMapper
         j.Location?.Name,
         j.HiringManagerId,
         j.HiringManager?.UserName,
-        Applicants:  j.Candidates.Count(c => !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase)),
-        Interviews:  j.Candidates.Count(c => (c.Interviews != null && c.Interviews.Any()) || string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase)),
-        Offers:      j.Candidates.Count(c => string.Equals(c.Status?.Name, "Offered", StringComparison.OrdinalIgnoreCase))
+        Applicants:       j.Candidates.Count(c => !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase)),
+        Interviews:       j.Candidates.Count(c => (c.Interviews != null && c.Interviews.Any()) || string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase)),
+        Offers:           j.Candidates.Count(c => string.Equals(c.Status?.Name, "Offered", StringComparison.OrdinalIgnoreCase)),
+        Responsibilities: j.Responsibilities,
+        RequiredSkills:   j.RequiredSkills,
+        ExperienceLevel:  j.ExperienceLevel,
+        Education:        j.Education,
+        Languages:        j.Languages
     );
 }

@@ -35,6 +35,8 @@ public class Candidate
     public string?        City                 { get; set; }
     public Country?       Country              { get; set; }
 
+ 
+
     // FK → Job
     public int JobId { get; set; }
     public Job Job { get; set; } = null!;

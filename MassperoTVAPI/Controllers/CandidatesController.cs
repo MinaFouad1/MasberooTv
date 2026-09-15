@@ -349,6 +349,8 @@ public class CandidatesController : ControllerBase
             i.Type?.Name != null &&
             i.Type.Name.Contains(typeKeyword, StringComparison.OrdinalIgnoreCase));
 
+        string resolvedTypeName = interview?.Type?.Name ?? string.Empty;
+
         if (interview is not null)
         {
             interview.Grade = dto.Grade;
@@ -365,6 +367,8 @@ public class CandidatesController : ControllerBase
             if (type is null)
                 return BadRequest(ApiResponse<CandidateDetailDto>.ErrorResponse($"Interview type containing '{typeKeyword}' not found."));
 
+            resolvedTypeName = type.Name;
+
             interview = new Interview
             {
                 CandidateId = candidate.Id,
@@ -375,6 +379,37 @@ public class CandidatesController : ControllerBase
                 EvaluatorId = evaluatorId
             };
             await _uow.Interviews.AddAsync(interview);
+        }
+
+        // Update candidate status based on interview type (e.g., HR Interview / Technical Interview)
+        var statuses = (await _uow.Statuses.GetAllAsync()).ToList();
+        Status? matchingStatus = null;
+
+        if (typeKeyword.Contains("HR", StringComparison.OrdinalIgnoreCase) || resolvedTypeName.Contains("HR", StringComparison.OrdinalIgnoreCase))
+        {
+            matchingStatus = statuses.FirstOrDefault(s =>
+                s.Name.Contains("HR", StringComparison.OrdinalIgnoreCase) &&
+                (s.Name.Contains("interv", StringComparison.OrdinalIgnoreCase) || s.Name.Contains("inerv", StringComparison.OrdinalIgnoreCase)))
+                ?? statuses.FirstOrDefault(s => s.Name.Contains("HR", StringComparison.OrdinalIgnoreCase));
+        }
+        else if (typeKeyword.Contains("Tech", StringComparison.OrdinalIgnoreCase) || resolvedTypeName.Contains("Tech", StringComparison.OrdinalIgnoreCase))
+        {
+            matchingStatus = statuses.FirstOrDefault(s =>
+                s.Name.Contains("Tech", StringComparison.OrdinalIgnoreCase) &&
+                (s.Name.Contains("interv", StringComparison.OrdinalIgnoreCase) || s.Name.Contains("inerv", StringComparison.OrdinalIgnoreCase)))
+                ?? statuses.FirstOrDefault(s => s.Name.Contains("Tech", StringComparison.OrdinalIgnoreCase));
+        }
+        else
+        {
+            matchingStatus = statuses.FirstOrDefault(s => s.Name.Equals(typeKeyword, StringComparison.OrdinalIgnoreCase))
+                ?? statuses.FirstOrDefault(s => s.Name.Contains(typeKeyword, StringComparison.OrdinalIgnoreCase) || typeKeyword.Contains(s.Name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (matchingStatus is not null)
+        {
+            candidate.StatusId = matchingStatus.Id;
+            candidate.Status = matchingStatus;
+            _uow.Candidates.Update(candidate);
         }
 
         await _uow.SaveChangesAsync();

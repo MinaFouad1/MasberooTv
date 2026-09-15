@@ -133,7 +133,12 @@ public record JobDto(
     string?   HiringManagerName,
     int       Applicants,
     int       Interviews,
-    int       Offers
+    int       Offers,
+    string?   Responsibilities = null,
+    string?   RequiredSkills   = null,
+    string?   ExperienceLevel  = null,
+    string?   Education        = null,
+    string?   Languages        = null
 );
 
 public record JobRecruitmentProgressDto(
@@ -160,6 +165,11 @@ public record CreateJobDto
                                 public bool      IsOpend          { get; init; } = true;
                                 public int?      LocationId       { get; init; }
                                 public string?   HiringManagerId  { get; init; }
+                                public string?   Responsibilities { get; init; }
+                                public string?   RequiredSkills   { get; init; }
+                                public string?   ExperienceLevel  { get; init; }
+                                public string?   Education        { get; init; }
+                                public string?   Languages        { get; init; }
 }
 public record UpdateJobDto
 {
@@ -173,6 +183,11 @@ public record UpdateJobDto
                                 public bool      IsOpend          { get; init; } = true;
                                 public int?      LocationId       { get; init; }
                                 public string?   HiringManagerId  { get; init; }
+                                public string?   Responsibilities { get; init; }
+                                public string?   RequiredSkills   { get; init; }
+                                public string?   ExperienceLevel  { get; init; }
+                                public string?   Education        { get; init; }
+                                public string?   Languages        { get; init; }
 }
 
 // ── Candidate ─────────────────────────────────────────────────────────────────

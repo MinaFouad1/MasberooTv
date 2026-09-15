@@ -13,7 +13,13 @@ public class Job
     public DateTime? TargetHiringDate { get; set; }
     public DateTime? DeadLineDate { get; set; }
 
- 
+    public string? Responsibilities { get; set; }
+    public string? RequiredSkills { get; set; }
+    public string? ExperienceLevel { get; set; }
+    public string? Education { get; set; }
+    public string? Languages { get; set; }
+
+
     // FK → Category
     public int      CategoryId { get; set; }
     public Category Category   { get; set; } = null!;

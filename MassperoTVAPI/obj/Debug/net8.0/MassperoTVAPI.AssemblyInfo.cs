@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MassperoTVAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1fcbd5b776032467746ea43797d31187c63323ed")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+196a790b5ca6f67c2affe1e6936a62f64136efc0")]
 [assembly: System.Reflection.AssemblyProductAttribute("MassperoTVAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MassperoTVAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

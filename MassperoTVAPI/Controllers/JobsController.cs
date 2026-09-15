@@ -100,7 +100,12 @@ public class JobsController : ControllerBase
             DeadLineDate     = dto.DeadLineDate,
             IsOpend          = dto.IsOpend,
             LocationId       = dto.LocationId,
-            HiringManagerId  = dto.HiringManagerId
+            HiringManagerId  = dto.HiringManagerId,
+            Responsibilities = dto.Responsibilities,
+            RequiredSkills   = dto.RequiredSkills,
+            ExperienceLevel  = dto.ExperienceLevel,
+            Education        = dto.Education,
+            Languages        = dto.Languages
         };
         await _uow.Jobs.AddAsync(entity);
         await _uow.SaveChangesAsync();
@@ -145,6 +150,11 @@ public class JobsController : ControllerBase
         entity.IsOpend          = dto.IsOpend;
         entity.LocationId       = dto.LocationId;
         entity.HiringManagerId  = dto.HiringManagerId;
+        entity.Responsibilities = dto.Responsibilities;
+        entity.RequiredSkills   = dto.RequiredSkills;
+        entity.ExperienceLevel  = dto.ExperienceLevel;
+        entity.Education        = dto.Education;
+        entity.Languages        = dto.Languages;
 
         _uow.Jobs.Update(entity);
         await _uow.SaveChangesAsync();

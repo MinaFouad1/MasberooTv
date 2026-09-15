@@ -1321,6 +1321,18 @@
         <member name="M:MassperoTVAPI.Migrations.AddInterviewScheduling.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:MassperoTVAPI.Migrations.JobInfo2">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.JobInfo2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.JobInfo2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MassperoTVAPI.Migrations.JobInfo2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="F:MassperoTVAPI.Services.CvParserService.SectionHeadingRegex">
             <summary>
             Builds a regex that matches any known section heading at the start of a line.
