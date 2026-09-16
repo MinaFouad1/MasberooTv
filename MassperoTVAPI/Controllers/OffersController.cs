@@ -44,6 +44,7 @@ public class OffersController : ControllerBase
         return Ok(ApiResponse<OfferStatusSummaryDto>.SuccessResponse(summary));
     }
 
+  
     // ─────────────────────────────────────────────────────────────────────────
     //  GET /api/offers
     //  Paged + filtered list (matches the table in the UI)
@@ -323,16 +324,7 @@ public class OffersController : ControllerBase
             : null;
         _uow.Offers.Update(offer);
 
-        var candidate = await _uow.Candidates.GetByIdAsync(offer.CandidateId);
-        if (candidate is not null)
-        {
-            candidate.StatusId = targetStatus.Id;
-
-            if (newOfferStatus == OfferStatus.Accepted)
-                candidate.HiringDate = DateTime.UtcNow;
-
-            _uow.Candidates.Update(candidate);
-        }
+       
 
         await _uow.SaveChangesAsync();
 

@@ -1,0 +1,13 @@
+2026-09-16 12:41:38.136 +02:00 [INF] [] Starting MassperoTVAPI application...
+2026-09-16 12:41:40.999 +02:00 [INF] [Microsoft.Hosting.Lifetime] Now listening on: https://localhost:7104
+2026-09-16 12:41:41.004 +02:00 [INF] [Microsoft.Hosting.Lifetime] Now listening on: http://localhost:5150
+2026-09-16 12:41:41.151 +02:00 [INF] [Microsoft.Hosting.Lifetime] Application started. Press Ctrl+C to shut down.
+2026-09-16 12:41:41.159 +02:00 [INF] [Microsoft.Hosting.Lifetime] Hosting environment: Development
+2026-09-16 12:41:41.162 +02:00 [INF] [Microsoft.Hosting.Lifetime] Content root path: D:\Projects\BackEnd\MasberooTv\MassperoTVAPI
+2026-09-16 12:41:42.591 +02:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger responded 301 in 5.4951 ms
+2026-09-16 12:41:42.713 +02:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/index.html responded 200 in 90.4638 ms
+2026-09-16 12:41:43.783 +02:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /swagger/v1/swagger.json responded 200 in 681.8815 ms
+2026-09-16 12:41:54.163 +02:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/Lookups/statuses responded 401 in 65.8818 ms
+2026-09-16 12:42:14.300 +02:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/Lookups/statuses responded 200 in 232.9836 ms
+2026-09-16 14:57:41.725 +02:00 [INF] [MassperoTVAPI.Services.EmailService] Email sent to sara.hassan@example.com — Subject: Interview invitation - HR
+2026-09-16 14:57:42.083 +02:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Interviews/schedule responded 201 in 2728.4501 ms

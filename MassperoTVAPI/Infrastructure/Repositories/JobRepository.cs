@@ -136,7 +136,8 @@ public class JobRepository : GenericRepository<Job>, IJobRepository
             return null;
 
         var applications = job.Candidates.Count(c =>
-            !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase));
+            !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(c.Status?.Name, "SignContract", StringComparison.OrdinalIgnoreCase));
 
         var hrInterviews = job.Candidates.Count(c =>
             c.Interviews.Any(i => string.Equals(i.Type?.Name, "HR", StringComparison.OrdinalIgnoreCase) ||
@@ -150,10 +151,13 @@ public class JobRepository : GenericRepository<Job>, IJobRepository
             string.Equals(c.Status?.Name, "Offered", StringComparison.OrdinalIgnoreCase));
 
         var hired = job.Candidates.Count(c =>
-            string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.Status?.Name, "SignContract", StringComparison.OrdinalIgnoreCase));
 
         var accepted = job.Candidates.Count(c =>
-            c.Accepted == true || string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase));
+            c.Accepted == true ||
+            string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.Status?.Name, "SignContract", StringComparison.OrdinalIgnoreCase));
 
         return new JobRecruitmentProgressDto(
             JobId: job.Id,

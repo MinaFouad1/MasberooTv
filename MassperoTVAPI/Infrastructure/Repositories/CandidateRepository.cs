@@ -109,7 +109,7 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
             .Include(c => c.Status)
             .Include(c => c.Interviews)
                 .ThenInclude(i => i.Type)
-            .Where(c => c.Status.Name != "Hired")
+            .Where(c => c.Status.Name != "Hired" && c.Status.Name != "SignContract")
             .AsNoTracking()
             .AsQueryable();
 

@@ -62,7 +62,8 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
 
         var openPositions = jobs.Sum(j => j.OpenPositions);
         var applications = jobs.SelectMany(j => j.Candidates)
-            .Count(c => !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase));
+            .Count(c => !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(c.Status?.Name, "SignContract", StringComparison.OrdinalIgnoreCase));
         var interviews = jobs.SelectMany(j => j.Candidates)
             .SelectMany(c => c.Interviews)
             .Count();

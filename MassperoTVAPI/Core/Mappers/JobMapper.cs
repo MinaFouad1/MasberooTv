@@ -22,7 +22,7 @@ public static class JobMapper
         j.Location?.Name,
         j.HiringManagerId,
         j.HiringManager?.UserName,
-        Applicants:       j.Candidates.Count(c => !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase)),
+        Applicants:       j.Candidates.Count(c => !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase) && !string.Equals(c.Status?.Name, "SignContract", StringComparison.OrdinalIgnoreCase)),
         Interviews:       j.Candidates.Count(c => (c.Interviews != null && c.Interviews.Any()) || string.Equals(c.Status?.Name, "Under Vetting", StringComparison.OrdinalIgnoreCase)),
         Offers:           j.Candidates.Count(c => string.Equals(c.Status?.Name, "Offered", StringComparison.OrdinalIgnoreCase)),
         Responsibilities: j.Responsibilities,

@@ -22,6 +22,8 @@ public class CandidatesController : ControllerBase
     private const string InitialSecurityClearanceName  = "In Check";
     // Pipeline status names
     private const string HiredStatusName               = "Hired";
+    private const string RejectedStatusName            = "Rejected";
+    private const string SignContractStatusName        = "SignContract";
     private const string PipelineCompleted             = "Completed";
     private const string PipelineInProgress            = "InProgress";
     private const string PipelinePending               = "Pending";
@@ -49,7 +51,6 @@ public class CandidatesController : ControllerBase
  
  
     [HttpGet("applicants")]
-    [HttpGet("applicants-not-hired")]
     public async Task<ActionResult<ApiResponse<PagedResult<ApplicantDto>>>> GetApplicants(
         [FromQuery] GetApplicantsQueryDto query)
     {
@@ -275,34 +276,135 @@ public class CandidatesController : ControllerBase
         return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(cvBaseUrl, profileBaseUrl)));
     }
 
-    /// <summary>Update only the application status for a candidate (e.g. Under Vetting, Approved, Rejected).</summary>
+    /// <summary>Update only the application status for a candidate (e.g. Under Vetting, Approved, Rejected, Hired, SignContract).</summary>
     /// <param name="id">Candidate ID.</param>
     /// <param name="dto">New status ID.</param>
     /// <returns>The updated candidate.</returns>
-    /// 
-    [HttpGet("statuses")]
-    public async Task<ActionResult<ApiResponse<IEnumerable<StatusDto>>>> GetStatuses()
-    {
-        var list = await _uow.Statuses.GetAllAsync();
-        return Ok(ApiResponse<IEnumerable<StatusDto>>.SuccessResponse(list.Select(s => s.ToDto())));
-    }
     [HttpPatch("{id:int}/status")]
     public async Task<ActionResult<ApiResponse<CandidateDto>>> PatchStatus(
-        int id, [FromBody] PatchCandidateStatusDto  dto)
+        int id, [FromBody] PatchCandidateStatusDto dto)
     {
         var entity = await _uow.Candidates.GetByIdAsync(id);
         if (entity is null) return NotFound(ApiResponse<CandidateDto>.NotFoundResponse());
 
-        if (!await _uow.Statuses.ExistsAsync(dto.StatusId))
+        var status = await _uow.Statuses.GetByIdAsync(dto.StatusId);
+        if (status is null)
             return BadRequest(ApiResponse<CandidateDto>.ErrorResponse($"Status {dto.StatusId} not found."));
 
         entity.StatusId = dto.StatusId;
+        entity.Status = status;
+
+        if (string.Equals(status.Name, HiredStatusName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(status.Name, SignContractStatusName, StringComparison.OrdinalIgnoreCase))
+        {
+            entity.Accepted = true;
+            entity.HiringDate ??= DateTime.UtcNow;
+        }
+        else if (string.Equals(status.Name, RejectedStatusName, StringComparison.OrdinalIgnoreCase))
+        {
+            entity.Accepted = false;
+            entity.HiringDate = null;
+        }
+
         _uow.Candidates.Update(entity);
         await _uow.SaveChangesAsync();
 
         var updated = await _uow.Candidates.GetByIdWithDetailsAsync(entity.Id);
         var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
         return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(cvBaseUrl, profileBaseUrl), "Candidate status updated."));
+    }
+
+    /// <summary>Approve a candidate: sets status to 'Hired', sets HiringDate, marks Accepted = true, and optional ReasonOfAccept.</summary>
+    /// <param name="id">Candidate ID.</param>
+    /// <param name="dto">Optional approval payload with HiringDate and ReasonOfAccept.</param>
+    /// <returns>The updated candidate.</returns>
+    [HttpPatch("{id:int}/approve")]
+    public async Task<ActionResult<ApiResponse<CandidateDto>>> ApproveCandidate(
+        int id,
+        [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] ApproveCandidateDto? dto = null)
+    {
+        var candidate = await _uow.Candidates.GetByIdAsync(id);
+        if (candidate is null) return NotFound(ApiResponse<CandidateDto>.NotFoundResponse());
+
+        var hiredStatus = await GetOrCreateStatusByNameAsync(HiredStatusName);
+
+        candidate.StatusId = hiredStatus.Id;
+        candidate.Status = hiredStatus;
+        candidate.Accepted = true;
+        candidate.HiringDate = dto?.HiringDate ?? DateTime.UtcNow;
+
+        if (!string.IsNullOrWhiteSpace(dto?.ReasonOfAccept))
+            candidate.ReasonOfAccept = dto.ReasonOfAccept.Trim();
+
+        _uow.Candidates.Update(candidate);
+        await _uow.SaveChangesAsync();
+
+        var updated = await _uow.Candidates.GetByIdWithDetailsAsync(candidate.Id);
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+        return Ok(ApiResponse<CandidateDto>.SuccessResponse(
+            updated!.ToDto(cvBaseUrl, profileBaseUrl), "Candidate approved and marked as hired."));
+    }
+
+    /// <summary>Reject a candidate: sets status to 'Rejected', marks Accepted = false, clears HiringDate, and optional ReasonOfReject.</summary>
+    /// <param name="id">Candidate ID.</param>
+    /// <param name="dto">Optional rejection payload with ReasonOfReject.</param>
+    /// <returns>The updated candidate.</returns>
+    [HttpPatch("{id:int}/reject")]
+    public async Task<ActionResult<ApiResponse<CandidateDto>>> RejectCandidate(
+        int id,
+        [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] RejectCandidateDto? dto = null)
+    {
+        var candidate = await _uow.Candidates.GetByIdAsync(id);
+        if (candidate is null) return NotFound(ApiResponse<CandidateDto>.NotFoundResponse());
+
+        var rejectedStatus = await GetOrCreateStatusByNameAsync(RejectedStatusName);
+
+        candidate.StatusId = rejectedStatus.Id;
+        candidate.Status = rejectedStatus;
+        candidate.Accepted = false;
+        candidate.HiringDate = null;
+
+        if (!string.IsNullOrWhiteSpace(dto?.ReasonOfReject))
+            candidate.ReasonOfReject = dto.ReasonOfReject.Trim();
+
+        _uow.Candidates.Update(candidate);
+        await _uow.SaveChangesAsync();
+
+        var updated = await _uow.Candidates.GetByIdWithDetailsAsync(candidate.Id);
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+        return Ok(ApiResponse<CandidateDto>.SuccessResponse(
+            updated!.ToDto(cvBaseUrl, profileBaseUrl), "Candidate marked as rejected."));
+    }
+
+    /// <summary>Sign contract for a candidate: sets status to 'SignContract', marks candidate as hired, sets HiringDate, and marks Accepted = true.</summary>
+    /// <param name="id">Candidate ID.</param>
+    /// <param name="dto">Optional sign-contract payload with HiringDate and Notes.</param>
+    /// <returns>The updated candidate.</returns>
+    [HttpPatch("{id:int}/sign-contract")]
+    public async Task<ActionResult<ApiResponse<CandidateDto>>> SignContract(
+        int id,
+        [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] SignContractCandidateDto? dto = null)
+    {
+        var candidate = await _uow.Candidates.GetByIdAsync(id);
+        if (candidate is null) return NotFound(ApiResponse<CandidateDto>.NotFoundResponse());
+
+        var signContractStatus = await GetOrCreateStatusByNameAsync(SignContractStatusName);
+
+        candidate.StatusId = signContractStatus.Id;
+        candidate.Status = signContractStatus;
+        candidate.Accepted = true;
+        candidate.HiringDate = dto?.HiringDate ?? DateTime.UtcNow;
+
+        if (!string.IsNullOrWhiteSpace(dto?.Notes) && string.IsNullOrWhiteSpace(candidate.ReasonOfAccept))
+            candidate.ReasonOfAccept = dto.Notes.Trim();
+
+        _uow.Candidates.Update(candidate);
+        await _uow.SaveChangesAsync();
+
+        var updated = await _uow.Candidates.GetByIdWithDetailsAsync(candidate.Id);
+        var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
+        return Ok(ApiResponse<CandidateDto>.SuccessResponse(
+            updated!.ToDto(cvBaseUrl, profileBaseUrl), "Contract signed successfully. Candidate is marked as hired."));
     }
 
     /// <summary>Update only the security clearance status for a candidate (e.g. In Check, Cleared, Denied).</summary>
@@ -351,35 +453,17 @@ public class CandidatesController : ControllerBase
 
         string resolvedTypeName = interview?.Type?.Name ?? string.Empty;
 
-        if (interview is not null)
-        {
+        if (interview is  null)
+            return BadRequest(ApiResponse<CandidateDto>.ErrorResponse($"Interview  not Sceduled yet ,,schedule that First."));
+
             interview.Grade = dto.Grade;
             interview.CreatedAt = DateTime.UtcNow;
             interview.EvaluatorId = evaluatorId;
             if (dto.Comments is not null)
                 interview.Comments = dto.Comments;
             _uow.Interviews.Update(interview);
-        }
-        else
-        {
-            var types = await _uow.InterviewTypes.GetAllAsync();
-            var type = types.FirstOrDefault(t => t.Name.Contains(typeKeyword, StringComparison.OrdinalIgnoreCase));
-            if (type is null)
-                return BadRequest(ApiResponse<CandidateDetailDto>.ErrorResponse($"Interview type containing '{typeKeyword}' not found."));
-
-            resolvedTypeName = type.Name;
-
-            interview = new Interview
-            {
-                CandidateId = candidate.Id,
-                TypeId = type.Id,
-                Grade = dto.Grade,
-                Comments = dto.Comments,
-                CreatedAt = DateTime.UtcNow,
-                EvaluatorId = evaluatorId
-            };
-            await _uow.Interviews.AddAsync(interview);
-        }
+        
+    
 
         // Update candidate status based on interview type (e.g., HR Interview / Technical Interview)
         var statuses = (await _uow.Statuses.GetAllAsync()).ToList();
@@ -498,6 +582,18 @@ public class CandidatesController : ControllerBase
         => (await _uow.Statuses.GetAllAsync())
             .FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
 
+    private async Task<Status> GetOrCreateStatusByNameAsync(string name)
+    {
+        var status = await GetStatusByNameAsync(name);
+        if (status is not null)
+            return status;
+
+        status = new Status { Name = name };
+        await _uow.Statuses.AddAsync(status);
+        await _uow.SaveChangesAsync();
+        return status;
+    }
+
     private async Task<SecurityClearanceStatus?> GetSecurityClearanceByNameAsync(string name)
         => (await _uow.SecurityClearances.GetAllAsync())
             .FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
@@ -537,9 +633,11 @@ public class CandidatesController : ControllerBase
         // Load all offers for this candidate
         var offers = (await _uow.Offers.GetByCandidateAsync(id)).ToList();
 
-        var isHired = candidate.HiringDate.HasValue ||
-                      string.Equals(candidate.Status?.Name, HiredStatusName,
-                                    StringComparison.OrdinalIgnoreCase);
+        var isHired = candidate.HiringDate.HasValue &&
+                      (string.Equals(candidate.Status?.Name, HiredStatusName,
+                                    StringComparison.OrdinalIgnoreCase) ||
+                       string.Equals(candidate.Status?.Name, SignContractStatusName,
+                                    StringComparison.OrdinalIgnoreCase));
 
         var steps = BuildPipeline(candidate, offers, isHired);
 
@@ -582,7 +680,7 @@ public class CandidatesController : ControllerBase
     }
 
     /// <summary>
-    /// Builds the 6-step pipeline list from the candidate and their offers.
+    /// Builds the 7-step pipeline list from the candidate and their offers.
     /// </summary>
     private static List<CandidatePipelineStepDto> BuildPipeline(
         Candidate           candidate,
@@ -597,6 +695,9 @@ public class CandidatesController : ControllerBase
 
         bool HasGrade(Interview? i) =>
             i is not null && !string.IsNullOrWhiteSpace(i.Grade);
+
+        var isContractSigned = isHired || string.Equals(
+            candidate.Status?.Name, SignContractStatusName, StringComparison.OrdinalIgnoreCase);
 
         // ── Step 1: Application — always completed ────────────────────────────
         var stepApplication = new CandidatePipelineStepDto(
@@ -659,7 +760,16 @@ public class CandidatesController : ControllerBase
             Detail:    clearanceName
         );
 
-        // ── Step 6: Hired ─────────────────────────────────────────────────────
+        // ── Step 6: Contract signed ───────────────────────────────────────────
+        var stepContractSigned = new CandidatePipelineStepDto(
+            StepName:  "ContractedSign",
+            Completed: isContractSigned,
+            Status:    isContractSigned ? PipelineCompleted : PipelinePending,
+            Date:      null,
+            Detail:    isContractSigned ? "SignContract" : null
+        );
+
+        // ── Step 7: Hired ─────────────────────────────────────────────────────
         var stepHired = new CandidatePipelineStepDto(
             StepName:  "Hired",
             Completed: isHired,
@@ -678,10 +788,11 @@ public class CandidatesController : ControllerBase
                 stepTech        with { Completed = true, Status = PipelineCompleted },
                 stepOffer       with { Completed = true, Status = PipelineCompleted },
                 stepClearance   with { Completed = true, Status = PipelineCompleted },
+                stepContractSigned with { Completed = true, Status = PipelineCompleted },
                 stepHired
             ];
         }
 
-        return [ stepApplication, stepHr, stepTech, stepOffer, stepClearance, stepHired ];
+        return [ stepApplication, stepHr, stepTech, stepOffer, stepClearance, stepContractSigned, stepHired ];
     }
 }

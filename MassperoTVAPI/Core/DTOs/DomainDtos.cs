@@ -576,6 +576,26 @@ public record PatchCandidateSecurityDto
     [Required] public int SecurityClearanceId { get; init; }
 }
 
+/// <summary>Request body for approving/hiring a candidate.</summary>
+public record ApproveCandidateDto
+{
+    public DateTime? HiringDate { get; init; }
+    [MaxLength(1000)] public string? ReasonOfAccept { get; init; }
+}
+
+/// <summary>Request body for rejecting a candidate.</summary>
+public record RejectCandidateDto
+{
+    [MaxLength(1000)] public string? ReasonOfReject { get; init; }
+}
+
+/// <summary>Request body for signing contract with a candidate.</summary>
+public record SignContractCandidateDto
+{
+    public DateTime? HiringDate { get; init; }
+    [MaxLength(1000)] public string? Notes { get; init; }
+}
+
 // ── User management DTOs (Admin) ──────────────────────────────────────────────
 public record UserDto(
     string Id,
@@ -942,6 +962,9 @@ public record UpdateOfferDto
     [MaxLength(2000)] public string? Benefits  { get; init; }
 }
 
+// ── Offer Status ──────────────────────────────────────────────────────────────
+public record OfferStatusDto(int Id, string Name);
+
 /// <summary>Request body for changing an offer's lifecycle status.</summary>
 public record UpdateOfferStatusDto
 {
@@ -1049,7 +1072,7 @@ public record CandidatePipelineDto(
     // True when the candidate has been hired (all steps forced to Completed).
     bool      IsHired,
 
-    // Ordered list of pipeline steps (Application → HR → Technical → Offer → Security Clearance → Hired).
+    // Ordered list of pipeline steps (Application → HR → Technical → Offer → Security Clearance → ContractedSign → Hired).
     IEnumerable<CandidatePipelineStepDto> Steps
 );
 

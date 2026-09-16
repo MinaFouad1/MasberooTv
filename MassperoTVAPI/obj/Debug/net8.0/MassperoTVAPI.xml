@@ -43,12 +43,29 @@
             <param name="dto">Updated candidate data.</param>
             <returns>The updated candidate.</returns>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.CandidatesController.GetStatuses">
-            <summary>Update only the application status for a candidate (e.g. Under Vetting, Approved, Rejected).</summary>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.PatchStatus(System.Int32,MassperoTVAPI.Core.DTOs.PatchCandidateStatusDto)">
+            <summary>Update only the application status for a candidate (e.g. Under Vetting, Approved, Rejected, Hired, SignContract).</summary>
             <param name="id">Candidate ID.</param>
             <param name="dto">New status ID.</param>
             <returns>The updated candidate.</returns>
-            
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.ApproveCandidate(System.Int32,MassperoTVAPI.Core.DTOs.ApproveCandidateDto)">
+            <summary>Approve a candidate: sets status to 'Hired', sets HiringDate, marks Accepted = true, and optional ReasonOfAccept.</summary>
+            <param name="id">Candidate ID.</param>
+            <param name="dto">Optional approval payload with HiringDate and ReasonOfAccept.</param>
+            <returns>The updated candidate.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.RejectCandidate(System.Int32,MassperoTVAPI.Core.DTOs.RejectCandidateDto)">
+            <summary>Reject a candidate: sets status to 'Rejected', marks Accepted = false, clears HiringDate, and optional ReasonOfReject.</summary>
+            <param name="id">Candidate ID.</param>
+            <param name="dto">Optional rejection payload with ReasonOfReject.</param>
+            <returns>The updated candidate.</returns>
+        </member>
+        <member name="M:MassperoTVAPI.Controllers.CandidatesController.SignContract(System.Int32,MassperoTVAPI.Core.DTOs.SignContractCandidateDto)">
+            <summary>Sign contract for a candidate: sets status to 'SignContract', marks candidate as hired, sets HiringDate, and marks Accepted = true.</summary>
+            <param name="id">Candidate ID.</param>
+            <param name="dto">Optional sign-contract payload with HiringDate and Notes.</param>
+            <returns>The updated candidate.</returns>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.PatchSecurityClearance(System.Int32,MassperoTVAPI.Core.DTOs.PatchCandidateSecurityDto)">
             <summary>Update only the security clearance status for a candidate (e.g. In Check, Cleared, Denied).</summary>
@@ -99,7 +116,7 @@
         </member>
         <member name="M:MassperoTVAPI.Controllers.CandidatesController.BuildPipeline(MassperoTVAPI.Core.Entities.Candidate,System.Collections.Generic.List{MassperoTVAPI.Core.Entities.Offer},System.Boolean)">
             <summary>
-            Builds the 6-step pipeline list from the candidate and their offers.
+            Builds the 7-step pipeline list from the candidate and their offers.
             </summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.CategoriesController.GetAll(MassperoTVAPI.Core.DTOs.GetCategoriesQueryDto)">
@@ -282,29 +299,11 @@
         <member name="M:MassperoTVAPI.Controllers.LookupsController.GetStatus(System.Int32)">
             <summary>Get a single application status by ID.</summary>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreateStatus(MassperoTVAPI.Core.DTOs.CreateStatusDto)">
-            <summary>Create a new application status. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdateStatus(System.Int32,MassperoTVAPI.Core.DTOs.UpdateStatusDto)">
-            <summary>Update an application status name. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeleteStatus(System.Int32)">
-            <summary>Delete an application status. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetSecurityClearances">
-            <summary>List all security clearance statuses (e.g. In Check, Cleared, Denied).</summary>
+        <member name="M:MassperoTVAPI.Controllers.LookupsController.GetOfferStatuses">
+            <summary>List all offer statuses (Pending = 1, Accepted = 2, Declined = 3, Expired = 4).</summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.LookupsController.GetSecurityClearance(System.Int32)">
             <summary>Get a single security clearance status by ID.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreateSecurityClearance(MassperoTVAPI.Core.DTOs.CreateSecurityClearanceStatusDto)">
-            <summary>Create a new security clearance status. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdateSecurityClearance(System.Int32,MassperoTVAPI.Core.DTOs.UpdateSecurityClearanceStatusDto)">
-            <summary>Update a security clearance status name. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeleteSecurityClearance(System.Int32)">
-            <summary>Delete a security clearance status. Admin only.</summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.LookupsController.GetInterviewTypes">
             <summary>List all interview types (e.g. HR, Technical).</summary>
@@ -312,44 +311,17 @@
         <member name="M:MassperoTVAPI.Controllers.LookupsController.GetInterviewType(System.Int32)">
             <summary>Get a single interview type by ID.</summary>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreateInterviewType(MassperoTVAPI.Core.DTOs.CreateInterviewTypeDto)">
-            <summary>Create a new interview type. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdateInterviewType(System.Int32,MassperoTVAPI.Core.DTOs.UpdateInterviewTypeDto)">
-            <summary>Update an interview type name. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeleteInterviewType(System.Int32)">
-            <summary>Delete an interview type. Admin only.</summary>
-        </member>
         <member name="M:MassperoTVAPI.Controllers.LookupsController.GetPhases">
             <summary>List all process phases.</summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.LookupsController.GetPhase(System.Int32)">
             <summary>Get a single phase by ID.</summary>
         </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreatePhase(MassperoTVAPI.Core.DTOs.CreatePhaseDto)">
-            <summary>Create a new phase. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdatePhase(System.Int32,MassperoTVAPI.Core.DTOs.UpdatePhaseDto)">
-            <summary>Update a phase name. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeletePhase(System.Int32)">
-            <summary>Delete a phase. Admin only.</summary>
-        </member>
         <member name="M:MassperoTVAPI.Controllers.LookupsController.GetProcessStatuses">
             <summary>List all process statuses (Pending, InProgress, Completed, Holded).</summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.LookupsController.GetProcessStatus(System.Int32)">
             <summary>Get a single process status by ID.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.CreateProcessStatus(MassperoTVAPI.Core.DTOs.CreateProcessStatusDto)">
-            <summary>Create a new process status with a completion percentage. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.UpdateProcessStatus(System.Int32,MassperoTVAPI.Core.DTOs.UpdateProcessStatusDto)">
-            <summary>Update a process status name and percentage. Admin only.</summary>
-        </member>
-        <member name="M:MassperoTVAPI.Controllers.LookupsController.DeleteProcessStatus(System.Int32)">
-            <summary>Delete a process status. Admin only.</summary>
         </member>
         <member name="M:MassperoTVAPI.Controllers.OffersController.GetSummary">
             <summary>Returns offer status counts for the dashboard summary cards.</summary>
@@ -534,6 +506,15 @@
         </member>
         <member name="T:MassperoTVAPI.Core.DTOs.PatchCandidateSecurityDto">
             <summary>PATCH body to update only the candidate security clearance status.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.ApproveCandidateDto">
+            <summary>Request body for approving/hiring a candidate.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.RejectCandidateDto">
+            <summary>Request body for rejecting a candidate.</summary>
+        </member>
+        <member name="T:MassperoTVAPI.Core.DTOs.SignContractCandidateDto">
+            <summary>Request body for signing contract with a candidate.</summary>
         </member>
         <member name="T:MassperoTVAPI.Core.DTOs.UpdateUserStatusDto">
             <summary>Payload for admin to change a user's account status.</summary>
@@ -1007,6 +988,13 @@
         <member name="T:MassperoTVAPI.Infrastructure.Repositories.LookupRepository`1">
             <summary>
             Reusable repository for simple lookup tables (e.g. Status, Phase, InterviewType…).
+            </summary>
+        </member>
+        <member name="T:MassperoTVAPI.Middlewares.GlobalExceptionMiddleware">
+            <summary>
+            Catches all unhandled exceptions in the request pipeline, logs full exception details
+            (including method, path, query, user, exception message, stack trace, and exact line numbers),
+            and returns a clean, structured JSON 500 ApiResponse.
             </summary>
         </member>
         <member name="T:MassperoTVAPI.Migrations.AddFullERDEntities">

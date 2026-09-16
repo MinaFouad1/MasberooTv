@@ -193,7 +193,8 @@ public class DashboardController : ControllerBase
         var candidates = (await _uow.Candidates.GetAllWithInterviewsAsync()).ToList();
 
         var candidatesCount = candidates.Count(c =>
-            !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase));
+            !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(c.Status?.Name, "SignContract", StringComparison.OrdinalIgnoreCase));
 
         var hrInterviewCount = candidates.Count(c =>
             c.Interviews.Any(i =>
@@ -210,7 +211,8 @@ public class DashboardController : ControllerBase
             string.Equals(c.Status?.Name, "In Process", StringComparison.OrdinalIgnoreCase));
 
         var hired = candidates.Count(c =>
-            string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.Status?.Name, "SignContract", StringComparison.OrdinalIgnoreCase));
 
         return Ok(ApiResponse<RecruitmentFunnelDto>.SuccessResponse(new RecruitmentFunnelDto(
             CandidatesCount:        candidatesCount,
@@ -234,11 +236,8 @@ public class DashboardController : ControllerBase
             JobTitle:      j.Name,
             OpenPositions: j.OpenPositions,
             Applications: j.Candidates.Count(c =>
-        !string.Equals(
-            c.Status?.Name,
-            "Hired",
-            StringComparison.OrdinalIgnoreCase
-        ))
+                !string.Equals(c.Status?.Name, "Hired", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(c.Status?.Name, "SignContract", StringComparison.OrdinalIgnoreCase))
         ));
 
         return Ok(ApiResponse<IEnumerable<JobStatusDto>>.SuccessResponse(result));

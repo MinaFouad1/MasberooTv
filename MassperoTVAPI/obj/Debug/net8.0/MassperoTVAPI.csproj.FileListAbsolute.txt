@@ -155,7 +155,6 @@ D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.MvcA
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.sourcelink.json
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.dll
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\refint\MassperoTVAPI.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\MassperoTVAPI.pdb
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\appsettings.Development.json
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\appsettings.json
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\MassperoTVAPI.staticwebassets.endpoints.json
@@ -163,7 +162,6 @@ D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\MassperoTVAPI.exe
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\MassperoTVAPI.deps.json
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\MassperoTVAPI.runtimeconfig.json
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\MassperoTVAPI.dll
-D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\MassperoTVAPI.pdb
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Azure.Core.dll
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Azure.Identity.dll
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
@@ -668,3 +666,12 @@ F:\Projects\Maspero\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\System.Text.Json.d
 F:\Projects\Maspero\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 F:\Projects\Maspero\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Serilog.dll
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Serilog.AspNetCore.dll
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Serilog.Extensions.Hosting.dll
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Serilog.Extensions.Logging.dll
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Serilog.Formatting.Compact.dll
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Serilog.Settings.Configuration.dll
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Serilog.Sinks.Console.dll
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Serilog.Sinks.Debug.dll
+D:\Projects\BackEnd\MasberooTv\MassperoTVAPI\bin\Debug\net8.0\Serilog.Sinks.File.dll
