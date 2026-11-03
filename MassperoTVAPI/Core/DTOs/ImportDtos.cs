@@ -35,6 +35,8 @@ public record CandidateImportRowDto
     public decimal? CurrentSalary { get; init; }
     public string? NoticePeriod { get; init; }
     public string? Availability { get; init; }
+    public byte? WorkingHoursPerDay { get; init; }
+    public byte? WorkingDaysPerWeek { get; init; }
 }
 
 public record ImportErrorDto

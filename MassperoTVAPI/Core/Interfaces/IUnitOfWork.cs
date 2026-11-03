@@ -21,6 +21,8 @@ public interface IUnitOfWork : IDisposable
     ILookupRepository<Phase>                  Phases            { get; }
     ILookupRepository<ProcessStatus>          ProcessStatuses   { get; }
     ILookupRepository<Location>               Locations         { get; }
+    ILookupRepository<Language>               Languages         { get; }
+    ILookupRepository<Skill>                  Skills            { get; }
 
     // Config
     IConfigurationRepository Configurations { get; }

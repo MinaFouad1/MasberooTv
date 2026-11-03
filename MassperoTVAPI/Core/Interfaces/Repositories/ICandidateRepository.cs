@@ -31,8 +31,8 @@ public interface ICandidateRepository : IGenericRepository<Candidate>
     /// <summary>Replace candidate profile collections when a collection is supplied.</summary>
     Task SyncProfileCollectionsAsync(
         Candidate candidate,
-        IEnumerable<UpsertCandidateSkillDto>? skills,
-        IEnumerable<UpsertCandidateLanguageDto>? languages,
+        IEnumerable<int>? skillIds,
+        IEnumerable<int>? languageIds,
         IEnumerable<UpsertCandidateCertificationDto>? certifications,
         IEnumerable<UpsertCandidateEducationDto>? educations);
 

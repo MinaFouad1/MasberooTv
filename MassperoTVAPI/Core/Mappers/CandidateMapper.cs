@@ -135,6 +135,8 @@ public static class CandidateMapper
             PreferredShift:         c.PreferredShift,
             City:                   c.City,
             Country:                c.Country,
+            WorkingHoursPerDay:     c.WorkingHoursPerDay,
+            WorkingDaysPerWeek:     c.WorkingDaysPerWeek,
 
             Skills:                 MapSkills(c),
             Languages:              MapLanguages(c),

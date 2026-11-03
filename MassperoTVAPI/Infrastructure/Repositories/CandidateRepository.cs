@@ -163,88 +163,133 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
 
     public async Task SyncProfileCollectionsAsync(
         Candidate candidate,
-        IEnumerable<UpsertCandidateSkillDto>? skills,
-        IEnumerable<UpsertCandidateLanguageDto>? languages,
+        IEnumerable<int>? skillIds,
+        IEnumerable<int>? languageIds,
         IEnumerable<UpsertCandidateCertificationDto>? certifications,
         IEnumerable<UpsertCandidateEducationDto>? educations)
     {
-        if (skills is not null)
+        // ── 1. CandidateSkills table ──────────────────────────────────────────
+        if (skillIds is not null)
         {
-            _context.CandidateSkills.RemoveRange(candidate.CandidateSkills);
-            candidate.CandidateSkills.Clear();
+            var existingSkills = await _context.CandidateSkills
+                .Where(cs => cs.CandidateId == candidate.Id)
+                .ToListAsync();
 
-            foreach (var item in skills.Where(s => !string.IsNullOrWhiteSpace(s.Name))
-                         .GroupBy(s => s.Name.Trim(), StringComparer.OrdinalIgnoreCase)
-                         .Select(g => g.First()))
+            if (existingSkills.Count > 0)
             {
-                var name = item.Name.Trim();
-                var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Name == name);
-                if (skill is null)
-                {
-                    skill = new Skill { Name = name };
-                    await _context.Skills.AddAsync(skill);
-                }
+                _context.CandidateSkills.RemoveRange(existingSkills);
+                await _context.SaveChangesAsync();
+            }
 
-                candidate.CandidateSkills.Add(new CandidateSkill
+            var targetSkillIds = new HashSet<int>();
+
+            foreach (var sid in skillIds.Where(id => id > 0))
+            {
+                if (await _context.Skills.AnyAsync(s => s.Id == sid))
+                {
+                    targetSkillIds.Add(sid);
+                }
+            }
+
+            foreach (var sid in targetSkillIds)
+            {
+                await _context.CandidateSkills.AddAsync(new CandidateSkill
                 {
                     CandidateId = candidate.Id,
-                    Skill = skill,
-                    YearsOfExperience = item.YearsOfExperience
+                    SkillId = sid,
+                    YearsOfExperience = 0
                 });
             }
+            await _context.SaveChangesAsync();
         }
 
-        if (languages is not null)
+        // ── 2. CandidateLanguages table (without duplicates) ──────────────────
+        if (languageIds is not null)
         {
-            _context.CandidateLanguages.RemoveRange(candidate.CandidateLanguages);
-            candidate.CandidateLanguages.Clear();
+            var existingLanguages = await _context.CandidateLanguages
+                .Where(cl => cl.CandidateId == candidate.Id)
+                .ToListAsync();
 
-            foreach (var item in languages.Where(l => !string.IsNullOrWhiteSpace(l.Name))
-                         .GroupBy(l => l.Name.Trim(), StringComparer.OrdinalIgnoreCase)
-                         .Select(g => g.First()))
+            if (existingLanguages.Count > 0)
             {
-                var name = item.Name.Trim();
-                var language = await _context.Languages.FirstOrDefaultAsync(l => l.Name == name);
-                if (language is null)
-                {
-                    language = new Language { Name = name };
-                    await _context.Languages.AddAsync(language);
-                }
+                _context.CandidateLanguages.RemoveRange(existingLanguages);
+                await _context.SaveChangesAsync();
+            }
 
-                candidate.CandidateLanguages.Add(new CandidateLanguage
+            var targetLanguageIds = new HashSet<int>();
+
+            foreach (var lid in languageIds.Where(id => id > 0))
+            {
+                if (await _context.Languages.AnyAsync(l => l.Id == lid))
+                {
+                    targetLanguageIds.Add(lid);
+                }
+            }
+
+            foreach (var langId in targetLanguageIds)
+            {
+                await _context.CandidateLanguages.AddAsync(new CandidateLanguage
                 {
                     CandidateId = candidate.Id,
-                    Language = language
+                    LanguageId = langId
                 });
             }
+            await _context.SaveChangesAsync();
         }
 
+        // ── 3. Certifications table ───────────────────────────────────────────
         if (certifications is not null)
         {
-            _context.Certifications.RemoveRange(candidate.Certifications);
-            candidate.Certifications.Clear();
+            var existingCerts = await _context.Certifications
+                .Where(c => c.CandidateId == candidate.Id)
+                .ToListAsync();
 
-            foreach (var item in certifications.Where(c => !string.IsNullOrWhiteSpace(c.Name)))
+            if (existingCerts.Count > 0)
             {
-                candidate.Certifications.Add(new Certification
+                _context.Certifications.RemoveRange(existingCerts);
+                await _context.SaveChangesAsync();
+            }
+
+            var validCerts = certifications
+                .Where(c => !string.IsNullOrWhiteSpace(c.Name))
+                .GroupBy(c => c.Name.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Select(g => g.First())
+                .ToList();
+
+            foreach (var item in validCerts)
+            {
+                await _context.Certifications.AddAsync(new Certification
                 {
                     CandidateId = candidate.Id,
                     Name = item.Name.Trim(),
                     Url = string.IsNullOrWhiteSpace(item.Url) ? null : item.Url.Trim()
                 });
             }
+            await _context.SaveChangesAsync();
         }
 
+        // ── 4. Educations table ───────────────────────────────────────────────
         if (educations is not null)
         {
-            _context.Educations.RemoveRange(candidate.Educations);
-            candidate.Educations.Clear();
+            var existingEducations = await _context.Educations
+                .Where(e => e.CandidateId == candidate.Id)
+                .ToListAsync();
 
-            foreach (var item in educations.Where(e =>
-                         !string.IsNullOrWhiteSpace(e.Degree) &&
-                         !string.IsNullOrWhiteSpace(e.University)))
+            if (existingEducations.Count > 0)
             {
-                candidate.Educations.Add(new Education
+                _context.Educations.RemoveRange(existingEducations);
+                await _context.SaveChangesAsync();
+            }
+
+            var validEducations = educations
+                .Where(e => !string.IsNullOrWhiteSpace(e.Degree) && !string.IsNullOrWhiteSpace(e.University))
+                .GroupBy(e => (Degree: e.Degree.Trim().ToLowerInvariant(), University: e.University.Trim().ToLowerInvariant(), Year: e.GraduationYear))
+                .Select(g => g.First())
+                .ToList();
+
+            foreach (var item in validEducations)
+            {
+                await _context.Educations.AddAsync(new Education
                 {
                     CandidateId = candidate.Id,
                     Degree = item.Degree.Trim(),
@@ -253,7 +298,11 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
                     Grade = string.IsNullOrWhiteSpace(item.Grade) ? null : item.Grade.Trim()
                 });
             }
+            await _context.SaveChangesAsync();
         }
+
+        // Detach or clear tracker to guarantee fresh re-query with all includes
+        _context.ChangeTracker.Clear();
     }
 
     public async Task<IEnumerable<Candidate>> GetAllWithInterviewsAsync()

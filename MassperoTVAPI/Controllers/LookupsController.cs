@@ -5,6 +5,7 @@ using MassperoTVAPI.Core.Helpers;
 using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Mappers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MassperoTVAPI.Controllers;
@@ -19,8 +20,13 @@ namespace MassperoTVAPI.Controllers;
 public class LookupsController : ControllerBase
 {
     private readonly IUnitOfWork _uow;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public LookupsController(IUnitOfWork uow) => _uow = uow;
+    public LookupsController(IUnitOfWork uow, UserManager<ApplicationUser> userManager)
+    {
+        _uow = uow;
+        _userManager = userManager;
+    }
 
     // ════════════════════════════════════════════════════════════
     // CANDIDATE STATUS
@@ -70,8 +76,6 @@ public class LookupsController : ControllerBase
         return Ok(ApiResponse<SecurityClearanceStatusDto>.SuccessResponse(entity.ToDto()));
     }
 
-    /// <summary>Create a new security clearance status. Admin only.</summary>
-  
     // ════════════════════════════════════════════════════════════
     // INTERVIEW TYPES
     // ════════════════════════════════════════════════════════════
@@ -138,5 +142,94 @@ public class LookupsController : ControllerBase
         return Ok(ApiResponse<ProcessStatusDto>.SuccessResponse(entity.ToDto()));
     }
 
-   
+    // ════════════════════════════════════════════════════════════
+    // LANGUAGES
+    // ════════════════════════════════════════════════════════════
+
+    /// <summary>List all available languages for candidate selection.</summary>
+    [HttpGet("languages")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<LanguageDto>>>> GetLanguages()
+    {
+        var list = await _uow.Languages.GetAllAsync();
+        return Ok(ApiResponse<IEnumerable<LanguageDto>>.SuccessResponse(list.Select(l => l.ToDto())));
+    }
+
+    /// <summary>Create a new language.</summary>
+    [HttpPost("languages")]
+    public async Task<ActionResult<ApiResponse<LanguageDto>>> CreateLanguage([FromBody] CreateLanguageDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            return BadRequest(ApiResponse<LanguageDto>.ErrorResponse("Language name is required."));
+
+        var name = dto.Name.Trim();
+        var existing = (await _uow.Languages.GetAllAsync()).FirstOrDefault(l => l.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if (existing is not null)
+            return Ok(ApiResponse<LanguageDto>.SuccessResponse(existing.ToDto(), "Language already exists."));
+
+        var language = new Language { Name = name };
+        await _uow.Languages.AddAsync(language);
+        await _uow.SaveChangesAsync();
+
+        return StatusCode(201, ApiResponse<LanguageDto>.CreatedResponse(language.ToDto()));
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // SKILLS
+    // ════════════════════════════════════════════════════════════
+
+    /// <summary>List all available skills for candidate selection.</summary>
+    [HttpGet("skills")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<SkillDto>>>> GetSkills()
+    {
+        var list = await _uow.Skills.GetAllAsync();
+        return Ok(ApiResponse<IEnumerable<SkillDto>>.SuccessResponse(list.Select(s => s.ToDto())));
+    }
+
+    /// <summary>Create a new skill.</summary>
+    [HttpPost("skills")]
+    public async Task<ActionResult<ApiResponse<SkillDto>>> CreateSkill([FromBody] CreateSkillDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            return BadRequest(ApiResponse<SkillDto>.ErrorResponse("Skill name is required."));
+
+        var name = dto.Name.Trim();
+        var existing = (await _uow.Skills.GetAllAsync()).FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if (existing is not null)
+            return Ok(ApiResponse<SkillDto>.SuccessResponse(existing.ToDto(), "Skill already exists."));
+
+        var skill = new Skill { Name = name };
+        await _uow.Skills.AddAsync(skill);
+        await _uow.SaveChangesAsync();
+
+        return StatusCode(201, ApiResponse<SkillDto>.CreatedResponse(skill.ToDto()));
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // LOCATIONS
+    // ════════════════════════════════════════════════════════════
+
+    /// <summary>List all locations with ID and Name.</summary>
+    [HttpGet("locations")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<LocationDto>>>> GetLocations()
+    {
+        var list = await _uow.Locations.GetAllAsync();
+        return Ok(ApiResponse<IEnumerable<LocationDto>>.SuccessResponse(list.Select(l => l.ToDto())));
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // HIRING MANAGERS
+    // ════════════════════════════════════════════════════════════
+
+    /// <summary>List all hiring managers (users with the HR role).</summary>
+    [HttpGet("hiringmanagers")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<HiringManagerDto>>>> GetHiringManagers()
+    {
+        var hrUsers = await _userManager.GetUsersInRoleAsync("HR");
+        var list = hrUsers
+            .OrderBy(u => u.UserName)
+            .Select(u => new HiringManagerDto(u.Id, u.UserName ?? string.Empty, u.Email));
+
+        return Ok(ApiResponse<IEnumerable<HiringManagerDto>>.SuccessResponse(list));
+    }
 }
+

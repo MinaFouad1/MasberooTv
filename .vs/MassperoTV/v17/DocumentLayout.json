@@ -3,27 +3,46 @@
   "WorkspaceRootPath": "D:\\Projects\\BackEnd\\MasberooTv\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\candidatescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\candidatescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\migrations\\20261025125516_addhoursperferdjob.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\migrations\\20261025125516_addhoursperferdjob.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\core\\entities\\candidate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\core\\entities\\candidate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\core\\dtos\\domaindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\core\\dtos\\domaindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\core\\helpers\\candidatemultipartoperationfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\core\\helpers\\candidatemultipartoperationfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\offerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\offerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\candidatescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\candidatescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\lookupscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\lookupscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Edgecom\\AppData\\Local\\SourceServer\\d873beac8c6b9e99f7af7637cfc26c5294d0b5e80a5429554ef712f82e6a5e35\\MassperoTVAPI\\Controllers\\OffersController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\core\\dtos\\domaindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\core\\dtos\\domaindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Edgecom\\AppData\\Local\\SourceServer\\d873beac8c6b9e99f7af7637cfc26c5294d0b5e80a5429554ef712f82e6a5e35\\MassperoTVAPI\\Controllers\\OffersController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\interviewscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -32,10 +51,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\core\\entities\\job.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\core\\entities\\job.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\core\\entities\\candidate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\core\\entities\\candidate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -56,10 +71,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\controllers\\importcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\controllers\\importcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|solutionrelative:massperotvapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9403A103-6025-4C03-AFD3-BF7B46E34DE8}|MassperoTVAPI\\MassperoTVAPI.csproj|d:\\projects\\backend\\masberootv\\massperotvapi\\core\\entities\\offer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -221,7 +232,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -241,69 +252,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Job.cs",
-              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Job.cs",
-              "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\Job.cs",
-              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Job.cs",
-              "RelativeToolTip": "MassperoTVAPI\\Core\\Entities\\Job.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAzAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "20261025125516_AddHoursPerferdJob.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20261025125516_AddHoursPerferdJob.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20261025125516_AddHoursPerferdJob.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20261025125516_AddHoursPerferdJob.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Migrations\\20261025125516_AddHoursPerferdJob.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAwAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T09:29:34.828Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "ApplicationDbContextModelSnapshot.cs",
-              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\ApplicationDbContextModelSnapshot.cs",
-              "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\ApplicationDbContextModelSnapshot.cs",
-              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\ApplicationDbContextModelSnapshot.cs",
-              "RelativeToolTip": "MassperoTVAPI\\Migrations\\ApplicationDbContextModelSnapshot.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T08:30:47.118Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "InterviewsController.cs",
-              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\InterviewsController.cs",
-              "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\InterviewsController.cs",
-              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\InterviewsController.cs",
-              "RelativeToolTip": "MassperoTVAPI\\Controllers\\InterviewsController.cs",
-              "ViewState": "AgIAADsAAAAAAAAAAADwv00AAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T12:39:29.945Z",
+              "WhenOpened": "2026-10-25T12:55:17.278Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "ExcelImportService.cs",
-              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Services\\ExcelImportService.cs",
-              "RelativeDocumentMoniker": "MassperoTVAPI\\Services\\ExcelImportService.cs",
-              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Services\\ExcelImportService.cs",
-              "RelativeToolTip": "MassperoTVAPI\\Services\\ExcelImportService.cs",
-              "ViewState": "AgIAAMUAAAAAAAAAAAAawO8AAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-15T11:09:47.445Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "LookupsController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\LookupsController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\LookupsController.cs",
               "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\LookupsController.cs",
               "RelativeToolTip": "MassperoTVAPI\\Controllers\\LookupsController.cs",
-              "ViewState": "AgIAAGUAAAAAAAAAAAAuwC0AAAANAAAAAAAAAA==",
+              "ViewState": "AgIAALsAAAAAAAAAAAAiwNMAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-09T08:51:16.849Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-09T08:51:16.849Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 16,
               "Title": "20260915110720_JobInfo.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260915110720_JobInfo.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260915110720_JobInfo.cs",
@@ -315,29 +289,76 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "OffersController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\OffersController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\OffersController.cs",
               "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\OffersController.cs",
               "RelativeToolTip": "MassperoTVAPI\\Controllers\\OffersController.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAAcwC4AAAACAAAAAAAAAA==",
+              "ViewState": "AgIAAGwAAAAAAAAAAAAmwH0AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T08:33:46.992Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-07T08:33:46.992Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\appsettings.json",
               "RelativeDocumentMoniker": "MassperoTVAPI\\appsettings.json",
               "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\appsettings.json",
               "RelativeToolTip": "MassperoTVAPI\\appsettings.json",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABMAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-07-06T16:33:29.589Z",
+              "WhenOpened": "2026-07-06T16:33:29.589Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CandidatesController.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\CandidatesController.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\CandidatesController.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\CandidatesController.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Controllers\\CandidatesController.cs",
+              "ViewState": "AgIAAOMBAAAAAAAAAAAAAIUAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T08:59:00.723Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Program.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Program.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Program.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Program.cs",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAIwGAAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-10T12:11:29.073Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Candidate.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Candidate.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\Candidate.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Candidate.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Core\\Entities\\Candidate.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAmwDIAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T09:00:50.096Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CandidateMultipartOperationFilter.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Helpers\\CandidateMultipartOperationFilter.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Helpers\\CandidateMultipartOperationFilter.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Helpers\\CandidateMultipartOperationFilter.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Core\\Helpers\\CandidateMultipartOperationFilter.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACAAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-22T11:16:30.838Z"
             },
             {
               "$type": "Document",
@@ -347,27 +368,71 @@
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\DTOs\\DomainDtos.cs",
               "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\DTOs\\DomainDtos.cs",
               "RelativeToolTip": "MassperoTVAPI\\Core\\DTOs\\DomainDtos.cs",
-              "ViewState": "AgIAANkBAAAAAAAAAAA4wOwBAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAAkBAAAAAAAAAAA3wDMBAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T16:41:12.159Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-06T16:41:12.159Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "CandidatesController.cs",
-              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\CandidatesController.cs",
-              "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\CandidatesController.cs",
-              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\CandidatesController.cs",
-              "RelativeToolTip": "MassperoTVAPI\\Controllers\\CandidatesController.cs",
-              "ViewState": "AgIAAGUCAAAAAAAAAAArwH4CAABTAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T08:59:00.723Z",
-              "EditorCaption": ""
+              "DocumentIndex": 9,
+              "Title": "Microsoft.Common.CurrentVersion.targets",
+              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ViewState": "AgIAAPkUAAAAAAAAAAAnwB0VAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2026-09-16T14:37:23.878Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 15,
+              "Title": "ExcelImportService.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Services\\ExcelImportService.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Services\\ExcelImportService.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Services\\ExcelImportService.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Services\\ExcelImportService.cs",
+              "ViewState": "AgIAAMUAAAAAAAAAAAAawO8AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-15T11:09:47.445Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "InterviewsController.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\InterviewsController.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\InterviewsController.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\InterviewsController.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Controllers\\InterviewsController.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAADwv00AAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T12:39:29.945Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ApplicationDbContextModelSnapshot.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T08:30:47.118Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Job.cs",
+              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Job.cs",
+              "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\Job.cs",
+              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Job.cs",
+              "RelativeToolTip": "MassperoTVAPI\\Core\\Entities\\Job.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-12T09:29:34.828Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "OffersController.cs",
               "DocumentMoniker": "C:\\Users\\Edgecom\\AppData\\Local\\SourceServer\\d873beac8c6b9e99f7af7637cfc26c5294d0b5e80a5429554ef712f82e6a5e35\\MassperoTVAPI\\Controllers\\OffersController.cs",
               "ToolTip": "C:\\Users\\Edgecom\\AppData\\Local\\SourceServer\\d873beac8c6b9e99f7af7637cfc26c5294d0b5e80a5429554ef712f82e6a5e35\\MassperoTVAPI\\Controllers\\OffersController.cs [Read Only]",
@@ -378,7 +443,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 17,
               "Title": "ImportController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\ImportController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\ImportController.cs",
@@ -390,19 +455,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Candidate.cs",
-              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Candidate.cs",
-              "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\Candidate.cs",
-              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Candidate.cs",
-              "RelativeToolTip": "MassperoTVAPI\\Core\\Entities\\Candidate.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAqwC8AAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T09:00:50.096Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "CandidateMapper.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Mappers\\CandidateMapper.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Mappers\\CandidateMapper.cs",
@@ -414,7 +467,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 55,
               "Title": "20260915112236_JobInfo2.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260915112236_JobInfo2.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260915112236_JobInfo2.cs",
@@ -426,7 +479,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 20,
               "Title": "20260910120000_AddInterviewScheduling.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260910120000_AddInterviewScheduling.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260910120000_AddInterviewScheduling.cs",
@@ -438,19 +491,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Program.cs",
-              "RelativeDocumentMoniker": "MassperoTVAPI\\Program.cs",
-              "ToolTip": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Program.cs",
-              "RelativeToolTip": "MassperoTVAPI\\Program.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-10T12:11:29.073Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 28,
               "Title": "20260909113114_Intevire.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260909113114_Intevire.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260909113114_Intevire.cs",
@@ -462,7 +503,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 22,
               "Title": "20260707193122_Cateogry.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260707193122_Cateogry.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260707193122_Cateogry.cs",
@@ -474,7 +515,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 29,
               "Title": "JobsController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\JobsController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\JobsController.cs",
@@ -486,7 +527,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 19,
               "Title": "20260910083900_OFFERSrEAONS.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260910083900_OFFERSrEAONS.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260910083900_OFFERSrEAONS.cs",
@@ -498,7 +539,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 18,
               "Title": "Offer.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Offer.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\Offer.cs",
@@ -510,7 +551,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 21,
               "Title": "Interview.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Interview.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\Interview.cs",
@@ -522,7 +563,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 24,
               "Title": "20260707091459_ImageUrl.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260707091459_ImageUrl.cs",
@@ -534,7 +575,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 25,
               "Title": "20260909100350_Candetails.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260909100350_Candetails.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260909100350_Candetails.cs",
@@ -546,7 +587,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 23,
               "Title": "20260909110000_AddInterviewEvaluator.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260909110000_AddInterviewEvaluator.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260909110000_AddInterviewEvaluator.cs",
@@ -558,7 +599,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 26,
               "Title": "20260908111821_IsOpendDATEiJops.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260908111821_IsOpendDATEiJops.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260908111821_IsOpendDATEiJops.cs",
@@ -570,7 +611,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 27,
               "Title": "InterviewConfiguration.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Infrastructure\\Data\\Configurations\\InterviewConfiguration.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Infrastructure\\Data\\Configurations\\InterviewConfiguration.cs",
@@ -582,7 +623,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 32,
               "Title": "CategoriesController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\CategoriesController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\CategoriesController.cs",
@@ -590,12 +631,11 @@
               "RelativeToolTip": "MassperoTVAPI\\Controllers\\CategoriesController.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAwwDwAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T19:32:05.222Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-07T19:32:05.222Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 33,
               "Title": "ApplicationUser.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\ApplicationUser.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\ApplicationUser.cs",
@@ -607,7 +647,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 31,
               "Title": "IJobRepository.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Interfaces\\Repositories\\IJobRepository.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Interfaces\\Repositories\\IJobRepository.cs",
@@ -619,7 +659,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 30,
               "Title": "JobRepository.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Infrastructure\\Repositories\\JobRepository.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Infrastructure\\Repositories\\JobRepository.cs",
@@ -631,7 +671,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 37,
               "Title": "UnitOfWork.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Infrastructure\\UnitOfWork.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Infrastructure\\UnitOfWork.cs",
@@ -643,7 +683,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 35,
               "Title": "ICategoryRepository.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Interfaces\\Repositories\\ICategoryRepository.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Interfaces\\Repositories\\ICategoryRepository.cs",
@@ -655,7 +695,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 36,
               "Title": "CategoryRepository.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Infrastructure\\Repositories\\CategoryRepository.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Infrastructure\\Repositories\\CategoryRepository.cs",
@@ -667,7 +707,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 34,
               "Title": "JobMapper.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Mappers\\JobMapper.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Mappers\\JobMapper.cs",
@@ -679,7 +719,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 38,
               "Title": "DashboardController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\DashboardController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\DashboardController.cs",
@@ -691,7 +731,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 42,
               "Title": "IssuesController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\IssuesController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\IssuesController.cs",
@@ -703,7 +743,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 41,
               "Title": "AuthController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\AuthController.cs",
@@ -715,7 +755,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 39,
               "Title": "CategoryMapper.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Mappers\\CategoryMapper.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Mappers\\CategoryMapper.cs",
@@ -723,12 +763,11 @@
               "RelativeToolTip": "MassperoTVAPI\\Core\\Mappers\\CategoryMapper.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-08T09:30:45.28Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-08T09:30:45.28Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 44,
               "Title": "IssueMapper.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Mappers\\IssueMapper.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Mappers\\IssueMapper.cs",
@@ -740,7 +779,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 43,
               "Title": "IssueRepository.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Infrastructure\\Repositories\\IssueRepository.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Infrastructure\\Repositories\\IssueRepository.cs",
@@ -752,7 +791,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 54,
               "Title": "20260712085056_iSSUES.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260712085056_iSSUES.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260712085056_iSSUES.cs",
@@ -764,7 +803,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 40,
               "Title": "Issue.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Issue.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\Issue.cs",
@@ -776,7 +815,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 47,
               "Title": "UsersController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\UsersController.cs",
@@ -788,7 +827,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 53,
               "Title": "20260708121139_Desc.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Migrations\\20260708121139_Desc.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Migrations\\20260708121139_Desc.cs",
@@ -800,7 +839,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 51,
               "Title": "AuthDtos.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\DTOs\\AuthDtos.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\DTOs\\AuthDtos.cs",
@@ -812,7 +851,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 45,
               "Title": "ProcessesController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\ProcessesController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\ProcessesController.cs",
@@ -824,7 +863,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 50,
               "Title": "RolesController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\RolesController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\RolesController.cs",
@@ -836,7 +875,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 49,
               "Title": "IssuePriority.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Enums\\IssuePriority.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Enums\\IssuePriority.cs",
@@ -848,7 +887,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 46,
               "Title": "PhasesController.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Controllers\\PhasesController.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Controllers\\PhasesController.cs",
@@ -860,7 +899,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 48,
               "Title": "AccountStatus.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Enums\\AccountStatus.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Enums\\AccountStatus.cs",
@@ -872,7 +911,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 52,
               "Title": "Category.cs",
               "DocumentMoniker": "D:\\Projects\\BackEnd\\MasberooTv\\MassperoTVAPI\\Core\\Entities\\Category.cs",
               "RelativeDocumentMoniker": "MassperoTVAPI\\Core\\Entities\\Category.cs",

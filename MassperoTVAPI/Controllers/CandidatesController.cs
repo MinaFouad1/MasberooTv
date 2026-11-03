@@ -109,16 +109,24 @@ public class CandidatesController : ControllerBase
     }
 
     /// <summary>
-    /// Create a new candidate with initial status and security clearance.
-    /// Optionally upload a CV file and/or a profile image.
+    /// Create a new candidate with initial status and security clearance (multipart/form-data).
+    /// CV file and profile image are optional.
     /// </summary>
     /// <param name="dto">Candidate data including name, job ID, optional CV file and optional profile image.</param>
     /// <returns>The created candidate.</returns>
     [HttpPost]
+    [Consumes("multipart/form-data")]
     public async Task<ActionResult<ApiResponse<CandidateDto>>> Create([FromForm] CreateCandidateDto dto)
+        => await CreateInternalAsync(dto, dto.CvFile, dto.ProfileImage);
+
+    private async Task<ActionResult<ApiResponse<CandidateDto>>> CreateInternalAsync(
+        CreateCandidateDto dto, IFormFile? cvFile, IFormFile? profileImage)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ApiResponse<CandidateDto>.ErrorResponse("Validation failed."));
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            return BadRequest(ApiResponse<CandidateDto>.ErrorResponse("Name is required."));
+
+        if (dto.JobId <= 0)
+            return BadRequest(ApiResponse<CandidateDto>.ErrorResponse("JobId is required."));
 
         if (!await _uow.Jobs.ExistsAsync(dto.JobId))
             return BadRequest(ApiResponse<CandidateDto>.ErrorResponse($"Job {dto.JobId} not found."));
@@ -133,9 +141,9 @@ public class CandidatesController : ControllerBase
 
         // ── CV upload (optional) ──────────────────────────────────────────────
         string? cvFileName = null;
-        if (dto.CvFile is not null)
+        if (cvFile is not null && cvFile.Length > 0)
         {
-            var upload = await UploadFileAsync(dto.CvFile, CvConfigurationKey);
+            var upload = await UploadFileAsync(cvFile, CvConfigurationKey);
             if (upload.Error is not null)
                 return BadRequest(ApiResponse<CandidateDto>.ErrorResponse(upload.Error));
             cvFileName = upload.FileName;
@@ -143,9 +151,9 @@ public class CandidatesController : ControllerBase
 
         // ── Profile image upload (optional) ──────────────────────────────────
         string? profileFileName = null;
-        if (dto.ProfileImage is not null)
+        if (profileImage is not null && profileImage.Length > 0)
         {
-            var upload = await UploadFileAsync(dto.ProfileImage, ProfileConfigurationKey);
+            var upload = await UploadFileAsync(profileImage, ProfileConfigurationKey);
             if (upload.Error is not null)
                 return BadRequest(ApiResponse<CandidateDto>.ErrorResponse(upload.Error));
             profileFileName = upload.FileName;
@@ -153,7 +161,7 @@ public class CandidatesController : ControllerBase
 
         var entity = new Candidate
         {
-            Name                = dto.Name,
+            Name                = dto.Name.Trim(),
             CvFile              = cvFileName,
             Profile             = profileFileName,
             JobId               = dto.JobId,
@@ -182,58 +190,70 @@ public class CandidatesController : ControllerBase
             PreferredShift       = dto.PreferredShift,
             City                 = dto.City,
             Country              = dto.Country,
+            WorkingHoursPerDay   = dto.WorkingHoursPerDay,
+            WorkingDaysPerWeek   = dto.WorkingDaysPerWeek,
         };
 
         await _uow.Candidates.AddAsync(entity);
         await _uow.SaveChangesAsync();
+
         await _uow.Candidates.SyncProfileCollectionsAsync(
             entity,
-            dto.Skills,
-            dto.Languages,
+            dto.SkillIds,
+            dto.LanguageIds,
             dto.Certifications,
             dto.Educations);
-        await _uow.SaveChangesAsync();
 
         var created = await _uow.Candidates.GetByIdWithDetailsAsync(entity.Id);
         var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
         return StatusCode(201, ApiResponse<CandidateDto>.CreatedResponse(created!.ToDto(cvBaseUrl, profileBaseUrl)));
     }
 
-    /// <summary>Update a candidate's basic info (name, job, reasons, CV, profile image).</summary>
+    /// <summary>
+    /// Update a candidate's basic info, profile collections, and optional CV/profile image (multipart/form-data).
+    /// </summary>
     /// <param name="id">Candidate ID.</param>
     /// <param name="dto">Updated candidate data.</param>
     /// <returns>The updated candidate.</returns>
     [HttpPut("{id:int}")]
+    [Consumes("multipart/form-data")]
     public async Task<ActionResult<ApiResponse<CandidateDto>>> Update(int id, [FromForm] UpdateCandidateDto dto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ApiResponse<CandidateDto>.ErrorResponse("Validation failed."));
+        => await UpdateInternalAsync(id, dto, dto.CvFile, dto.ProfileImage);
 
+    private async Task<ActionResult<ApiResponse<CandidateDto>>> UpdateInternalAsync(
+        int id, UpdateCandidateDto dto, IFormFile? cvFile, IFormFile? profileImage)
+    {
         var entity = await _uow.Candidates.GetByIdWithDetailsAsync(id);
         if (entity is null) return NotFound(ApiResponse<CandidateDto>.NotFoundResponse());
+
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            return BadRequest(ApiResponse<CandidateDto>.ErrorResponse("Name is required."));
+
+        if (dto.JobId <= 0)
+            return BadRequest(ApiResponse<CandidateDto>.ErrorResponse("JobId is required."));
 
         if (!await _uow.Jobs.ExistsAsync(dto.JobId))
             return BadRequest(ApiResponse<CandidateDto>.ErrorResponse($"Job {dto.JobId} not found."));
 
         // ── CV upload (optional — only replaces if a new file is sent) ────────
-        if (dto.CvFile is not null)
+        if (cvFile is not null && cvFile.Length > 0)
         {
-            var upload = await UploadFileAsync(dto.CvFile, CvConfigurationKey);
+            var upload = await UploadFileAsync(cvFile, CvConfigurationKey);
             if (upload.Error is not null)
                 return BadRequest(ApiResponse<CandidateDto>.ErrorResponse(upload.Error));
             entity.CvFile = upload.FileName;
         }
 
         // ── Profile image upload (optional — only replaces if a new file is sent)
-        if (dto.ProfileImage is not null)
+        if (profileImage is not null && profileImage.Length > 0)
         {
-            var upload = await UploadFileAsync(dto.ProfileImage, ProfileConfigurationKey);
+            var upload = await UploadFileAsync(profileImage, ProfileConfigurationKey);
             if (upload.Error is not null)
                 return BadRequest(ApiResponse<CandidateDto>.ErrorResponse(upload.Error));
             entity.Profile = upload.FileName;
         }
 
-        entity.Name           = dto.Name;
+        entity.Name           = dto.Name.Trim();
         entity.ReasonOfAccept = dto.ReasonOfAccept;
         entity.ReasonOfReject = dto.ReasonOfReject;
         entity.JobId          = dto.JobId;
@@ -260,21 +280,23 @@ public class CandidatesController : ControllerBase
         entity.PreferredShift       = dto.PreferredShift;
         entity.City                 = dto.City;
         entity.Country              = dto.Country;
+        entity.WorkingHoursPerDay   = dto.WorkingHoursPerDay;
+        entity.WorkingDaysPerWeek   = dto.WorkingDaysPerWeek;
+
+        await _uow.SaveChangesAsync();
 
         await _uow.Candidates.SyncProfileCollectionsAsync(
             entity,
-            dto.Skills,
-            dto.Languages,
+            dto.SkillIds,
+            dto.LanguageIds,
             dto.Certifications,
             dto.Educations);
-
-        _uow.Candidates.Update(entity);
-        await _uow.SaveChangesAsync();
 
         var updated = await _uow.Candidates.GetByIdWithDetailsAsync(entity.Id);
         var (cvBaseUrl, profileBaseUrl) = await GetBaseUrlsAsync();
         return Ok(ApiResponse<CandidateDto>.SuccessResponse(updated!.ToDto(cvBaseUrl, profileBaseUrl)));
     }
+
 
     /// <summary>Update only the application status for a candidate (e.g. Under Vetting, Approved, Rejected, Hired, SignContract).</summary>
     /// <param name="id">Candidate ID.</param>
@@ -492,7 +514,7 @@ public class CandidatesController : ControllerBase
         if (matchingStatus is not null)
         {
             candidate.StatusId = matchingStatus.Id;
-            candidate.Status = matchingStatus;
+            //candidate.Status = matchingStatus;
             _uow.Candidates.Update(candidate);
         }
 

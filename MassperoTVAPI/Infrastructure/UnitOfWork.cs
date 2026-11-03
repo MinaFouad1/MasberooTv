@@ -23,6 +23,8 @@ public class UnitOfWork : IUnitOfWork
     public ILookupRepository<Phase>                  Phases             { get; }
     public ILookupRepository<ProcessStatus>          ProcessStatuses    { get; }
     public ILookupRepository<Location>               Locations          { get; }
+    public ILookupRepository<Language>               Languages          { get; }
+    public ILookupRepository<Skill>                  Skills             { get; }
     public IConfigurationRepository          Configurations     { get; }
 
     public UnitOfWork(
@@ -40,6 +42,8 @@ public class UnitOfWork : IUnitOfWork
         ILookupRepository<Phase>                   phases,
         ILookupRepository<ProcessStatus>           processStatuses,
         ILookupRepository<Location>                locations,
+        ILookupRepository<Language>                languages,
+        ILookupRepository<Skill>                   skills,
         IConfigurationRepository           configurations)
     {
         _context           = context;
@@ -56,6 +60,8 @@ public class UnitOfWork : IUnitOfWork
         Phases             = phases;
         ProcessStatuses    = processStatuses;
         Locations          = locations;
+        Languages          = languages;
+        Skills             = skills;
         Configurations     = configurations;
     }
 

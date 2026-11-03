@@ -1,8 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using MassperoTVAPI.Core.Enums;
+using MassperoTVAPI.Core.Helpers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MassperoTVAPI.Core.DTOs;
+
+// ── Location Lookup ───────────────────────────────────────────────────────────
+public record LocationDto(int Id, string Name);
+
+// ── Hiring Manager Lookup ─────────────────────────────────────────────────────
+public record HiringManagerDto(string Id, string Name, string? Email = null);
 
 // ── Security Clearance Status ─────────────────────────────────────────────────
 public record SecurityClearanceStatusDto(int Id, string Name);
@@ -245,15 +254,18 @@ public record ApplicantDto(
     string    Status
 );
 
-public record UpsertCandidateSkillDto
-{
-    [Required] [MaxLength(150)] public string Name { get; init; } = string.Empty;
-    [Range(0, 100)] public int YearsOfExperience { get; init; }
-}
-public record UpsertCandidateLanguageDto
+public record LanguageDto(int Id, string Name);
+public record CreateLanguageDto
 {
     [Required] [MaxLength(100)] public string Name { get; init; } = string.Empty;
 }
+
+public record SkillDto(int Id, string Name);
+public record CreateSkillDto
+{
+    [Required] [MaxLength(150)] public string Name { get; init; } = string.Empty;
+}
+
 public record UpsertCandidateCertificationDto
 {
     [Required] [MaxLength(200)] public string Name { get; init; } = string.Empty;
@@ -269,16 +281,16 @@ public record UpsertCandidateEducationDto
 public record CreateCandidateDto
 {
     [Required] [MaxLength(200)] public string    Name         { get; init; } = string.Empty;
-    public IFormFile?                            CvFile       { get; init; }
-    public IFormFile?                            ProfileImage { get; init; }
+    [JsonIgnore] public IFormFile?               CvFile       { get; init; }
+    [JsonIgnore] public IFormFile?               ProfileImage { get; init; }
     [Required]                  public int       JobId        { get; init; }
     [MaxLength(200)]            public string?   CurrentEmployer    { get; init; }
     [MaxLength(200)]            public string?   CurrentPosition    { get; init; }
-                                public int?      YearsOfExperience  { get; init; }
-                                public decimal?  ExpectedSalary     { get; init; }
+    public int?      YearsOfExperience  { get; init; }
+    public decimal?  ExpectedSalary     { get; init; }
     [MaxLength(100)]            public string?   NoticePeriod       { get; init; }
     [MaxLength(100)]            public string?   Availability       { get; init; }
-                                public decimal?  CurrentSalary      { get; init; }
+    public decimal?  CurrentSalary      { get; init; }
     public string?              Summary { get; init; }
 
     // ── Personal info (all optional) ──────────────────────────────────────────
@@ -290,23 +302,32 @@ public record CreateCandidateDto
     [EmailAddress]
     [MaxLength(200)] public string?   Email                { get; init; }
     public MaritalStatus?  MaritalStatus        { get; init; }
-                     public DateTime? DateOfBeginning      { get; init; }
+    public DateTime? DateOfBeginning      { get; init; }
     [MaxLength(100)] public string?   Nationality          { get; init; }
     [MaxLength(200)] public string?   PreferredJobLocation { get; init; }
     public PreferredShift? PreferredShift       { get; init; }
     [MaxLength(100)] public string?   City                 { get; init; }
     public Country?        Country              { get; init; }
+    public byte?           WorkingHoursPerDay   { get; init; }
+    public byte?           WorkingDaysPerWeek   { get; init; }
 
-    public List<UpsertCandidateSkillDto>?         Skills             { get; init; }
-    public List<UpsertCandidateLanguageDto>?      Languages          { get; init; }
-    public List<UpsertCandidateCertificationDto>? Certifications     { get; init; }
-    public List<UpsertCandidateEducationDto>?     Educations         { get; init; }
+    [ModelBinder(BinderType = typeof(JsonOrFormIntListModelBinder))]
+    public List<int>?                             LanguageIds    { get; set; }
+
+    [ModelBinder(BinderType = typeof(JsonOrFormIntListModelBinder))]
+    public List<int>?                             SkillIds       { get; set; }
+
+    [ModelBinder(BinderType = typeof(JsonOrFormListModelBinder<UpsertCandidateCertificationDto>))]
+    public List<UpsertCandidateCertificationDto>? Certifications { get; set; }
+
+    [ModelBinder(BinderType = typeof(JsonOrFormListModelBinder<UpsertCandidateEducationDto>))]
+    public List<UpsertCandidateEducationDto>?     Educations     { get; set; }
 }
 public record UpdateCandidateDto
 {
     [Required] [MaxLength(200)] public string    Name           { get; init; } = string.Empty;
-    public IFormFile?                            CvFile         { get; init; }
-    public IFormFile?                            ProfileImage   { get; init; }
+    [JsonIgnore] public IFormFile?               CvFile         { get; init; }
+    [JsonIgnore] public IFormFile?               ProfileImage   { get; init; }
     [MaxLength(1000)]           public string?   ReasonOfAccept { get; init; }
     [MaxLength(1000)]           public string?   ReasonOfReject { get; init; }
     [Required]                  public int       JobId          { get; init; }
@@ -334,11 +355,20 @@ public record UpdateCandidateDto
     public PreferredShift? PreferredShift       { get; init; }
     [MaxLength(100)] public string?   City                 { get; init; }
     public Country?        Country              { get; init; }
+    public byte?           WorkingHoursPerDay   { get; init; }
+    public byte?           WorkingDaysPerWeek   { get; init; }
 
-    public List<UpsertCandidateSkillDto>?         Skills             { get; init; }
-    public List<UpsertCandidateLanguageDto>?      Languages          { get; init; }
-    public List<UpsertCandidateCertificationDto>? Certifications     { get; init; }
-    public List<UpsertCandidateEducationDto>?     Educations         { get; init; }
+    [ModelBinder(BinderType = typeof(JsonOrFormIntListModelBinder))]
+    public List<int>?                             LanguageIds    { get; set; }
+
+    [ModelBinder(BinderType = typeof(JsonOrFormIntListModelBinder))]
+    public List<int>?                             SkillIds       { get; set; }
+
+    [ModelBinder(BinderType = typeof(JsonOrFormListModelBinder<UpsertCandidateCertificationDto>))]
+    public List<UpsertCandidateCertificationDto>? Certifications { get; set; }
+
+    [ModelBinder(BinderType = typeof(JsonOrFormListModelBinder<UpsertCandidateEducationDto>))]
+    public List<UpsertCandidateEducationDto>?     Educations     { get; set; }
 }
 
 public record PatchCandidateInterviewGradeDto
@@ -432,6 +462,8 @@ public record CandidateDetailDto(
     PreferredShift? PreferredShift,
     string?        City,
     Country?       Country,
+    byte?          WorkingHoursPerDay,
+    byte?          WorkingDaysPerWeek,
 
     IEnumerable<CandidateSkillDto> Skills,
     IEnumerable<CandidateLanguageDto> Languages,

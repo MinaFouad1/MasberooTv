@@ -32,6 +32,9 @@ public class Candidate
     public string?        Nationality          { get; set; }
     public string?        PreferredJobLocation { get; set; }
     public PreferredShift? PreferredShift      { get; set; }
+
+    public Byte? WorkingHoursPerDay { get; set; }
+    public Byte? WorkingDaysPerWeek { get; set; }
     public string?        City                 { get; set; }
     public Country?       Country              { get; set; }
 

@@ -238,6 +238,12 @@ namespace MassperoTVAPI.Migrations
                     b.Property<string>("Summary")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte?>("WorkingDaysPerWeek")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte?>("WorkingHoursPerDay")
+                        .HasColumnType("tinyint");
+
                     b.Property<int?>("YearsOfExperience")
                         .HasColumnType("int");
 

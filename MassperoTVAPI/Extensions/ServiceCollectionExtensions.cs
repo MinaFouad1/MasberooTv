@@ -31,6 +31,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ILookupRepository<Phase>,                   LookupRepository<Phase>>();
         services.AddScoped<ILookupRepository<ProcessStatus>,           LookupRepository<ProcessStatus>>();
         services.AddScoped<ILookupRepository<Location>,                LookupRepository<Location>>();
+        services.AddScoped<ILookupRepository<Language>,                LookupRepository<Language>>();
+        services.AddScoped<ILookupRepository<Skill>,                   LookupRepository<Skill>>();
 
         // Domain entity repositories
         services.AddScoped<ICandidateRepository,       CandidateRepository>();
@@ -154,6 +156,9 @@ public static class ServiceCollectionExtensions
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             if (File.Exists(xmlPath))
                 options.IncludeXmlComments(xmlPath);
+
+            options.OperationFilter<MassperoTVAPI.Core.Helpers.CandidateMultipartOperationFilter>();
+            options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
         });
 
         return services;

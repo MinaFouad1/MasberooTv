@@ -177,7 +177,9 @@ public class ExcelImportService : IExcelImportService
             ExpectedSalary = TryGetDecimal(values, colMap, "ExpectedSalary", "Expected Salary", "الراتب المتوقع"),
             CurrentSalary = TryGetDecimal(values, colMap, "CurrentSalary", "Current Salary", "الراتب الحالي"),
             NoticePeriod = TryGetString(values, colMap, "NoticePeriod", "Notice Period", "notice period", "فترة الإخطار", "فترة الاخطار"),
-            Availability = TryGetString(values, colMap, "Availability", "فترة التوافر")
+            Availability = TryGetString(values, colMap, "Availability", "فترة التوافر"),
+            WorkingHoursPerDay = TryGetByte(values, colMap, "WorkingHoursPerDay", "Working Hours Per Day", "WorkingHours", "ساعات العمل اليومية"),
+            WorkingDaysPerWeek = TryGetByte(values, colMap, "WorkingDaysPerWeek", "Working Days Per Week", "WorkingDays", "أيام العمل الأسبوعية")
         };
     }
 
@@ -245,7 +247,9 @@ public class ExcelImportService : IExcelImportService
                 ExpectedSalary = row.ExpectedSalary,
                 CurrentSalary = row.CurrentSalary,
                 NoticePeriod = row.NoticePeriod,
-                Availability = row.Availability
+                Availability = row.Availability,
+                WorkingHoursPerDay = row.WorkingHoursPerDay,
+                WorkingDaysPerWeek = row.WorkingDaysPerWeek
             });
         }
 
@@ -301,6 +305,8 @@ public class ExcelImportService : IExcelImportService
             "CurrentSalary",
             "NoticePeriod",
             "Availability",
+            "WorkingHoursPerDay",
+            "WorkingDaysPerWeek",
             "CvFile",
             "ReasonOfAccept",
             "ReasonOfReject",
@@ -322,17 +328,17 @@ public class ExcelImportService : IExcelImportService
             new object[] {
                 "أحمد محمود علي", 1, 1, 1, "Male", "01012345678", "القاهرة - مدينة نصر", "ahmed.ali@example.com", "Egyptian",
                 "29801011234567", "Married", "2026-10-01", "2026-09-01", "Cairo", "Morning", "Cairo", "Egypt",
-                "Al-Hayat TV", "Senior Presenter", 8, 25000m, 20000m, "1 Month", "Immediate", "cv_ahmed.pdf", "خبرة ممتازة", "", true
+                "Al-Hayat TV", "Senior Presenter", 8, 25000m, 20000m, "1 Month", "Immediate", 8, 5, "cv_ahmed.pdf", "خبرة ممتازة", "", true
             },
             new object[] {
                 "سارة محمد حسن", 2, 2, 2, "Female", "01123456789", "الجيزة - الدقي", "sara.hassan@example.com", "Egyptian",
                 "29902021234568", "Single", "2026-10-15", "2026-09-05", "Giza", "Flexible", "Giza", "Egypt",
-                "DMC Channel", "Production Assistant", 3, 12000m, 9500m, "2 Weeks", "After 2 weeks", "cv_sara.pdf", "", "", false
+                "DMC Channel", "Production Assistant", 3, 12000m, 9500m, "2 Weeks", "After 2 weeks", 6, 6, "cv_sara.pdf", "", "", false
             },
             new object[] {
                 "John Smith", 1002, 1, 1, "Male", "01234567890", "Alexandria - Smouha", "john.smith@example.com", "British",
                 "GBR12345678", "Married", "2026-11-01", "2026-09-08", "Alexandria", "Morning", "Alexandria", "Other",
-                "BBC Arabic", "Broadcast Engineer", 10, 45000m, 38000m, "1 Month", "1 Month", "cv_john.pdf", "Qualified specialist", "", true
+                "BBC Arabic", "Broadcast Engineer", 10, 45000m, 38000m, "1 Month", "1 Month", 8, 5, "cv_john.pdf", "Qualified specialist", "", true
             }
         };
 
@@ -548,5 +554,22 @@ public class ExcelImportService : IExcelImportService
     {
         var val = TryGetString(values, colMap, columnNames)?.Trim().ToLowerInvariant();
         return val is "true" or "yes" or "1" or "y" or "نعم";
+    }
+
+    private static byte? TryGetByte(List<string> values, Dictionary<string, int> colMap, params string[] columnNames)
+    {
+        foreach (var colName in columnNames)
+        {
+            if (!colMap.TryGetValue(colName, out var idx) || idx >= values.Count)
+                continue;
+
+            var val = values[idx].Trim();
+            if (string.IsNullOrWhiteSpace(val)) continue;
+
+            if (byte.TryParse(val, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result))
+                return result;
+        }
+
+        return null;
     }
 }
