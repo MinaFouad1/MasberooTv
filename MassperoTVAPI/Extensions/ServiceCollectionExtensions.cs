@@ -12,6 +12,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Candidates;
+using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Interviews;
+using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Jobs;
+using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Categories;
+using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Issues;
+using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Processes;
+using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Offers;
+using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Configurations;
 
 namespace MassperoTVAPI.Extensions;
 
