@@ -1,5 +1,5 @@
 using MassperoTVAPI.Core.DTOs;
-using MassperoTVAPI.Core.Entities;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Processes;
 
 namespace MassperoTVAPI.Core.Mappers;
 

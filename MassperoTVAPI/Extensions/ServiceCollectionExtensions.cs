@@ -1,7 +1,6 @@
 using System.Reflection;
 using System.Text;
 using MassperoTV.Infrastructure.Repositories;
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Core.Settings;

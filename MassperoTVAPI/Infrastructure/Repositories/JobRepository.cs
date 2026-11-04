@@ -1,9 +1,9 @@
 using MassperoTV.Infrastructure.Repositories;
 using MassperoTVAPI.Core.DTOs;
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Jobs;
 
 namespace MassperoTVAPI.Infrastructure.Repositories;
 

@@ -1,6 +1,6 @@
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Enums;
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Shared.Domain;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Employees;
 
 namespace MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations;
 

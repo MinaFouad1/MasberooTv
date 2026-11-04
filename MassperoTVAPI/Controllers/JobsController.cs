@@ -1,11 +1,11 @@
 using MassperoTVAPI.Core.DTOs;
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Core.Helpers;
 using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Identity;
 
 namespace MassperoTVAPI.Controllers;
 

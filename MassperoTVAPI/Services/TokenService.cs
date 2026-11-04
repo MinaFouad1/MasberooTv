@@ -1,9 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using MassperoTVAPI.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Identity;
 
 namespace MassperoTVAPI.Services;
 

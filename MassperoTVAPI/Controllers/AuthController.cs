@@ -1,12 +1,12 @@
 using System.Security.Claims;
 using MassperoTVAPI.Core.DTOs;
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Core.Helpers;
 using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Identity;
 
 namespace MassperoTVAPI.Controllers;
 
@@ -105,11 +105,11 @@ public class AuthController : ControllerBase
             return Unauthorized(ApiResponse<AuthResponseDto>.ErrorResponse("Invalid email or password."));
 
         // ── Account status guard ─────────────────────────────────────────────
-        if (user.AccountStatus == Core.Enums.AccountStatus.Locked)
+        if (user.AccountStatus == MassperoTVAPI.Modules.Hr.Domain.Enums.AccountStatus.Locked)
             return StatusCode(403, ApiResponse<AuthResponseDto>.ForbiddenResponse(
                 "Your account has been locked due to too many failed login attempts. Please contact an administrator."));
 
-        if (user.AccountStatus == Core.Enums.AccountStatus.Blocked)
+        if (user.AccountStatus == MassperoTVAPI.Modules.Hr.Domain.Enums.AccountStatus.Blocked)
             return StatusCode(403, ApiResponse<AuthResponseDto>.ForbiddenResponse(
                 "Your account has been blocked by an administrator. Please contact support."));
 
@@ -121,7 +121,7 @@ public class AuthController : ControllerBase
 
             if (user.FailedLoginAttempts >= 3)
             {
-                user.AccountStatus = Core.Enums.AccountStatus.Locked;
+                user.AccountStatus = MassperoTVAPI.Modules.Hr.Domain.Enums.AccountStatus.Locked;
                 await _userManager.UpdateAsync(user);
                 return StatusCode(403, ApiResponse<AuthResponseDto>.ForbiddenResponse(
                     "Your account has been locked after 3 failed login attempts. Please contact an administrator."));

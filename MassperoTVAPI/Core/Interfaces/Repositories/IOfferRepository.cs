@@ -1,6 +1,5 @@
 using MassperoTVAPI.Core.DTOs;
-using MassperoTVAPI.Core.Entities;
-using MassperoTVAPI.Core.Enums;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Offers;
 
 namespace MassperoTVAPI.Core.Interfaces.Repositories;
 

@@ -1,5 +1,6 @@
 using MassperoTVAPI.Core.DTOs;
-using MassperoTVAPI.Core.Entities;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Interviews;
 
 namespace MassperoTVAPI.Core.Mappers;
 

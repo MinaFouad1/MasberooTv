@@ -1,6 +1,6 @@
-using MassperoTVAPI.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Categories;
 
 namespace MassperoTVAPI.Infrastructure.Data.Configurations;
 

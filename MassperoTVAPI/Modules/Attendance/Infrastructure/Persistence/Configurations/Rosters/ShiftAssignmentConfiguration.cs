@@ -1,5 +1,4 @@
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters;
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts;
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Enums;
 using Microsoft.EntityFrameworkCore;

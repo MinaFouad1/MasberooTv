@@ -1,5 +1,5 @@
-using MassperoTVAPI.Core.Entities;
-using MassperoTVAPI.Core.Enums;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Issues;
+using MassperoTVAPI.Modules.Hr.Domain.Enums;
 
 namespace MassperoTVAPI.Core.Interfaces.Repositories;
 

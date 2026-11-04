@@ -1,5 +1,5 @@
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Shared.Domain;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Jobs;
 
 namespace MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts;
 

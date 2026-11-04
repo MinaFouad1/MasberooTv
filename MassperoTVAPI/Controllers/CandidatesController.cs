@@ -1,6 +1,4 @@
 using MassperoTVAPI.Core.DTOs;
-using MassperoTVAPI.Core.Entities;
-using MassperoTVAPI.Core.Enums;
 using MassperoTVAPI.Core.Helpers;
 using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Mappers;
@@ -8,6 +6,10 @@ using MassperoTVAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Offers;
+using MassperoTVAPI.Modules.Hr.Domain.Enums;
 
 namespace MassperoTVAPI.Controllers;
 

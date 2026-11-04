@@ -1,6 +1,6 @@
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Modules.AttendanceModule.Application.Abstractions.Repositories;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups;
 
 namespace MassperoTVAPI.Core.Interfaces;
 

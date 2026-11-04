@@ -12,11 +12,11 @@ namespace MassperoTVAPI.Controllers;
 public class RolesController : ControllerBase
 {
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly UserManager<Core.Entities.ApplicationUser> _userManager;
+    private readonly UserManager<MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser> _userManager;
 
     public RolesController(
         RoleManager<IdentityRole> roleManager,
-        UserManager<Core.Entities.ApplicationUser> userManager)
+        UserManager<MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser> userManager)
     {
         _roleManager = roleManager;
         _userManager = userManager;

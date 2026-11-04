@@ -1,6 +1,6 @@
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Enums;
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Shared.Domain;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Teams;
 
 namespace MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters;
 

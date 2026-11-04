@@ -1,5 +1,4 @@
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations;
-using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

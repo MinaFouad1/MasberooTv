@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using MassperoTVAPI.Core.Enums;
+using MassperoTVAPI.Modules.Hr.Domain.Enums;
 
 namespace MassperoTVAPI.Core.DTOs;
 

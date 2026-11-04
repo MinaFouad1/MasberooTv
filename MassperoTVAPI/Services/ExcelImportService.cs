@@ -1,10 +1,9 @@
 using System.Globalization;
 using ClosedXML.Excel;
 using MassperoTVAPI.Core.DTOs;
-using MassperoTVAPI.Core.Entities;
-using MassperoTVAPI.Core.Enums;
 using MassperoTVAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
+using MassperoTVAPI.Modules.Hr.Domain.Enums;
 
 namespace MassperoTVAPI.Services;
 

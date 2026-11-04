@@ -1,4 +1,4 @@
-using MassperoTVAPI.Core.Entities;
+using MassperoTVAPI.Modules.Hr.Domain.Entities.Interviews;
 
 namespace MassperoTVAPI.Core.Interfaces.Repositories;
 
