@@ -3,6 +3,7 @@ using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
 using MassperoTVAPI.Infrastructure.Repositories;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Abstractions.Repositories;
 
 namespace MassperoTVAPI.Infrastructure;
 
@@ -27,6 +28,20 @@ public class UnitOfWork : IUnitOfWork
     public ILookupRepository<Skill>                  Skills             { get; }
     public IConfigurationRepository          Configurations     { get; }
 
+    // Attendance repositories
+    public IShiftRepository Shifts { get; }
+    public IRosterMonthRepository RosterMonths { get; }
+    public IShiftAssignmentRepository ShiftAssignments { get; }
+    public IAttendancePunchRepository AttendancePunches { get; }
+    public IAttendanceRepository Attendances { get; }
+    public IVacationTypeRepository VacationTypes { get; }
+    public IVacationRequestRepository VacationRequests { get; }
+    public IVacationBalanceRepository VacationBalances { get; }
+    public IHolidayRepository Holidays { get; }
+    public IPermissionTypeRepository PermissionTypes { get; }
+    public IPermissionBalanceRepository PermissionBalances { get; }
+    public IPermissionRequestRepository PermissionRequests { get; }
+
     public UnitOfWork(
         ApplicationDbContext               context,
         ICandidateRepository               candidates,
@@ -44,6 +59,18 @@ public class UnitOfWork : IUnitOfWork
         ILookupRepository<Location>                locations,
         ILookupRepository<Language>                languages,
         ILookupRepository<Skill>                   skills,
+        IShiftRepository shifts,
+        IRosterMonthRepository rosterMonths,
+        IShiftAssignmentRepository shiftAssignments,
+        IAttendancePunchRepository attendancePunches,
+        IAttendanceRepository attendances,
+        IVacationTypeRepository vacationTypes,
+        IVacationRequestRepository vacationRequests,
+        IVacationBalanceRepository vacationBalances,
+        IHolidayRepository holidays,
+        IPermissionTypeRepository permissionTypes,
+        IPermissionBalanceRepository permissionBalances,
+        IPermissionRequestRepository permissionRequests,
         IConfigurationRepository           configurations)
     {
         _context           = context;
@@ -63,6 +90,18 @@ public class UnitOfWork : IUnitOfWork
         Languages          = languages;
         Skills             = skills;
         Configurations     = configurations;
+        Shifts = shifts;
+        RosterMonths = rosterMonths;
+        ShiftAssignments = shiftAssignments;
+        AttendancePunches = attendancePunches;
+        Attendances = attendances;
+        VacationTypes = vacationTypes;
+        VacationRequests = vacationRequests;
+        VacationBalances = vacationBalances;
+        Holidays = holidays;
+        PermissionTypes = permissionTypes;
+        PermissionBalances = permissionBalances;
+        PermissionRequests = permissionRequests;
     }
 
     public async Task<int> SaveChangesAsync()

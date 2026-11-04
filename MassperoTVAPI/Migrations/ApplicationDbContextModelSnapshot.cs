@@ -403,6 +403,45 @@ namespace MassperoTVAPI.Migrations
                     b.ToTable("Educations");
                 });
 
+            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CandidateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmploymentType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId")
+                        .IsUnique()
+                        .HasFilter("[CandidateId] IS NOT NULL");
+
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Employees");
+                });
+
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Interview", b =>
                 {
                     b.Property<int>("Id")
@@ -847,6 +886,817 @@ namespace MassperoTVAPI.Migrations
                     b.ToTable("Statuses");
                 });
 
+            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Team", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("TeamName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances.Attendance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset?>("CheckIn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("CheckOut")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EarlyLeaveMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("ExpectedEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("ExpectedStart")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsManualOverride")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LateMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OverrideReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int?>("ShiftId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("WorkDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("WorkedMinutes")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShiftId");
+
+                    b.HasIndex("EmployeeId", "WorkDate", "ShiftId")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.ToTable("Attendances", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances.AttendancePunch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeviceId")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsProcessed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset>("PunchTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsProcessed");
+
+                    b.HasIndex("EmployeeId", "PunchTime");
+
+                    b.ToTable("AttendancePunches", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Holidays.Holiday", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("HolidayDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HolidayDate")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.ToTable("Holidays", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions.PermissionBalance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AllowedMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermissionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsedMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionTypeId");
+
+                    b.HasIndex("EmployeeId", "PermissionTypeId", "Year", "Month")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.ToTable("PermissionBalances", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions.PermissionRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ApprovedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AttendanceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExceededMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("Minutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("PermissionDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PermissionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttendanceId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("PermissionTypeId");
+
+                    b.ToTable("PermissionRequests", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions.PermissionType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DefaultMonthlyMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PermissionTypes", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters.RosterMonth", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("PublishedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("PublishedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamId", "Year", "Month")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.ToTable("RosterMonths", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters.ShiftAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DayType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("RosterMonthId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int?>("ShiftId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("WorkDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RosterMonthId");
+
+                    b.HasIndex("ShiftId");
+
+                    b.HasIndex("EmployeeId", "WorkDate", "ShiftId")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.ToTable("ShiftAssignments", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts.JobShift", b =>
+                {
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShiftId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("JobId", "ShiftId");
+
+                    b.HasIndex("ShiftId");
+
+                    b.ToTable("JobShifts", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts.Shift", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BreakMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GraceMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("TimeZoneId")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasDefaultValue("Egypt Standard Time");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Shifts", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationBalance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("CarriedOver")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Entitled")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Used")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<int>("VacationTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VacationTypeId");
+
+                    b.HasIndex("EmployeeId", "VacationTypeId", "Year")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.ToTable("VacationBalances", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ApprovedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Days")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("FromDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateOnly>("ToDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VacationTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("VacationTypeId");
+
+                    b.ToTable("VacationRequests", "attendance");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AttendanceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Days")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VacationBalanceId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VacationRequestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttendanceId");
+
+                    b.HasIndex("VacationBalanceId");
+
+                    b.HasIndex("VacationRequestId");
+
+                    b.ToTable("VacationTransactions", "attendance", t =>
+                        {
+                            t.HasCheckConstraint("CK_VacationTransactions_Request_Or_Attendance", "NOT ([VacationRequestId] IS NOT NULL AND [AttendanceId] IS NOT NULL)");
+                        });
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("CanCarryOver")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DefaultDays")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VacationTypes", "attendance");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1074,6 +1924,30 @@ namespace MassperoTVAPI.Migrations
                     b.Navigation("Candidate");
                 });
 
+            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Employee", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Core.Entities.Candidate", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MassperoTVAPI.Core.Entities.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MassperoTVAPI.Core.Entities.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Candidate");
+
+                    b.Navigation("Job");
+
+                    b.Navigation("Team");
+                });
+
             modelBuilder.Entity("MassperoTVAPI.Core.Entities.Interview", b =>
                 {
                     b.HasOne("MassperoTVAPI.Core.Entities.Candidate", "Candidate")
@@ -1188,6 +2062,198 @@ namespace MassperoTVAPI.Migrations
                     b.Navigation("DependsOn");
 
                     b.Navigation("Process");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances.Attendance", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts.Shift", "Shift")
+                        .WithMany()
+                        .HasForeignKey("ShiftId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Shift");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances.AttendancePunch", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions.PermissionBalance", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions.PermissionType", "PermissionType")
+                        .WithMany()
+                        .HasForeignKey("PermissionTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("PermissionType");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions.PermissionRequest", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances.Attendance", "Attendance")
+                        .WithMany()
+                        .HasForeignKey("AttendanceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions.PermissionType", "PermissionType")
+                        .WithMany()
+                        .HasForeignKey("PermissionTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Attendance");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("PermissionType");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters.RosterMonth", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Core.Entities.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters.ShiftAssignment", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters.RosterMonth", "RosterMonth")
+                        .WithMany()
+                        .HasForeignKey("RosterMonthId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts.Shift", "Shift")
+                        .WithMany()
+                        .HasForeignKey("ShiftId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("RosterMonth");
+
+                    b.Navigation("Shift");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts.JobShift", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Core.Entities.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts.Shift", "Shift")
+                        .WithMany()
+                        .HasForeignKey("ShiftId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+
+                    b.Navigation("Shift");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationBalance", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationType", "VacationType")
+                        .WithMany()
+                        .HasForeignKey("VacationTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("VacationType");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationRequest", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationType", "VacationType")
+                        .WithMany()
+                        .HasForeignKey("VacationTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("VacationType");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationTransaction", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances.Attendance", "Attendance")
+                        .WithMany()
+                        .HasForeignKey("AttendanceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationBalance", "VacationBalance")
+                        .WithMany()
+                        .HasForeignKey("VacationBalanceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationRequest", "VacationRequest")
+                        .WithMany()
+                        .HasForeignKey("VacationRequestId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Attendance");
+
+                    b.Navigation("VacationBalance");
+
+                    b.Navigation("VacationRequest");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

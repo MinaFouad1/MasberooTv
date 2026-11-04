@@ -1,4 +1,10 @@
 using MassperoTVAPI.Core.Entities;
+using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts;
+using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters;
+using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances;
+using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations;
+using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions;
+using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Holidays;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +38,27 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ProcessDependency>      ProcessDependencies     => Set<ProcessDependency>();
     public DbSet<Issue>                  Issues                  => Set<Issue>();
     public DbSet<Offer>                  Offers                  => Set<Offer>();
+
+    // HR: Employees / Teams
+    public DbSet<Employee>               Employees               => Set<Employee>();
+    public DbSet<Team>                   Teams                   => Set<Team>();
+
+    // Attendance module
+    public DbSet<Shift> Shifts => Set<Shift>();
+    public DbSet<JobShift> JobShifts => Set<JobShift>();
+    public DbSet<RosterMonth> RosterMonths => Set<RosterMonth>();
+    public DbSet<ShiftAssignment> ShiftAssignments => Set<ShiftAssignment>();
+    public DbSet<AttendancePunch> AttendancePunches => Set<AttendancePunch>();
+    public DbSet<Attendance> Attendances => Set<Attendance>();
+    public DbSet<VacationType> VacationTypes => Set<VacationType>();
+    public DbSet<VacationRequest> VacationRequests => Set<VacationRequest>();
+    public DbSet<VacationBalance> VacationBalances => Set<VacationBalance>();
+    public DbSet<VacationTransaction> VacationTransactions => Set<VacationTransaction>();
+    public DbSet<Holiday> Holidays => Set<Holiday>();
+    public DbSet<PermissionType> PermissionTypes => Set<PermissionType>();
+    public DbSet<PermissionBalance> PermissionBalances => Set<PermissionBalance>();
+    public DbSet<PermissionRequest> PermissionRequests => Set<PermissionRequest>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

@@ -1,6 +1,7 @@
 using MassperoTVAPI.Extensions;
 using MassperoTVAPI.Infrastructure.Data;
 using MassperoTVAPI.Middlewares;
+using MassperoTVAPI.Modules.AttendanceModule;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -51,6 +52,7 @@ try
 
     // ─── Repositories, UnitOfWork, TokenService, Email, FileUpload, Config ────────
     builder.Services.AddApplicationServices(builder.Configuration);
+    builder.Services.AddAttendanceModule();
 
     // ─── Controllers ──────────────────────────────────────────────────────────────
     builder.Services.AddControllers()
