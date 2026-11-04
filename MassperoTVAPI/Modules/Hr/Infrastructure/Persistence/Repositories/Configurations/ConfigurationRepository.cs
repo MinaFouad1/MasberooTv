@@ -1,9 +1,9 @@
 
-using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Configurations;
 using MassperoTVAPI.Shared.Persistence;
+using MassperoTVAPI.Modules.Hr.Application.Abstractions.Repositories;
 
 namespace MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Configurations;
 

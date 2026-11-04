@@ -1,12 +1,12 @@
-using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Helpers;
-using MassperoTVAPI.Core.Interfaces;
-using MassperoTVAPI.Core.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MassperoTVAPI.Modules.Hr.Domain.Enums;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups;
 using MassperoTVAPI.Shared.Persistence;
+using MassperoTVAPI.Modules.Hr.Application.Features.Common;
+using MassperoTVAPI.Modules.Hr.Application.Features.Notifications;
+using MassperoTVAPI.Modules.Hr.Application.Features.Offers;
 
 namespace MassperoTVAPI.Controllers;
 

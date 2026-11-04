@@ -1,4 +1,3 @@
-using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions;
 using MassperoTVAPI.Shared.Persistence;
 

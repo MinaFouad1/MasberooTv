@@ -1,4 +1,3 @@
-using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters;
 using MassperoTVAPI.Shared.Persistence;
 

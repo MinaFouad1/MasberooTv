@@ -1,6 +1,7 @@
 using MassperoTVAPI.Extensions;
 using MassperoTVAPI.Infrastructure.Data;
 using MassperoTVAPI.Middlewares;
+using MassperoTVAPI.Modules.Hr.Application.Features.Identity;
 using MassperoTVAPI.Modules.AttendanceModule;
 using Microsoft.EntityFrameworkCore;
 using Serilog;

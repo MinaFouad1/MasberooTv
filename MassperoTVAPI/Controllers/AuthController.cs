@@ -1,13 +1,11 @@
 using System.Security.Claims;
-using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Helpers;
-using MassperoTVAPI.Core.Interfaces;
-using MassperoTVAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Identity;
 using MassperoTVAPI.Shared.Persistence;
+using MassperoTVAPI.Modules.Hr.Application.Features.Identity;
 
 namespace MassperoTVAPI.Controllers;
 

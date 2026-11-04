@@ -1,9 +1,8 @@
 using System.Security.Claims;
-using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Helpers;
-using MassperoTVAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MassperoTVAPI.Modules.Hr.Application.Features.Candidates;
 
 namespace MassperoTVAPI.Controllers;
 

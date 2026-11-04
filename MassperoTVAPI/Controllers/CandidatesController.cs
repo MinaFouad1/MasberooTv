@@ -1,8 +1,4 @@
-using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Helpers;
-using MassperoTVAPI.Core.Interfaces;
-using MassperoTVAPI.Core.Mappers;
-using MassperoTVAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,6 +7,9 @@ using MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Offers;
 using MassperoTVAPI.Modules.Hr.Domain.Enums;
 using MassperoTVAPI.Shared.Persistence;
+using MassperoTVAPI.Modules.Hr.Application.Features.Common;
+using MassperoTVAPI.Modules.Hr.Application.Features.Candidates;
+using MassperoTVAPI.Modules.Hr.Application.Features.Interviews;
 
 namespace MassperoTVAPI.Controllers;
 

@@ -1,10 +1,10 @@
-using MassperoTVAPI.Core.DTOs;
-using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Offers;
 using MassperoTVAPI.Modules.Hr.Domain.Enums;
 using MassperoTVAPI.Shared.Persistence;
+using MassperoTVAPI.Modules.Hr.Application.Abstractions.Repositories;
+using MassperoTVAPI.Modules.Hr.Application.Features.Common;
 
 namespace MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Offers;
 

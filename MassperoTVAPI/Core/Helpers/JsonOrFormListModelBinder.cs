@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using MassperoTVAPI.Core.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MassperoTVAPI.Modules.Hr.Application.Features.Common;
 
 namespace MassperoTVAPI.Core.Helpers;
 
