@@ -3,7 +3,7 @@ using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Configurations;
-using MassperoTV.Infrastructure.Repositories;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Configurations;
 

@@ -1,8 +1,8 @@
-using MassperoTV.Infrastructure.Repositories;
 using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Interviews;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Interviews;
 

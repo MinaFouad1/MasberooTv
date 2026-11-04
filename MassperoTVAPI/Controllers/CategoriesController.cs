@@ -4,6 +4,7 @@ using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Controllers;
 

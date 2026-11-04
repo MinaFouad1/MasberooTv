@@ -3,6 +3,7 @@ using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Services;
 

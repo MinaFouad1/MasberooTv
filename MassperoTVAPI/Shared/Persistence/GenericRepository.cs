@@ -3,7 +3,7 @@ using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace MassperoTV.Infrastructure.Repositories;
+namespace MassperoTVAPI.Shared.Persistence;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {

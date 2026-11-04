@@ -1,4 +1,4 @@
-namespace MassperoTVAPI.Core.Interfaces.Repositories;
+namespace MassperoTVAPI.Shared.Persistence;
 
 public interface IGenericRepository<T> where T : class
 {

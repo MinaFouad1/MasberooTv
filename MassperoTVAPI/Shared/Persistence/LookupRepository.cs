@@ -2,7 +2,7 @@ using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace MassperoTVAPI.Infrastructure.Repositories;
+namespace MassperoTVAPI.Shared.Persistence;
 
 /// <summary>
 /// Reusable repository for simple lookup tables (e.g. Status, Phase, InterviewType…).

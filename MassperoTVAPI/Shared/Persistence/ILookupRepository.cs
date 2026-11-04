@@ -1,4 +1,4 @@
-namespace MassperoTVAPI.Core.Interfaces.Repositories;
+namespace MassperoTVAPI.Shared.Persistence;
 
 /// <summary>
 /// Generic read-write repository for simple lookup tables (no FK navigation needed).

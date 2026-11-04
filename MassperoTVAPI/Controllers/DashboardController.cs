@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MassperoTVAPI.Modules.Hr.Domain.Enums;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Identity;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Controllers;
 

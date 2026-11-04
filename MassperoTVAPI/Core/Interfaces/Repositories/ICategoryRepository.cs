@@ -1,6 +1,7 @@
 
 using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Categories;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Core.Interfaces.Repositories;
 

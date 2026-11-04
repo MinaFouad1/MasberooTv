@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Processes;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Controllers;
 

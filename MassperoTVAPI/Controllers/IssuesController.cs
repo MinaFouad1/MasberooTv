@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using MassperoTVAPI.Modules.Hr.Domain.Enums;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Controllers;
 

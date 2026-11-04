@@ -4,6 +4,7 @@ using MassperoTVAPI.Core.DTOs;
 using MassperoTVAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using MassperoTVAPI.Modules.Hr.Domain.Enums;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Services;
 

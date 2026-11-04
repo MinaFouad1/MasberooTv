@@ -1,11 +1,10 @@
 using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Infrastructure.Data;
-using MassperoTVAPI.Infrastructure.Repositories;
 using MassperoTVAPI.Modules.AttendanceModule.Application.Abstractions.Repositories;
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups;
 
-namespace MassperoTVAPI.Infrastructure;
+namespace MassperoTVAPI.Shared.Persistence;
 
 public class UnitOfWork : IUnitOfWork
 {

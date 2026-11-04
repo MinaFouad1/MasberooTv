@@ -1,4 +1,5 @@
 using MassperoTVAPI.Modules.Hr.Domain.Entities.Processes;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Core.Interfaces.Repositories;
 

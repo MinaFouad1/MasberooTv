@@ -1,12 +1,9 @@
 using System.Reflection;
 using System.Text;
-using MassperoTV.Infrastructure.Repositories;
 using MassperoTVAPI.Core.Interfaces;
 using MassperoTVAPI.Core.Interfaces.Repositories;
 using MassperoTVAPI.Core.Settings;
-using MassperoTVAPI.Infrastructure;
 using MassperoTVAPI.Infrastructure.Data;
-using MassperoTVAPI.Infrastructure.Repositories;
 using MassperoTVAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +17,7 @@ using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Issues;
 using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Processes;
 using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Offers;
 using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Configurations;
+using MassperoTVAPI.Shared.Persistence;
 
 namespace MassperoTVAPI.Extensions;
 
