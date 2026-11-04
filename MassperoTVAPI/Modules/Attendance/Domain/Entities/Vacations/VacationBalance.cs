@@ -1,5 +1,5 @@
-using MassperoTVAPI.Modules.AttendanceModule.Domain.Common;
 using MassperoTVAPI.Core.Entities;
+using MassperoTVAPI.Shared.Domain;
 
 namespace MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations;
 

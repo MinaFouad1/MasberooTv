@@ -1,7 +1,7 @@
-using MassperoTVAPI.Modules.AttendanceModule.Domain.Common;
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Enums;
 using MassperoTVAPI.Core.Entities;
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts;
+using MassperoTVAPI.Shared.Domain;
 
 namespace MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances;
 

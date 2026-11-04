@@ -1,6 +1,6 @@
-using MassperoTVAPI.Modules.AttendanceModule.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MassperoTVAPI.Shared.Domain;
 
 namespace MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence.Configurations;
 

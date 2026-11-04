@@ -1,4 +1,4 @@
-using MassperoTVAPI.Modules.AttendanceModule.Domain.Common;
+using MassperoTVAPI.Shared.Domain;
 
 namespace MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts;
 

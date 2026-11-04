@@ -1,4 +1,4 @@
-namespace MassperoTVAPI.Modules.AttendanceModule.Domain.Common;
+namespace MassperoTVAPI.Shared.Domain;
 
 /// <summary>Audit columns shared by every Attendance table.</summary>
 public abstract class AuditableBase
