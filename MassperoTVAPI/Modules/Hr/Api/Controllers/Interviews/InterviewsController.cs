@@ -6,7 +6,7 @@ using MassperoTVAPI.Modules.Hr.Application.Features.Notifications;
 using MassperoTVAPI.Modules.Hr.Application.Features.Interviews;
 using MassperoTVAPI.Shared.Application;
 
-namespace MassperoTVAPI.Controllers;
+namespace MassperoTVAPI.Modules.Hr.Api.Controllers.Interviews;
 
 [ApiController]
 [Route("api/[controller]")]

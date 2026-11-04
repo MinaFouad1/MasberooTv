@@ -9,7 +9,7 @@ using MassperoTVAPI.Modules.Hr.Application.Features.Processes;
 using MassperoTVAPI.Modules.Hr.Application.Features.Lookups;
 using MassperoTVAPI.Shared.Application;
 
-namespace MassperoTVAPI.Controllers;
+namespace MassperoTVAPI.Modules.Hr.Api.Controllers.Lookups;
 
 /// <summary>
 /// CRUD for all lookup / reference tables.

@@ -7,7 +7,7 @@ using MassperoTVAPI.Modules.Hr.Application.Features.Common;
 using MassperoTVAPI.Modules.Hr.Application.Features.Jobs;
 using MassperoTVAPI.Shared.Application;
 
-namespace MassperoTVAPI.Controllers;
+namespace MassperoTVAPI.Modules.Hr.Api.Controllers.Jobs;
 
 [ApiController]
 [Route("api/[controller]")]

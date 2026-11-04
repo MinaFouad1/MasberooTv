@@ -8,7 +8,7 @@ using MassperoTVAPI.Modules.Hr.Application.Features.Notifications;
 using MassperoTVAPI.Modules.Hr.Application.Features.Offers;
 using MassperoTVAPI.Shared.Application;
 
-namespace MassperoTVAPI.Controllers;
+namespace MassperoTVAPI.Modules.Hr.Api.Controllers.Offers;
 
 [ApiController]
 [Route("api/offers")]

@@ -11,7 +11,7 @@ using MassperoTVAPI.Modules.Hr.Application.Features.Candidates;
 using MassperoTVAPI.Modules.Hr.Application.Features.Interviews;
 using MassperoTVAPI.Shared.Application;
 
-namespace MassperoTVAPI.Controllers;
+namespace MassperoTVAPI.Modules.Hr.Api.Controllers.Candidates;
 
 [ApiController]
 [Route("api/[controller]")]
