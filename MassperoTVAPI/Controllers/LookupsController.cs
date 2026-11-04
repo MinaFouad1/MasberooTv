@@ -1,4 +1,3 @@
-using MassperoTVAPI.Core.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,7 @@ using MassperoTVAPI.Shared.Persistence;
 using MassperoTVAPI.Modules.Hr.Application.Features.Common;
 using MassperoTVAPI.Modules.Hr.Application.Features.Processes;
 using MassperoTVAPI.Modules.Hr.Application.Features.Lookups;
+using MassperoTVAPI.Shared.Application;
 
 namespace MassperoTVAPI.Controllers;
 

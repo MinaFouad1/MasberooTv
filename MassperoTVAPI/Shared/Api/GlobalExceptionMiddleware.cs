@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text.Json;
-using MassperoTVAPI.Core.Helpers;
+using MassperoTVAPI.Shared.Application;
 
-namespace MassperoTVAPI.Middlewares;
+namespace MassperoTVAPI.Shared.Api;
 
 /// <summary>
 /// Catches all unhandled exceptions in the request pipeline, logs full exception details

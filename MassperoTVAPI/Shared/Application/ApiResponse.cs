@@ -1,4 +1,4 @@
-namespace MassperoTVAPI.Core.Helpers;
+namespace MassperoTVAPI.Shared.Application;
 
 public class ApiResponse<T>
 {

@@ -2,7 +2,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace MassperoTVAPI.Core.Helpers;
+namespace MassperoTVAPI.Modules.Hr.Api.Filters.Candidates;
 
 /// <summary>
 /// Configures Swagger UI for multipart/form-data candidate endpoints so that collection fields

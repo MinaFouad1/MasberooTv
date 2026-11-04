@@ -163,7 +163,7 @@ public static class ServiceCollectionExtensions
             if (File.Exists(xmlPath))
                 options.IncludeXmlComments(xmlPath);
 
-            options.OperationFilter<MassperoTVAPI.Core.Helpers.CandidateMultipartOperationFilter>();
+            options.OperationFilter<MassperoTVAPI.Modules.Hr.Api.Filters.Candidates.CandidateMultipartOperationFilter>();
             options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
         });
 

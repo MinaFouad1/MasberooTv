@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using MassperoTVAPI.Core.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MassperoTVAPI.Modules.Hr.Domain.Enums;
+using MassperoTVAPI.Modules.Hr.Api.ModelBinders.Candidates;
 
 namespace MassperoTVAPI.Modules.Hr.Application.Features.Common;
 
