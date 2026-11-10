@@ -22,888 +22,6 @@ namespace MassperoTVAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.AppConfiguration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Key")
-                        .IsUnique()
-                        .HasDatabaseName("IX_Configuration_Key");
-
-                    b.ToTable("Configuration", (string)null);
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AccountStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("FailedLoginAttempts")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsVerified")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<DateTime?>("LastLoginAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Candidate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool?>("Accepted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AlternateMobile")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Availability")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Country")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CurrentEmployer")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("CurrentPosition")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<decimal?>("CurrentSalary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("CvFile")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("DateOfBeginning")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("ExpectedSalary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("HiringDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("JobId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MaritalStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Mobile")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("NationalId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nationality")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NoticePeriod")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PreferredJobLocation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PreferredShift")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Profile")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("ReasonOfAccept")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ReasonOfReject")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("SecurityClearanceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte?>("WorkingDaysPerWeek")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte?>("WorkingHoursPerDay")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int?>("YearsOfExperience")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("JobId");
-
-                    b.HasIndex("SecurityClearanceId");
-
-                    b.HasIndex("StatusId");
-
-                    b.ToTable("Candidates");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.CandidateLanguage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CandidateId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LanguageId");
-
-                    b.HasIndex("CandidateId", "LanguageId")
-                        .IsUnique();
-
-                    b.ToTable("CandidateLanguages");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.CandidateSkill", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CandidateId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SkillId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearsOfExperience")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SkillId");
-
-                    b.HasIndex("CandidateId", "SkillId")
-                        .IsUnique();
-
-                    b.ToTable("CandidateSkills");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CategoryCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Certification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CandidateId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Url")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CandidateId");
-
-                    b.ToTable("Certifications");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Education", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CandidateId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Degree")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Grade")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("GraduationYear")
-                        .HasColumnType("int");
-
-                    b.Property<string>("University")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CandidateId");
-
-                    b.ToTable("Educations");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CandidateId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EmploymentType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("JobId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CandidateId")
-                        .IsUnique()
-                        .HasFilter("[CandidateId] IS NOT NULL");
-
-                    b.HasIndex("JobId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Interview", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CandidateId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comments")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<TimeOnly?>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("EvaluatorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Grade")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("InterviewDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("InterviewMode")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<TimeOnly?>("StartTime")
-                        .HasColumnType("time");
-
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CandidateId");
-
-                    b.HasIndex("EvaluatorId");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("Interviews");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.InterviewType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InterviewTypes");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Issue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedByUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int?>("Priority")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProcessId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ProcessId");
-
-                    b.ToTable("Issues");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Job", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeadLineDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Desc")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Education")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmploymentType")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ExperienceLevel")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HiringManagerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsOpend")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Languages")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("OpenPositions")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RequiredSkills")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Responsibilities")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("TargetHiringDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("HiringManagerId");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("Jobs");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Language", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Languages");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Offer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Benefits")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int>("CandidateId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2(7)")
-                        .HasDefaultValueSql("SYSDATETIME()");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2(7)");
-
-                    b.Property<DateTime>("OfferDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2(7)")
-                        .HasDefaultValueSql("SYSDATETIME()");
-
-                    b.Property<int>("OfferStatusId")
-                        .HasColumnType("int")
-                        .HasColumnName("OfferStatusId");
-
-                    b.Property<decimal>("ProposedSalary")
-                        .HasColumnType("decimal(12,2)");
-
-                    b.Property<string>("ReasonOfRejected")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime2(7)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CandidateId");
-
-                    b.ToTable("Offers", (string)null);
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Phase", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Phases");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Process", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("PhaseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProcessStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhaseId");
-
-                    b.HasIndex("ProcessStatusId");
-
-                    b.ToTable("Processes");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.ProcessDependency", b =>
-                {
-                    b.Property<int>("ProcessId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DependsOnProcessId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProcessId", "DependsOnProcessId");
-
-                    b.HasIndex("DependsOnProcessId");
-
-                    b.ToTable("ProcessDependencies");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.ProcessStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal>("Percentage")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProcessStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Pending",
-                            Percentage = 0m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "InProgress",
-                            Percentage = 50m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Completed",
-                            Percentage = 100m
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Holded",
-                            Percentage = 0m
-                        });
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.SecurityClearanceStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SecurityClearanceStatuses");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Skill", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Skills");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Status", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Statuses");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Team", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("TeamName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teams");
-                });
-
             modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances.Attendance", b =>
                 {
                     b.Property<int>("Id")
@@ -1059,6 +177,10 @@ namespace MassperoTVAPI.Migrations
 
                     b.Property<DateOnly>("HolidayDate")
                         .HasColumnType("date");
+
+                    b.Property<string>("HolidayType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -1697,6 +819,888 @@ namespace MassperoTVAPI.Migrations
                     b.ToTable("VacationTypes", "attendance");
                 });
 
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Accepted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AlternateMobile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Availability")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Country")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CurrentEmployer")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("CurrentPosition")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal?>("CurrentSalary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CvFile")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DateOfBeginning")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("ExpectedSalary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("HiringDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MaritalStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Mobile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NationalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nationality")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoticePeriod")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PreferredJobLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PreferredShift")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Profile")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ReasonOfAccept")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ReasonOfReject")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("SecurityClearanceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Summary")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte?>("WorkingDaysPerWeek")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte?>("WorkingHoursPerDay")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int?>("YearsOfExperience")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("SecurityClearanceId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Candidates");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.CandidateLanguage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CandidateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("CandidateId", "LanguageId")
+                        .IsUnique();
+
+                    b.ToTable("CandidateLanguages");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.CandidateSkill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CandidateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearsOfExperience")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SkillId");
+
+                    b.HasIndex("CandidateId", "SkillId")
+                        .IsUnique();
+
+                    b.ToTable("CandidateSkills");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Certification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CandidateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Url")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("Certifications");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Education", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CandidateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Degree")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Grade")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("GraduationYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("University")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("Educations");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Categories.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CategoryCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Configurations.AppConfiguration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Configuration_Key");
+
+                    b.ToTable("Configuration", (string)null);
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Employees.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CandidateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmploymentType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId")
+                        .IsUnique()
+                        .HasFilter("[CandidateId] IS NOT NULL");
+
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("FailedLoginAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsVerified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Interviews.Interview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CandidateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comments")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeOnly?>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("EvaluatorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Grade")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("InterviewDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("InterviewMode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<TimeOnly?>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("EvaluatorId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("Interviews");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Issues.Issue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int?>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProcessId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("ProcessId");
+
+                    b.ToTable("Issues");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Jobs.Job", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeadLineDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Desc")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Education")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmploymentType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ExperienceLevel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HiringManagerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsOpend")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Languages")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("OpenPositions")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RequiredSkills")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Responsibilities")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("TargetHiringDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("HiringManagerId");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.InterviewType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InterviewTypes");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Language", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Languages");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Phase", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Phases");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.ProcessStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Percentage")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProcessStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Pending",
+                            Percentage = 0m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "InProgress",
+                            Percentage = 50m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Completed",
+                            Percentage = 100m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Holded",
+                            Percentage = 0m
+                        });
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.SecurityClearanceStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SecurityClearanceStatuses");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Skill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Status", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Statuses");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Offers.Offer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Benefits")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("CandidateId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(7)")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2(7)");
+
+                    b.Property<DateTime>("OfferDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(7)")
+                        .HasDefaultValueSql("SYSDATETIME()");
+
+                    b.Property<int>("OfferStatusId")
+                        .HasColumnType("int")
+                        .HasColumnName("OfferStatusId");
+
+                    b.Property<decimal>("ProposedSalary")
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<string>("ReasonOfRejected")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2(7)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("Offers", (string)null);
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Processes.Process", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("PhaseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProcessStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhaseId");
+
+                    b.HasIndex("ProcessStatusId");
+
+                    b.ToTable("Processes");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Processes.ProcessDependency", b =>
+                {
+                    b.Property<int>("ProcessId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DependsOnProcessId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProcessId", "DependsOnProcessId");
+
+                    b.HasIndex("DependsOnProcessId");
+
+                    b.ToTable("ProcessDependencies");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Teams.Team", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("TeamName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teams");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1830,243 +1834,9 @@ namespace MassperoTVAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Candidate", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", "User")
-                        .WithMany("Candidates")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.Job", "Job")
-                        .WithMany("Candidates")
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.SecurityClearanceStatus", "SecurityClearance")
-                        .WithMany("Candidates")
-                        .HasForeignKey("SecurityClearanceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.Status", "Status")
-                        .WithMany("Candidates")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Job");
-
-                    b.Navigation("SecurityClearance");
-
-                    b.Navigation("Status");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.CandidateLanguage", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Candidate", "Candidate")
-                        .WithMany("CandidateLanguages")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.Language", "Language")
-                        .WithMany("CandidateLanguages")
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Candidate");
-
-                    b.Navigation("Language");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.CandidateSkill", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Candidate", "Candidate")
-                        .WithMany("CandidateSkills")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.Skill", "Skill")
-                        .WithMany("CandidateSkills")
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Candidate");
-
-                    b.Navigation("Skill");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Certification", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Candidate", "Candidate")
-                        .WithMany("Certifications")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Candidate");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Education", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Candidate", "Candidate")
-                        .WithMany("Educations")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Candidate");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Employee", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Candidate", "Candidate")
-                        .WithMany()
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.Job", "Job")
-                        .WithMany()
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Candidate");
-
-                    b.Navigation("Job");
-
-                    b.Navigation("Team");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Interview", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Candidate", "Candidate")
-                        .WithMany("Interviews")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", "Evaluator")
-                        .WithMany("EvaluatedInterviews")
-                        .HasForeignKey("EvaluatorId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.InterviewType", "Type")
-                        .WithMany("Interviews")
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Candidate");
-
-                    b.Navigation("Evaluator");
-
-                    b.Navigation("Type");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Issue", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", "CreatedByUser")
-                        .WithMany("CreatedIssues")
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.Process", "Process")
-                        .WithMany("Issues")
-                        .HasForeignKey("ProcessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("Process");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Job", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Category", "Category")
-                        .WithMany("Jobs")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", "HiringManager")
-                        .WithMany("ManagedJobs")
-                        .HasForeignKey("HiringManagerId");
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.Location", "Location")
-                        .WithMany("Jobs")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Category");
-
-                    b.Navigation("HiringManager");
-
-                    b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Offer", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Candidate", "Candidate")
-                        .WithMany()
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Candidate");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Process", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Phase", "Phase")
-                        .WithMany("Processes")
-                        .HasForeignKey("PhaseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.ProcessStatus", "ProcessStatus")
-                        .WithMany("Processes")
-                        .HasForeignKey("ProcessStatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Phase");
-
-                    b.Navigation("ProcessStatus");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.ProcessDependency", b =>
-                {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Process", "DependsOn")
-                        .WithMany("DependentProcesses")
-                        .HasForeignKey("DependsOnProcessId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MassperoTVAPI.Core.Entities.Process", "Process")
-                        .WithMany("Dependencies")
-                        .HasForeignKey("ProcessId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("DependsOn");
-
-                    b.Navigation("Process");
-                });
-
             modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances.Attendance", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2084,7 +1854,7 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Attendances.AttendancePunch", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2095,7 +1865,7 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Permissions.PermissionBalance", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2119,7 +1889,7 @@ namespace MassperoTVAPI.Migrations
                         .HasForeignKey("AttendanceId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2140,7 +1910,7 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters.RosterMonth", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Team", "Team")
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Teams.Team", "Team")
                         .WithMany()
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -2150,7 +1920,7 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Rosters.ShiftAssignment", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2176,7 +1946,7 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Shifts.JobShift", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Job", "Job")
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Jobs.Job", "Job")
                         .WithMany()
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2195,7 +1965,7 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationBalance", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2214,7 +1984,7 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("MassperoTVAPI.Modules.AttendanceModule.Domain.Entities.Vacations.VacationRequest", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.Employee", "Employee")
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2256,6 +2026,240 @@ namespace MassperoTVAPI.Migrations
                     b.Navigation("VacationRequest");
                 });
 
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", "User")
+                        .WithMany("Candidates")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Jobs.Job", "Job")
+                        .WithMany("Candidates")
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.SecurityClearanceStatus", "SecurityClearance")
+                        .WithMany("Candidates")
+                        .HasForeignKey("SecurityClearanceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Status", "Status")
+                        .WithMany("Candidates")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+
+                    b.Navigation("SecurityClearance");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.CandidateLanguage", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", "Candidate")
+                        .WithMany("CandidateLanguages")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Language", "Language")
+                        .WithMany("CandidateLanguages")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Candidate");
+
+                    b.Navigation("Language");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.CandidateSkill", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", "Candidate")
+                        .WithMany("CandidateSkills")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Skill", "Skill")
+                        .WithMany("CandidateSkills")
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Candidate");
+
+                    b.Navigation("Skill");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Certification", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", "Candidate")
+                        .WithMany("Certifications")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Candidate");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Education", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", "Candidate")
+                        .WithMany("Educations")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Candidate");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Employees.Employee", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Jobs.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Teams.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Candidate");
+
+                    b.Navigation("Job");
+
+                    b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Interviews.Interview", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", "Candidate")
+                        .WithMany("Interviews")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", "Evaluator")
+                        .WithMany("EvaluatedInterviews")
+                        .HasForeignKey("EvaluatorId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.InterviewType", "Type")
+                        .WithMany("Interviews")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Candidate");
+
+                    b.Navigation("Evaluator");
+
+                    b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Issues.Issue", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", "CreatedByUser")
+                        .WithMany("CreatedIssues")
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Processes.Process", "Process")
+                        .WithMany("Issues")
+                        .HasForeignKey("ProcessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Process");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Jobs.Job", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Categories.Category", "Category")
+                        .WithMany("Jobs")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", "HiringManager")
+                        .WithMany("ManagedJobs")
+                        .HasForeignKey("HiringManagerId");
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Location", "Location")
+                        .WithMany("Jobs")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Category");
+
+                    b.Navigation("HiringManager");
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Offers.Offer", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Candidate");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Processes.Process", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Phase", "Phase")
+                        .WithMany("Processes")
+                        .HasForeignKey("PhaseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.ProcessStatus", "ProcessStatus")
+                        .WithMany("Processes")
+                        .HasForeignKey("ProcessStatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Phase");
+
+                    b.Navigation("ProcessStatus");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Processes.ProcessDependency", b =>
+                {
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Processes.Process", "DependsOn")
+                        .WithMany("DependentProcesses")
+                        .HasForeignKey("DependsOnProcessId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Processes.Process", "Process")
+                        .WithMany("Dependencies")
+                        .HasForeignKey("ProcessId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DependsOn");
+
+                    b.Navigation("Process");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -2267,7 +2271,7 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", null)
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2276,7 +2280,7 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", null)
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2291,7 +2295,7 @@ namespace MassperoTVAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", null)
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2300,25 +2304,14 @@ namespace MassperoTVAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("MassperoTVAPI.Core.Entities.ApplicationUser", null)
+                    b.HasOne("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.ApplicationUser", b =>
-                {
-                    b.Navigation("Candidates");
-
-                    b.Navigation("CreatedIssues");
-
-                    b.Navigation("EvaluatedInterviews");
-
-                    b.Navigation("ManagedJobs");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Candidate", b =>
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Candidates.Candidate", b =>
                 {
                     b.Navigation("CandidateLanguages");
 
@@ -2331,63 +2324,74 @@ namespace MassperoTVAPI.Migrations
                     b.Navigation("Interviews");
                 });
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Category", b =>
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Categories.Category", b =>
                 {
                     b.Navigation("Jobs");
                 });
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.InterviewType", b =>
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Identity.ApplicationUser", b =>
                 {
-                    b.Navigation("Interviews");
+                    b.Navigation("Candidates");
+
+                    b.Navigation("CreatedIssues");
+
+                    b.Navigation("EvaluatedInterviews");
+
+                    b.Navigation("ManagedJobs");
                 });
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Job", b =>
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Jobs.Job", b =>
                 {
                     b.Navigation("Candidates");
                 });
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Language", b =>
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.InterviewType", b =>
+                {
+                    b.Navigation("Interviews");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Language", b =>
                 {
                     b.Navigation("CandidateLanguages");
                 });
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Location", b =>
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Location", b =>
                 {
                     b.Navigation("Jobs");
                 });
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Phase", b =>
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Phase", b =>
                 {
                     b.Navigation("Processes");
                 });
 
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Process", b =>
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.ProcessStatus", b =>
+                {
+                    b.Navigation("Processes");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.SecurityClearanceStatus", b =>
+                {
+                    b.Navigation("Candidates");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Skill", b =>
+                {
+                    b.Navigation("CandidateSkills");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Lookups.Status", b =>
+                {
+                    b.Navigation("Candidates");
+                });
+
+            modelBuilder.Entity("MassperoTVAPI.Modules.Hr.Domain.Entities.Processes.Process", b =>
                 {
                     b.Navigation("Dependencies");
 
                     b.Navigation("DependentProcesses");
 
                     b.Navigation("Issues");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.ProcessStatus", b =>
-                {
-                    b.Navigation("Processes");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.SecurityClearanceStatus", b =>
-                {
-                    b.Navigation("Candidates");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Skill", b =>
-                {
-                    b.Navigation("CandidateSkills");
-                });
-
-            modelBuilder.Entity("MassperoTVAPI.Core.Entities.Status", b =>
-                {
-                    b.Navigation("Candidates");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,6 +10,7 @@ using MassperoTVAPI.Modules.Hr.Application.Features.Common;
 using MassperoTVAPI.Modules.Hr.Application.Features.Candidates;
 using MassperoTVAPI.Modules.Hr.Application.Features.Interviews;
 using MassperoTVAPI.Shared.Application;
+using MassperoTVAPI.Migrations;
 
 namespace MassperoTVAPI.Modules.Hr.Api.Controllers.Candidates;
 
@@ -359,8 +360,17 @@ public class CandidatesController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(dto?.ReasonOfAccept))
             candidate.ReasonOfAccept = dto.ReasonOfAccept.Trim();
+        Employee employee = new Employee
+        {
+            CandidateId = id,
+            EmploymentType = "FullTimeEmpoyee",
+            JobId = candidate.JobId,
+            Name = candidate.Name,
 
+        };
+        await _uow.Employee.AddAsync(employee);
         _uow.Candidates.Update(candidate);
+      
         await _uow.SaveChangesAsync();
 
         var updated = await _uow.Candidates.GetByIdWithDetailsAsync(candidate.Id);

@@ -6,6 +6,16 @@ using MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence.Reposito
 using MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence.Repositories.Holidays;
 using MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence.Repositories.Permissions;
 using Microsoft.Extensions.DependencyInjection;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Abstractions;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Shifts;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Holidays;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Vacations;
+using MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence.Employees;
+using MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Permissions;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Rosters;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Teams;
+using MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence.Repositories.Teams;
 
 namespace MassperoTVAPI.Modules.AttendanceModule;
 
@@ -25,6 +35,29 @@ public static class AttendanceModuleExtensions
         services.AddScoped<IPermissionTypeRepository, PermissionTypeRepository>();
         services.AddScoped<IPermissionBalanceRepository, PermissionBalanceRepository>();
         services.AddScoped<IPermissionRequestRepository, PermissionRequestRepository>();
+
+        // Lookups and replaceable business rules
+        services.AddScoped<IEmployeeLookup, EmployeeLookup>();
+        services.AddScoped<IVacationDaysCalculator, DefaultVacationDaysCalculator>();
+        services.AddScoped<IAttendanceSaveChanges, AttendanceSaveChanges>();
+
+        // Application services
+        services.AddScoped<IShiftService, ShiftService>();
+        services.AddScoped<IHolidayService, HolidayService>();
+        services.AddScoped<IVacationTypeService, VacationTypeService>();
+        services.AddScoped<IVacationBalanceService, VacationBalanceService>();
+        services.AddScoped<IVacationRequestService, VacationRequestService>();
+
+        // Permissions, Rosters, Teams
+        services.AddScoped<ITeamMembershipRepository, TeamMembershipRepository>();
+        services.AddScoped<IConflictAwareSaveChanges, ConflictAwareSaveChanges>();
+        services.AddScoped<IPermissionUsageCalculator, DefaultPermissionUsageCalculator>();
+        services.AddScoped<IShiftOverlapChecker, DefaultShiftOverlapChecker>();
+        services.AddScoped<IPermissionTypeService, PermissionTypeService>();
+        services.AddScoped<IPermissionBalanceService, PermissionBalanceService>();
+        services.AddScoped<IPermissionRequestService, PermissionRequestService>();
+        services.AddScoped<IRosterService, RosterService>();
+        services.AddScoped<ITeamService, TeamService>();
 
         return services;
     }

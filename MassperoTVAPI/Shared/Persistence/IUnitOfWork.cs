@@ -14,6 +14,7 @@ public interface IUnitOfWork : IDisposable
     IIssueRepository      Issues      { get; }
     IProcessRepository    Processes   { get; }
     IOfferRepository      Offers      { get; }
+    IEmployeeRepository Employee { get; }
 
     // Lookup repositories
     ILookupRepository<Status>                 Statuses          { get; }

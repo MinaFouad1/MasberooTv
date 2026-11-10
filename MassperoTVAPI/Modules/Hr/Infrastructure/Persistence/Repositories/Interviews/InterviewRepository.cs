@@ -1,6 +1,5 @@
 using MassperoTVAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using MassperoTVAPI.Modules.Hr.Domain.Entities.Interviews;
 using MassperoTVAPI.Shared.Persistence;
 using MassperoTVAPI.Modules.Hr.Application.Abstractions.Repositories;
 

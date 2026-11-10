@@ -19,6 +19,7 @@ using MassperoTVAPI.Modules.Hr.Application.Features.Identity;
 using MassperoTVAPI.Modules.Hr.Application.Features.Candidates;
 using MassperoTVAPI.Modules.Hr.Application.Features.Configurations;
 using MassperoTVAPI.Modules.Hr.Application.Features.Notifications;
+using MassperoTVAPI.Modules.Hr.Infrastructure.Persistence.Repositories.Employees;
 
 namespace MassperoTVAPI.Extensions;
 
@@ -44,6 +45,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICandidateRepository,       CandidateRepository>();
         services.AddScoped<IInterviewRepository,       InterviewRepository>();
         services.AddScoped<IJobRepository,             JobRepository>();
+        services.AddScoped<IEmployeeRepository,             EmployeeRepository>();
         services.AddScoped<ICategoryRepository,        CategoryRepository>();
         services.AddScoped<IIssueRepository,           IssueRepository>();
         services.AddScoped<IProcessRepository,         ProcessRepository>();
