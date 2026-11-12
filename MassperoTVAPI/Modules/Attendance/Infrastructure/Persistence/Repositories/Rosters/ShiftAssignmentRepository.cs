@@ -11,6 +11,18 @@ namespace MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence.Repo
 public class ShiftAssignmentRepository : GenericRepository<ShiftAssignment>, IShiftAssignmentRepository
 {
     public ShiftAssignmentRepository(ApplicationDbContext context) : base(context) { }
+    public async Task<List<int>> GetWorkShiftIdsAsync(int employeeId, DateOnly workDate, CancellationToken ct = default)
+        => await _dbSet.AsNoTracking()
+                       .Where(x => !x.IsDeleted
+                                && x.EmployeeId == employeeId
+                                && x.WorkDate == workDate
+                                && x.DayType == DayType.Work
+                                && x.ShiftId != null)
+                       .Select(x => x.ShiftId!.Value)
+                       .Distinct()
+                       .OrderBy(id => id)
+                       .ToListAsync(ct);
+
     public async Task<List<DateOnly>> GetDayOffDatesAsync(int employeeId, DateOnly fromDate, DateOnly toDate, CancellationToken ct = default)
         => await _dbSet.AsNoTracking()
                        .Where(x => !x.IsDeleted

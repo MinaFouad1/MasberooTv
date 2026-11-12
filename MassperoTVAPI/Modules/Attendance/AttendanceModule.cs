@@ -16,6 +16,7 @@ using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Permissions;
 using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Rosters;
 using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Teams;
 using MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence.Repositories.Teams;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Attendances;
 
 namespace MassperoTVAPI.Modules.AttendanceModule;
 
@@ -58,6 +59,12 @@ public static class AttendanceModuleExtensions
         services.AddScoped<IPermissionRequestService, PermissionRequestService>();
         services.AddScoped<IRosterService, RosterService>();
         services.AddScoped<ITeamService, TeamService>();
+
+        // Attendance (manual creation + search)
+        services.AddScoped<IShiftTimeConverter, DefaultShiftTimeConverter>();
+        services.AddOptions<AttendanceStatusOptions>();
+        services.AddScoped<IAttendanceCalculator, DefaultAttendanceCalculator>();
+        services.AddScoped<IAttendanceService, AttendanceService>();
 
         return services;
     }

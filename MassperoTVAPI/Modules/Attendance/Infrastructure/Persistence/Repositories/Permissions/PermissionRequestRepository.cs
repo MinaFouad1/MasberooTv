@@ -5,12 +5,38 @@ using MassperoTVAPI.Shared.Persistence;
 using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Permissions;
 using MassperoTVAPI.Modules.AttendanceModule.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using MassperoTVAPI.Modules.AttendanceModule.Application.Features.Attendances;
 
 namespace MassperoTVAPI.Modules.AttendanceModule.Infrastructure.Persistence.Repositories.Permissions;
 
 public class PermissionRequestRepository : GenericRepository<PermissionRequest>, IPermissionRequestRepository
 {
     public PermissionRequestRepository(ApplicationDbContext context) : base(context) { }
+
+    public async Task<List<AttendanceDayPermissionDto>> GetApprovedForEmployeesInRangeAsync(IReadOnlyCollection<int> employeeIds, DateOnly fromDate, DateOnly toDate, CancellationToken ct = default)
+    {
+        var idList = employeeIds.Distinct().ToList();
+        if (idList.Count == 0)
+            return new List<AttendanceDayPermissionDto>();
+
+        return await _dbSet.AsNoTracking()
+                           .Where(x => !x.IsDeleted
+                                    && x.Status == RequestStatus.Approved
+                                    && idList.Contains(x.EmployeeId)
+                                    && x.PermissionDate >= fromDate
+                                    && x.PermissionDate <= toDate)
+                           .OrderBy(x => x.PermissionDate)
+                           .ThenBy(x => x.Id)
+                           .Select(x => new AttendanceDayPermissionDto(
+                               x.EmployeeId,
+                               x.PermissionDate,
+                               x.Id,
+                               x.PermissionTypeId,
+                               x.PermissionType.Name,
+                               x.Minutes,
+                               x.ExceededMinutes))
+                           .ToListAsync(ct);
+    }
 
     /// <summary>Approved, non-deleted requests of one (employee, type, month), TRACKED, ordered by PermissionDate then Id.</summary>
     public async Task<List<PermissionRequest>> GetApprovedGroupForUpdateAsync(int employeeId, int permissionTypeId, int year, int month, CancellationToken ct = default)

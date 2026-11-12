@@ -13,4 +13,6 @@ public interface IShiftAssignmentRepository : IGenericRepository<ShiftAssignment
     Task<List<int>> GetRosterMonthIdsAsync(int employeeId, DateOnly fromDate, DateOnly toDate, CancellationToken ct = default);
     Task AddRangeAsync(IEnumerable<ShiftAssignment> rows, CancellationToken ct = default);
     Task<List<RosterScheduleRowDto>> GetScheduleAsync(DateOnly fromDate, DateOnly toDate, int? teamId, int? employeeId, CancellationToken ct = default);
+    /// <summary>Distinct ShiftIds of the employee's non-deleted Work rows on the date (DayOff rows and rows without a shift excluded).</summary>
+    Task<List<int>> GetWorkShiftIdsAsync(int employeeId, DateOnly workDate, CancellationToken ct = default);
 }
